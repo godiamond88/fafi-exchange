@@ -3,69 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFI Trading</title>
+    <title>FAFI Trading - FARA/USDT Spot</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 70px; user-select: none; }
         header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
-        .nav-links { display: flex; gap: 15px; font-weight: 500; font-size: 0.9em; }
-        .nav-links a { color: #888; text-decoration: none; padding-bottom: 4px; white-space: nowrap; }
-        .nav-links a.active { color: #00ffcc; border-bottom: 2px solid #00ffcc; }
         
         .page-section { max-width: 520px; margin: auto; padding: 10px; }
-        .trading-pair-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #181818; border-radius: 8px; margin-bottom: 10px; border: 1px solid #2a2a2a; }
+        .trade-header { background: #1e1e1e; padding: 12px 15px; border-radius: 8px; border: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9em; }
         
-        .chart-box-pro { background: #181818; border-radius: 8px; border: 1px solid #2a2a2a; margin-bottom: 10px; overflow: hidden; }
-        .chart-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #2a2a2a; font-size: 0.8em; color: #888; }
-        .tf-group { display: flex; gap: 8px; align-items: center; }
-        .tf-btn { cursor: pointer; padding: 2px 6px; border-radius: 4px; }
-        .tf-btn.active { color: #00ffcc; background: #2a2a2a; }
-
-        .chart-viewport { display: flex; height: 215px; position: relative; background: #151515; overflow: hidden; border-radius: 4px; }
-        .chart-scroll-area { overflow-x: auto; flex-grow: 1; display: flex; align-items: flex-end; position: relative; padding: 10px 0; scrollbar-width: none; cursor: grab; }
-        .chart-scroll-area:active { cursor: grabbing; }
-        .chart-scroll-area::-webkit-scrollbar { display: none; }
+        /* Grafik Simulasi Candlestick */
+        .chart-box { background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; padding: 15px; margin-bottom: 10px; text-align: center; }
+        .timeframes { display: flex; gap: 8px; margin-bottom: 10px; }
+        .tf-btn { background: #222; border: none; color: #888; padding: 4px 8px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
+        .tf-btn.active { background: #333; color: #00ffcc; }
         
-        .candles-track { display: flex; align-items: flex-end; gap: 12px; padding: 0 40px; min-width: 1400px; height: 100%; position: relative; }
-        .live-price-line { position: absolute; left: 0; right: 0; height: 1px; background: #00ff88; pointer-events: none; z-index: 5; display: flex; align-items: center; justify-content: flex-end; }
-        .live-price-tag { background: #00ff88; color: #121212; font-size: 0.6em; font-weight: bold; padding: 1px 5px; border-radius: 2px; position: absolute; right: 5px; transform: translateY(-50%); }
+        .candlestick-area { height: 160px; display: flex; align-items: flex-end; justify-content: space-around; padding-top: 10px; border-bottom: 1px solid #2a2a2a; border-left: 1px solid #2a2a2a; position: relative; margin-bottom: 10px; }
+        .candle { width: 6px; position: relative; border-radius: 2px; }
+        .candle.green { background: #00ff88; }
+        .candle.green::before { content:''; position: absolute; top: -6px; left: 2px; width: 2px; height: calc(100% + 12px); background: #00ff88; }
+        .candle.red { background: #ff4d4d; }
+        .candle.red::before { content:''; position: absolute; top: -6px; left: 2px; width: 2px; height: calc(100% + 12px); background: #ff4d4d; }
 
-        .grid-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0; }
-        .grid-row { border-bottom: 1px dashed #222; width: 100%; height: 25%; }
-
-        .price-scale { width: 75px; background: #181818; border-left: 1px solid #2a2a2a; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 4px; font-size: 0.65em; color: #888; text-align: right; z-index: 6; cursor: ns-resize; }
-        .price-scale span.highlight { color: #00ff88; font-weight: bold; background: rgba(0,255,136,0.15); padding: 2px; border-radius: 2px; border: 1px solid #00ff88; }
-
-        .date-scale-wrapper { background: #1a1a1a; border-top: 1px solid #2a2a2a; padding: 6px 0; overflow: hidden; position: relative; }
-        .date-scale { display: flex; gap: 85px; padding: 0 40px; min-width: 1400px; font-size: 0.65em; color: #777; white-space: nowrap; }
-
-        .candle { display: flex; flex-direction: column; align-items: center; position: relative; width: 12px; height: 100%; justify-content: center; z-index: 2; flex-shrink: 0; }
-        .wick { width: 2px; position: absolute; }
-        .body-candle { width: 8px; position: absolute; border-radius: 1px; }
-        .candle.green .wick, .candle.green .body-candle { background: #00ff88; }
-        .candle.red .wick, .candle.red .body-candle { background: #ff4d4d; }
-
-        .trading-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .trading-panel, .orderbook-panel { background: #1e1e1e; padding: 12px; border-radius: 8px; border: 1px solid #2a2a2a; font-size: 0.85em; }
+        /* Panel Beli / Jual */
+        .trade-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .panel-box { background: #1e1e1e; padding: 12px; border-radius: 8px; border: 1px solid #2a2a2a; font-size: 0.85em; }
         
         .tab-switch { display: flex; background: #121212; border-radius: 6px; padding: 3px; margin-bottom: 10px; gap: 4px; }
-        .tab-btn { flex: 1; text-align: center; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85em; color: #888; }
-        .tab-btn.buy-tab.active { background: #00ff88; color: #121212; }
-        .tab-btn.sell-tab.active { background: #ff4d4d; color: #fff; }
+        .tab-btn { flex: 1; text-align: center; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.8em; color: #888; }
+        .tab-btn.buy.active { background: #00ff88; color: #121212; }
+        .tab-btn.sell.active { background: #ff4d4d; color: #fff; }
 
         .input-group { margin-bottom: 8px; }
-        .input-group label { display: block; font-size: 0.75em; color: #888; margin-bottom: 3px; }
-        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 6px 10px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.85em; }
+        .input-group label { display: block; font-size: 0.7em; color: #888; margin-bottom: 2px; }
+        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.8em; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9em; }
-        
-        .action-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9em; cursor: pointer; margin-top: 8px; background: #00ff88; color: #121212; }
-        
-        .orderbook-header { display: grid; grid-template-columns: 1fr 1fr; color: #888; padding-bottom: 4px; border-bottom: 1px solid #2a2a2a; margin-bottom: 6px; font-size: 0.75em; }
-        .book-row { display: grid; grid-template-columns: 1fr 1fr; padding: 2px 0; font-size: 0.8em; }
-        .book-row.ask { color: #ff4d4d; }
-        .book-row.bid { color: #00ff88; }
-        .current-price-center { font-size: 1.1em; font-weight: bold; padding: 6px 0; text-align: center; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; margin: 4px 0; color: #00ff88; }
 
-        /* Navigasi Bawah 5 Menu Konsisten */
+        .action-btn { width: 100%; padding: 8px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.85em; cursor: pointer; margin-top: 5px; }
+        .action-btn.buy { background: #00ff88; color: #121212; }
+        .action-btn.sell { background: #ff4d4d; color: #fff; }
+
+        /* Order Book Sederhana */
+        .orderbook-item { display: flex; justify-content: space-between; font-size: 0.75em; padding: 2px 0; }
+        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
         .nav-item.active { color: #00ffcc; }
@@ -74,96 +53,86 @@
 </head>
 <body>
     <header>
-        <div style="font-weight: bold; color: #00ffcc;">⚡ FAFI Trading</div>
-        <!-- Address wallet di pojok kanan atas disembunyikan -->
-        <div></div>
+        <div style="font-weight: bold; color: #00ffcc;">⚡ FAFI Exchange</div>
+        <div style="font-size: 0.75em; color: #888;">Master Wallet: <span style="color:#00ffcc;">TTip6T1...xCxy</span></div>
     </header>
 
     <div class="page-section">
-        <div class="trading-pair-bar">
-            <span style="font-weight: bold; font-size: 1.1em;">FAFI/USDT <span style="font-size: 0.65em; background: #2a2a2a; padding: 2px 6px; border-radius: 4px; color: #00ffcc;">Spot</span></span>
-            <span style="font-size: 0.85em; color: #00ff88;">+4.15%</span>
-        </div>
-
-        <div class="chart-box-pro">
-            <div class="chart-top-bar">
-                <div class="tf-group">
-                    <span class="tf-btn" id="tf-15m" onclick="changeTimeframe('15m')">15m</span>
-                    <span class="tf-btn active" id="tf-1j" onclick="changeTimeframe('1j')">1j</span>
-                    <span class="tf-btn" id="tf-4j" onclick="changeTimeframe('4j')">4j</span>
-                    <span class="tf-btn" id="tf-1H" onclick="changeTimeframe('1H')">1H</span>
-                </div>
-                <span style="color: #00ffcc;" id="tfLabel">1j</span>
+        <!-- Header Pair -->
+        <div class="trade-header">
+            <div>
+                <span style="font-weight: bold; font-size: 1.1em; color: #fff;">FARA/USDT</span>
+                <span style="background: #1a3a2a; color: #00ff88; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; margin-left: 6px;">Spot</span>
             </div>
-
-            <div class="chart-viewport" id="chartViewport">
-                <div class="chart-scroll-area" id="scrollArea">
-                    <div class="grid-lines">
-                        <div class="grid-row"></div>
-                        <div class="grid-row"></div>
-                        <div class="grid-row"></div>
-                        <div class="grid-row"></div>
-                    </div>
-                    <div class="live-price-line" id="livePriceLine" style="bottom: 50%;">
-                        <div class="live-price-tag" id="livePriceTag">1.5000</div>
-                    </div>
-                    <div class="candles-track" id="candleContainer"></div>
-                </div>
-
-                <div class="price-scale" id="priceScaleContainer" title="Klik dan geser vertikal untuk merubah skala harga">
-                    <span id="pMax">1.6000</span>
-                    <span id="pMidHigh">1.5500</span>
-                    <span class="highlight" id="pMid">1.5000</span>
-                    <span id="pMidLow">1.4500</span>
-                    <span id="pMin">1.4000</span>
-                </div>
-            </div>
-
-            <div class="date-scale-wrapper">
-                <div class="date-scale" id="dateScaleContainer">
-                    <span>01/11, 00:00</span>
-                    <span>04/11, 08:00</span>
-                    <span>07/11, 16:00</span>
-                    <span>10/11, 00:00</span>
-                    <span>13/11, 08:00</span>
-                    <span>16/11, 16:00</span>
-                    <span>20/11, 00:00</span>
-                </div>
+            <div style="text-align: right;">
+                <div style="font-weight: bold; font-size: 1.1em; color: #00ff88;" id="currentPrice">1.5000</div>
+                <div style="font-size: 0.75em; color: #00ff88;">+4.15%</div>
             </div>
         </div>
 
-        <div class="trading-grid">
-            <div class="trading-panel">
+        <!-- Grafik Candlestick -->
+        <div class="chart-box">
+            <div class="timeframes">
+                <button class="tf-btn">15m</button>
+                <button class="tf-btn active">1H</button>
+                <button class="tf-btn">4H</button>
+                <button class="tf-btn">1D</button>
+            </div>
+            <div class="candlestick-area" id="candleContainer">
+                <!-- Dihasilkan otomatis via JS -->
+            </div>
+            <div style="font-size: 0.75em; color: #888; display: flex; justify-content: space-between;">
+                <span>High: <strong style="color:#fff;">1.5500</strong></span>
+                <span>Low: <strong style="color:#fff;">1.4500</strong></span>
+                <span>Vol FARA: <strong style="color:#00ffcc;">1,245,890</strong></span>
+            </div>
+        </div>
+
+        <!-- Panel Order & Order Book -->
+        <div class="trade-panel">
+            <!-- Panel Eksekusi Order -->
+            <div class="panel-box">
                 <div class="tab-switch">
-                    <div class="tab-btn buy-tab active" onclick="switchTab('buy')">Beli</div>
-                    <div class="tab-btn sell-tab" onclick="switchTab('sell')">Jual</div>
+                    <div class="tab-btn buy active" id="btnBuyTab" onclick="switchTradeType('buy')">Beli</div>
+                    <div class="tab-btn sell" id="btnSellTab" onclick="switchTradeType('sell')">Jual</div>
                 </div>
 
                 <div class="input-group">
                     <label>Harga (USDT)</label>
-                    <div class="input-box"><input type="number" id="priceInput" value="1.5000" step="0.0001"><span>USDT</span></div>
+                    <div class="input-box"><input type="text" id="tradePrice" value="1.5000" readonly></div>
                 </div>
 
                 <div class="input-group">
-                    <label>Jumlah FAFI</label>
-                    <div class="input-box"><input type="number" placeholder="0"><span>FAFI</span></div>
+                    <label>Jumlah FARA</label>
+                    <div class="input-box"><input type="number" id="tradeAmount" placeholder="0"></div>
                 </div>
 
-                <button class="action-btn" id="btnAction" onclick="executeOrder()">Beli FAFI</button>
+                <div style="font-size: 0.7em; color: #888; margin-bottom: 8px;">
+                    Saldo USDT: <span style="color:#00ffcc;" id="userUsdtBalance">0.00</span>
+                </div>
+
+                <button class="action-btn buy" id="executeTradeBtn" onclick="executeTrade()">Beli FARA</button>
             </div>
 
-            <div class="orderbook-panel">
-                <div class="orderbook-header"><span>Harga</span><span style="text-align: right;">Jumlah</span></div>
-                <div class="book-row ask"><span>1.5250</span><span style="text-align: right;">10K</span></div>
-                <div class="book-row ask"><span>1.5120</span><span style="text-align: right;">25K</span></div>
-                <div class="current-price-center">1.5000</div>
-                <div class="book-row bid"><span>1.4880</span><span style="text-align: right;">12K</span></div>
-                <div class="book-row bid"><span>1.4750</span><span style="text-align: right;">50K</span></div>
+            <!-- Order Book Singkat -->
+            <div class="panel-box">
+                <div style="font-size: 0.8em; font-weight: bold; color: #888; margin-bottom: 6px;">Order Book</div>
+                <div style="margin-bottom: 8px;">
+                    <div class="orderbook-item" style="color: #ff4d4d;"><span>1.5250</span><span>10K</span></div>
+                    <div class="orderbook-item" style="color: #ff4d4d;"><span>1.5120</span><span>25K</span></div>
+                </div>
+                <div style="text-align: center; font-weight: bold; color: #00ff88; font-size: 0.9em; padding: 4px 0; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; margin-bottom: 8px;">
+                    1.5000 USDT
+                </div>
+                <div>
+                    <div class="orderbook-item" style="color: #00ff88;"><span>1.4880</span><span>12K</span></div>
+                    <div class="orderbook-item" style="color: #00ff88;"><span>1.4750</span><span>50K</span></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Navigasi Bawah 5 Menu Utama Sesuai Standar -->
+    <!-- Navigasi Bawah -->
     <div class="bottom-nav">
         <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
         <a href="/trading" class="nav-item active"><div>📊</div><span>Trading</span></a>
@@ -173,171 +142,91 @@
     </div>
 
     <script>
-        let priceSpread = 0.05;
-        let rawCandlesData = [];
-
-        function generateCandleData(tf) {
-            let count = 70;
-            rawCandlesData = [];
-            let currentDev = 0;
-            for(let i = 0; i < count; i++) {
-                currentDev += (Math.random() - 0.49) * 0.008;
-                if(currentDev > 0.035) currentDev = 0.035;
-                if(currentDev < -0.035) currentDev = -0.035;
-
-                if (i === count - 1) {
-                    rawCandlesData.push({ open: 1.4975, close: 1.5000, high: 1.5025, low: 1.4950 });
-                    break;
-                }
-
-                const openDev = currentDev + (Math.random() - 0.5) * 0.004;
-                const closeDev = currentDev + (Math.random() - 0.5) * 0.004;
-                const highDev = Math.max(openDev, closeDev) + Math.random() * 0.006;
-                const lowDev = Math.min(openDev, closeDev) - Math.random() * 0.006;
-
-                rawCandlesData.push({
-                    open: 1.5000 + openDev,
-                    close: 1.5000 + closeDev,
-                    high: 1.5000 + highDev,
-                    low: 1.5000 + lowDev
-                });
-            }
-        }
-
-        function renderProCandles(tf) {
-            if (rawCandlesData.length === 0) generateCandleData(tf);
-            const container = document.getElementById('candleContainer');
-            container.innerHTML = '';
-            
-            ['15m', '1j', '4j', '1H'].forEach(t => {
-                const btn = document.getElementById('tf-' + t);
-                if(btn) btn.classList.remove('active');
-            });
-            const activeBtn = document.getElementById('tf-' + tf);
-            if(activeBtn) activeBtn.classList.add('active');
-            document.getElementById('tfLabel').innerText = tf;
-
-            const minPrice = 1.5000 - priceSpread;
-            const maxPrice = 1.5000 + priceSpread;
-            const priceRange = maxPrice - minPrice;
-
-            rawCandlesData.forEach(c => {
-                const isGreen = c.close >= c.open;
-                const candleClass = isGreen ? 'green' : 'red';
-                
-                const highPercent = ((c.high - minPrice) / priceRange) * 100;
-                const lowPercent = ((c.low - minPrice) / priceRange) * 100;
-                const openPercent = ((c.open - minPrice) / priceRange) * 100;
-                const closePercent = ((c.close - minPrice) / priceRange) * 100;
-
-                const wickBottom = Math.max(1, Math.min(99, lowPercent));
-                const wickHeight = Math.max(2, Math.min(99 - wickBottom, highPercent - lowPercent));
-
-                const bodyBottom = Math.max(1, Math.min(99, Math.min(openPercent, closePercent)));
-                const bodyHeight = Math.max(2, Math.min(99 - bodyBottom, Math.abs(closePercent - openPercent)));
-
-                const candleDiv = document.createElement('div');
-                candleDiv.className = 'candle ' + candleClass;
-                candleDiv.innerHTML = '<div class="wick" style="height: ' + wickHeight + '%; bottom: ' + wickBottom + '%;"></div><div class="body-candle" style="height: ' + bodyHeight + '%; bottom: ' + bodyBottom + '%;"></div>';
-                container.appendChild(candleDiv);
-            });
-
-            const exactPricePercent = ((1.5000 - minPrice) / priceRange) * 100;
-            const clampedPercent = Math.max(2, Math.min(98, exactPricePercent));
-            
-            document.getElementById('livePriceLine').style.bottom = clampedPercent + '%';
-            document.getElementById('livePriceTag').innerText = "1.5000";
-
-            updatePriceScale(minPrice, maxPrice);
-        }
-
-        function updatePriceScale(minP, maxP) {
-            document.getElementById('pMax').innerText = maxP.toFixed(4);
-            document.getElementById('pMidHigh').innerText = (minP + (maxP - minP) * 0.75).toFixed(4);
-            document.getElementById('pMid').innerText = '1.5000';
-            document.getElementById('pMidLow').innerText = (minP + (maxP - minP) * 0.25).toFixed(4);
-            document.getElementById('pMin').innerText = minP.toFixed(4);
-        }
-
-        function changeTimeframe(tf) {
-            generateCandleData(tf);
-            renderProCandles(tf);
-        }
-
-        const priceScaleEl = document.getElementById('priceScaleContainer');
-        let isResizingPrice = false;
-        let startY = 0;
-
-        priceScaleEl.addEventListener('mousedown', (e) => {
-            isResizingPrice = true;
-            startY = e.clientY;
-        });
-        window.addEventListener('mouseup', () => { isResizingPrice = false; });
-        window.addEventListener('mousemove', (e) => {
-            if (!isResizingPrice) return;
-            const deltaY = e.clientY - startY;
-            startY = e.clientY;
-            
-            priceSpread += deltaY * 0.0006;
-            if(priceSpread < 0.015) priceSpread = 0.015;
-            if(priceSpread > 0.25) priceSpread = 0.25;
-
-            const activeTf = document.querySelector('.tf-btn.active').id.replace('tf-', '');
-            renderProCandles(activeTf);
-        });
-
-        const scrollArea = document.getElementById('scrollArea');
-        const dateScaleContainer = document.getElementById('dateScaleContainer');
-        let isDown = false, startX, scrollLeft;
-
-        scrollArea.addEventListener('mousedown', (e) => {
-            isDown = true;
-            scrollArea.classList.add('active');
-            startX = e.pageX - scrollArea.offsetLeft;
-            scrollLeft = scrollArea.scrollLeft;
-        });
-        window.addEventListener('mouseup', () => { isDown = false; });
-        window.addEventListener('mousemove', (e) => {
-            if(!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - scrollArea.offsetLeft;
-            const walk = (x - startX) * 2;
-            scrollArea.scrollLeft = scrollLeft - walk;
-            dateScaleContainer.parentElement.scrollLeft = scrollArea.scrollLeft;
-        });
-
-        window.onload = function() {
-            generateCandleData('1j');
-            renderProCandles('1j');
-            scrollArea.scrollLeft = scrollArea.scrollWidth;
-            dateScaleContainer.parentElement.scrollLeft = scrollArea.scrollWidth;
+        let currentMode = 'buy';
+        let userWalletData = JSON.parse(localStorage.getItem('fafiUserWallet')) || {
+            faraBalance: 1500.00,
+            usdtBalance: 250.00
         };
 
-        let currentAction = 'buy';
-        function switchTab(type) {
-            currentAction = type;
-            const buyTab = document.querySelector('.buy-tab');
-            const sellTab = document.querySelector('.sell-tab');
-            const btnAction = document.getElementById('btnAction');
+        function saveUserData() {
+            localStorage.setItem('fafiUserWallet', JSON.stringify(userWalletData));
+        }
+
+        function updateUI() {
+            document.getElementById('userUsdtBalance').innerText = userWalletData.usdtBalance.toFixed(2);
+        }
+
+        function switchTradeType(type) {
+            currentMode = type;
+            const btnBuy = document.getElementById('btnBuyTab');
+            const btnSell = document.getElementById('btnSellTab');
+            const execBtn = document.getElementById('executeTradeBtn');
 
             if(type === 'buy') {
-                buyTab.classList.add('active');
-                sellTab.classList.remove('active');
-                btnAction.style.background = '#00ff88';
-                btnAction.style.color = '#121212';
-                btnAction.innerText = 'Beli FAFI';
+                btnBuy.classList.add('active');
+                btnSell.classList.remove('active');
+                execBtn.classList.remove('sell');
+                execBtn.classList.add('buy');
+                execBtn.innerText = 'Beli FARA';
             } else {
-                sellTab.classList.add('active');
-                buyTab.classList.remove('active');
-                btnAction.style.background = '#ff4d4d';
-                btnAction.style.color = '#fff';
-                btnAction.innerText = 'Jual FAFI';
+                btnSell.classList.add('active');
+                btnBuy.classList.remove('active');
+                execBtn.classList.remove('buy');
+                execBtn.classList.add('sell');
+                execBtn.innerText = 'Jual FARA';
             }
         }
 
-        function executeOrder() {
-            alert('Order ' + (currentAction === 'buy' ? 'Beli' : 'Jual') + ' FAFI Berhasil Dipasang!');
+        function executeTrade() {
+            let amount = parseFloat(document.getElementById('tradeAmount').value);
+            let price = parseFloat(document.getElementById('tradePrice').value);
+
+            if(!amount || amount <= 0) {
+                alert('Silakan masukkan jumlah FARA yang valid.');
+                return;
+            }
+
+            let totalCost = amount * price;
+
+            if(currentMode === 'buy') {
+                if(userWalletData.usdtBalance < totalCost) {
+                    alert('❌ Saldo USDT tidak mencukupi untuk pembelian ini.');
+                    return;
+                }
+                userWalletData.usdtBalance -= totalCost;
+                userWalletData.faraBalance += amount;
+                alert(`✅ Berhasil Membeli ${amount} FARA seharga ${totalCost.toFixed(2)} USDT!`);
+            } else {
+                if(userWalletData.faraBalance < amount) {
+                    alert('❌ Saldo FARA tidak mencukupi untuk penjualan ini.');
+                    return;
+                }
+                userWalletData.faraBalance -= amount;
+                userWalletData.usdtBalance += totalCost;
+                alert(`✅ Berhasil Menjual ${amount} FARA senilai ${totalCost.toFixed(2)} USDT!`);
+            }
+
+            saveUserData();
+            updateUI();
+            document.getElementById('tradeAmount').value = '';
         }
+
+        // Render Grafik Candlestick Mini
+        function renderCandles() {
+            const container = document.getElementById('candleContainer');
+            let html = '';
+            let heights = [40, 55, 30, 70, 60, 85, 45, 90, 75, 65, 95, 80, 110, 100, 120];
+            heights.forEach((h, idx) => {
+                let type = (idx % 3 === 0) ? 'red' : 'green';
+                html += `<div class="candle ${type}" style="height: ${h}px;"></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        window.onload = function() {
+            updateUI();
+            renderCandles();
+        };
     </script>
 </body>
 </html>

@@ -86,19 +86,20 @@
                 </div>
 
                 <div class="wallet-box">
-                    <div class="label">Alamat Dompet Unik TRC20</div>
-                    <div style="font-size: 0.8em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TRGZVJ5FXB9zwaOA3539</div>
-                    <div style="font-size: 0.7em; color: #666; margin-top: 2px;">FARA Contract: TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
+                    <div class="label">Alamat Dompet Utama TRC20 (Master Pool)</div>
+                    <div style="font-size: 0.75em; color: #00ffcc; word-break: break-all; margin-top: 2px;" id="masterWalletAddr">TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy</div>
+                    <div style="font-size: 0.7em; color: #666; margin-top: 2px;">FARA Contract: TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG (Owner: godiamond)</div>
+                    <button class="copy-btn" style="margin-top: 6px;" onclick="copyText('TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy')">Salin Alamat Utama</button>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <div class="wallet-box" style="margin-bottom: 0;">
-                        <div class="label">Saldo FARA</div>
+                        <div class="label">Saldo FARA (User)</div>
                         <div class="value" style="color: #00ff88;" id="faraBalance">0,00</div>
                         <div style="font-size: 0.65em; color: #888; margin-top: 2px;" id="faraIdrVal">≈ Rp 0</div>
                     </div>
                     <div class="wallet-box" style="margin-bottom: 0;">
-                        <div class="label">Saldo USDT</div>
+                        <div class="label">Saldo USDT (User)</div>
                         <div class="value" style="color: #00ffcc;" id="usdtBalance">0,00</div>
                         <div style="font-size: 0.65em; color: #888; margin-top: 2px;" id="usdtIdrVal">≈ Rp 0</div>
                     </div>
@@ -149,21 +150,21 @@
 
                     <div id="cryptoAddressBox" style="display: none;">
                         <div class="wallet-box" style="background: #151515;">
-                            <div class="label">Alamat Dompet Tujuan (TRC20)</div>
-                            <div style="font-size: 0.8em; color: #00ffcc; word-break: break-all; margin-top: 4px;">TRGZVJ5FXB9zwaOA3539</div>
-                            <button class="copy-btn" style="margin-top: 6px;" onclick="copyText('TRGZVJ5FXB9zwaOA3539')">Salin Alamat</button>
+                            <div class="label">Kirim ke Alamat Utama Tron (godiamond)</div>
+                            <div style="font-size: 0.75em; color: #00ffcc; word-break: break-all; margin-top: 4px;">TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy</div>
+                            <button class="copy-btn" style="margin-top: 6px;" onclick="copyText('TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy')">Salin Alamat Utama</button>
                         </div>
                     </div>
 
                     <div class="input-group" style="margin-top: 10px;"><label>Jumlah Deposit</label><div class="input-box"><input type="number" id="depAmount" placeholder="Masukkan jumlah"></div></div>
-                    <button class="action-btn secondary" onclick="alert('Permintaan deposit berhasil diajukan!')">Lanjutkan Pembayaran</button>
+                    <button class="action-btn secondary" onclick="processDeposit()">Lanjutkan Pembayaran</button>
                 </div>
 
                 <div id="formWd" style="display: none;">
                     <div class="input-group"><label>Pilih Bank Lokal</label><div class="input-box"><select id="bankName" style="background: transparent; border: none; color: #fff; width: 100%; outline: none;"><option value="BCA">BANK BCA</option><option value="Mandiri">BANK MANDIRI</option><option value="BNI">BANK BNI</option><option value="BRI">BANK BRI</option></select></div></div>
-                    <div class="input-group"><label>Nomor Rekening</label><div class="input-box"><input type="text" placeholder="Masukkan No Rekening"></div></div>
-                    <div class="input-group"><label>Jumlah Penarikan (IDR)</label><div class="input-box"><input type="number" placeholder="500000"></div></div>
-                    <button class="action-btn danger" onclick="alert('Penarikan bank lokal berhasil diproses!')">Tarik ke Bank Lokal</button>
+                    <div class="input-group"><label>Nomor Rekening</label><div class="input-box"><input type="text" id="wdAccount" placeholder="Masukkan No Rekening"></div></div>
+                    <div class="input-group"><label>Jumlah Penarikan (IDR)</label><div class="input-box"><input type="number" id="wdAmount" placeholder="500000"></div></div>
+                    <button class="action-btn danger" onclick="processWithdrawal()">Tarik ke Bank Lokal</button>
                 </div>
             </div>
         </div>
@@ -195,7 +196,7 @@
                         <div style="font-size: 0.75em; color: #888; margin-top: 4px; cursor: pointer; color: #00ffcc;" onclick="alert('Riwayat penarikan komisi FARA terbuka.')">📜 Riwayat penarikan</div>
                     </div>
 
-                    <button class="action-btn" onclick="alert('Komisi FARA berhasil ditarik ke Saldo Dompet Utama!')">↓ Tarik ke Dompet</button>
+                    <button class="action-btn" onclick="claimCommission()">↓ Tarik ke Saldo FARA</button>
                 </div>
 
                 <div id="partnerRefView" style="display: none;">
@@ -204,8 +205,8 @@
 
                     <div style="font-size: 0.8em; color: #aaa; margin-bottom: 4px;">Bagikan tautan referral unik Anda</div>
                     <div class="ref-input-group">
-                        <span id="refLinkText">https://fara-exchange.pro/ref/ryank5336</span>
-                        <button class="copy-btn" onclick="copyText('https://fara-exchange.pro/ref/ryank5336')">Salin</button>
+                        <span id="refLinkText">https://fafi-exchange.app/ref/ryank5336</span>
+                        <button class="copy-btn" onclick="copyText('https://fafi-exchange.app/ref/ryank5336')">Salin</button>
                     </div>
 
                     <div style="font-size: 0.8em; color: #aaa; margin: 12px 0 4px 0;">Bagikan kode referral Anda</div>
@@ -234,15 +235,22 @@
     </div>
 
     <script>
-        let userWalletData = {
-            faraBalance: 0,
-            usdtBalance: 0,
+        const MASTER_TRON_ADDRESS = "TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy"; // Alamat utama owner godiamond
+
+        // Simulasi data user yang tersimpan di LocalStorage (Saldo spesifik per user, jaringan tetap ke master address)
+        let userWalletData = JSON.parse(localStorage.getItem('fafiUserWallet')) || {
+            faraBalance: 1500.00,  // Saldo FARA spesifik milik user yang sedang login
+            usdtBalance: 250.00,   // Saldo USDT spesifik milik user yang sedang login
             rateFaraIdr: 24000,
             rateUsdtIdr: 16000,
-            referredClients: 0,
-            totalCommission: 0,
-            withdrawableCommission: 0
+            referredClients: 3,
+            totalCommission: 120.50,
+            withdrawableCommission: 120.50
         };
+
+        function saveUserData() {
+            localStorage.setItem('fafiUserWallet', JSON.stringify(userWalletData));
+        }
 
         function updateWalletUI() {
             const faraIdr = userWalletData.faraBalance * userWalletData.rateFaraIdr;
@@ -337,6 +345,53 @@
         function backToDepositMethods() {
             document.getElementById('formDepositDetail').style.display = 'none';
             document.getElementById('formDeposit').style.display = 'block';
+        }
+
+        function processDeposit() {
+            let amt = parseFloat(document.getElementById('depAmount').value);
+            if(!amt || amt <= 0) {
+                alert('Silakan masukkan jumlah deposit yang valid.');
+                return;
+            }
+            // Simulasi penambahan saldo USDT user
+            userWalletData.usdtBalance += amt / userWalletData.rateUsdtIdr;
+            saveUserData();
+            updateWalletUI();
+            alert('✅ Permintaan deposit berhasil diajukan ke alamat master ' + MASTER_TRON_ADDRESS + '!');
+            backToDepositMethods();
+            document.getElementById('depAmount').value = '';
+        }
+
+        function processWithdrawal() {
+            let acc = document.getElementById('wdAccount').value;
+            let amt = parseFloat(document.getElementById('wdAmount').value);
+            if(!acc || !amt || amt <= 0) {
+                alert('Mohon lengkapi data penarikan bank lokal dengan benar.');
+                return;
+            }
+            let requiredUsdt = amt / userWalletData.rateUsdtIdr;
+            if(userWalletData.usdtBalance < requiredUsdt) {
+                alert('❌ Saldo USDT Anda tidak mencukupi untuk penarikan ini.');
+                return;
+            }
+            userWalletData.usdtBalance -= requiredUsdt;
+            saveUserData();
+            updateWalletUI();
+            alert('✅ Penarikan sebesar Rp ' + amt.toLocaleString('id-ID') + ' berhasil diproses ke rekening ' + acc);
+            document.getElementById('wdAccount').value = '';
+            document.getElementById('wdAmount').value = '';
+        }
+
+        function claimCommission() {
+            if(userWalletData.withdrawableCommission <= 0) {
+                alert('Tidak ada komisi yang tersedia untuk ditarik.');
+                return;
+            }
+            userWalletData.faraBalance += userWalletData.withdrawableCommission;
+            userWalletData.withdrawableCommission = 0;
+            saveUserData();
+            updateWalletUI();
+            alert('✅ Komisi FARA berhasil ditarik ke Saldo Dompet Utama Anda!');
         }
 
         function copyText(text) {
