@@ -23,8 +23,28 @@
         .main-wtab { flex: 1; text-align: center; padding: 8px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 0.85em; color: #888; }
         .main-wtab.active { background: #2a2a2a; color: #00ffcc; border: 1px solid #333; }
 
+        .step-indicator { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; font-size: 0.75em; color: #888; text-align: center; }
+        .step-item.active { color: #00ffcc; font-weight: bold; }
+        
+        .method-card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s; }
+        .method-card:hover { border-color: #00ffcc; }
+        .method-info { display: flex; align-items: center; gap: 10px; font-weight: bold; color: #fff; font-size: 0.9em; }
+        
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; font-size: 0.75em; color: #888; margin-bottom: 3px; }
+        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.85em; }
+        .input-box input, .input-box select { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9em; }
+        
         .action-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9em; cursor: pointer; margin-top: 8px; background: #00ff88; color: #121212; }
         .action-btn.secondary { background: #00ffcc; }
+        .action-btn.danger { background: #ff4d4d; color: #fff; }
+
+        .tab-switch { display: flex; background: #121212; border-radius: 6px; padding: 3px; margin-bottom: 12px; gap: 4px; }
+        .tab-btn { flex: 1; text-align: center; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85em; color: #888; }
+        .tab-btn.buy-tab.active { background: #00ff88; color: #121212; }
+        .tab-btn.sell-tab.active { background: #ff4d4d; color: #fff; }
+        
+        .copy-btn { background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75em; white-space: nowrap; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
@@ -51,6 +71,7 @@
                 <div class="label">Alamat Master Pool Utama (godiamond)</div>
                 <div style="font-size: 0.75em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy</div>
                 <div style="font-size: 0.7em; color: #666; margin-top: 2px;">FARA Contract: TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
+                <button class="copy-btn" style="margin-top: 6px;" onclick="copyText('TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy')">Salin Alamat Master</button>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
@@ -66,6 +87,73 @@
                 </div>
             </div>
         </div>
+
+        <!-- GATEWAY KEUANGAN (DEPOSIT & WD) -->
+        <div class="wallet-card">
+            <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Gateway Keuangan</h4>
+            <div class="tab-switch">
+                <div class="tab-btn buy-tab active" id="tabDep" onclick="switchFinTab('deposit')">Deposit</div>
+                <div class="tab-btn sell-tab" id="tabWd" onclick="switchFinTab('wd')">WD Bank Lokal</div>
+            </div>
+            
+            <div id="formDeposit">
+                <div class="step-indicator">
+                    <span class="step-item active">📦 1. Metode Deposit</span>
+                    <span class="step-item">💳 2. Jumlah</span>
+                    <span class="step-item">✅ 3. Selesai</span>
+                </div>
+
+                <div style="font-size: 0.8em; color: #888; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Crypto</div>
+                <div class="method-card" onclick="selectDepositMethod('USDT TRC20')">
+                    <div class="method-info"><span>🟢</span> USDT TRC20</div>
+                    <span style="color: #888;">➔</span>
+                </div>
+
+                <div style="font-size: 0.8em; color: #888; margin: 12px 0 6px 0; font-weight: bold; text-transform: uppercase;">Bank Transfer</div>
+                <div class="method-card" onclick="selectDepositMethod('Bank Transfer')">
+                    <div class="method-info"><span>🏦</span> Bank Transfer (Manual)</div>
+                    <span style="color: #888;">➔</span>
+                </div>
+                <div class="method-card" onclick="selectDepositMethod('QRIS')">
+                    <div class="method-info"><span>📱</span> QRIS Instant</div>
+                    <span style="color: #888;">➔</span>
+                </div>
+            </div>
+
+            <div id="formDepositDetail" style="display: none;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="font-size: 0.85em; color: #00ffcc; font-weight: bold;" id="selectedMethodTitle">Metode: USDT TRC20</span>
+                    <span style="font-size: 0.75em; color: #888; cursor: pointer; text-decoration: underline;" onclick="backToDepositMethods()">⬅ Ganti Metode</span>
+                </div>
+
+                <div id="cryptoAddressBox" style="display: none;">
+                    <div class="wallet-box" style="background: #151515;">
+                        <div class="label">Kirim ke Master Pool (godiamond)</div>
+                        <div style="font-size: 0.75em; color: #00ffcc; word-break: break-all; margin-top: 4px;">TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy</div>
+                        <button class="copy-btn" style="margin-top: 6px;" onclick="copyText('TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy')">Salin Alamat</button>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 10px;"><label>Jumlah Deposit (IDR)</label><div class="input-box"><input type="number" id="depAmount" placeholder="Contoh: 500000"></div></div>
+                <button class="action-btn secondary" onclick="processDeposit()">Konfirmasi Deposit</button>
+            </div>
+
+            <div id="formWd" style="display: none;">
+                <div class="input-group"><label>Pilih Bank Lokal</label>
+                    <div class="input-box">
+                        <select id="bankName">
+                            <option value="BCA">BANK BCA</option>
+                            <option value="Mandiri">BANK MANDIRI</option>
+                            <option value="BNI">BANK BNI</option>
+                            <option value="BRI">BANK BRI</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group"><label>Nomor Rekening</label><div class="input-box"><input type="text" id="wdAccount" placeholder="Masukkan No Rekening"></div></div>
+                <div class="input-group"><label>Jumlah Penarikan (IDR)</label><div class="input-box"><input type="number" id="wdAmount" placeholder="Contoh: 250000"></div></div>
+                <button class="action-btn danger" onclick="processWithdrawal()">Tarik ke Bank Lokal</button>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-nav">
@@ -77,7 +165,6 @@
     </div>
 
     <script>
-        // Saldo awal bersih dari nol, rate USD ke IDR dinamis, FARA dasar $1.00
         let userWalletData = JSON.parse(localStorage.getItem('fafiUserWallet')) || {
             faraBalance: 0.00,
             usdtBalance: 0.00,
@@ -95,12 +182,11 @@
                     updateWalletUI();
                 }
             } catch(e) {
-                console.log("Menggunakan rate default standar.");
+                console.log("Menggunakan rate default.");
             }
         }
 
         function updateWalletUI() {
-            // Ambil harga FARA terkini dari market trading jika ada, default $1.00
             let currentFaraPriceUsd = parseFloat(localStorage.getItem('fafiMarketPrice')) || userWalletData.faraUsdRate;
 
             const faraIdr = userWalletData.faraBalance * currentFaraPriceUsd * userWalletData.rateUsdtIdr;
@@ -113,6 +199,87 @@
             
             document.getElementById('faraIdrVal').innerText = '≈ Rp ' + faraIdr.toLocaleString('id-ID', { maximumFractionDigits: 0 });
             document.getElementById('usdtIdrVal').innerText = '≈ Rp ' + usdtIdr.toLocaleString('id-ID', { maximumFractionDigits: 0 });
+        }
+
+        function switchFinTab(type) {
+            const tabDep = document.getElementById('tabDep');
+            const tabWd = document.getElementById('tabWd');
+            const formDep = document.getElementById('formDeposit');
+            const formWd = document.getElementById('formWd');
+            const formDetail = document.getElementById('formDepositDetail');
+
+            formDetail.style.display = 'none';
+
+            if(type === 'deposit') {
+                tabDep.classList.add('active');
+                tabWd.classList.remove('active');
+                formDep.style.display = 'block';
+                formWd.style.display = 'none';
+            } else {
+                tabWd.classList.add('active');
+                tabDep.classList.remove('active');
+                formWd.style.display = 'block';
+                formDep.style.display = 'none';
+            }
+        }
+
+        function selectDepositMethod(methodName) {
+            document.getElementById('formDeposit').style.display = 'none';
+            document.getElementById('formDepositDetail').style.display = 'block';
+            document.getElementById('selectedMethodTitle').innerText = 'Metode: ' + methodName;
+
+            const cryptoBox = document.getElementById('cryptoAddressBox');
+            if(methodName === 'USDT TRC20') {
+                cryptoBox.style.display = 'block';
+            } else {
+                cryptoBox.style.display = 'none';
+            }
+        }
+
+        function backToDepositMethods() {
+            document.getElementById('formDepositDetail').style.display = 'none';
+            document.getElementById('formDeposit').style.display = 'block';
+        }
+
+        function processDeposit() {
+            let amtIdr = parseFloat(document.getElementById('depAmount').value);
+            if(!amtIdr || amtIdr <= 0) {
+                alert('Masukkan jumlah deposit yang valid.');
+                return;
+            }
+            let addedUsdt = amtIdr / userWalletData.rateUsdtIdr;
+            userWalletData.usdtBalance += addedUsdt;
+            localStorage.setItem('fafiUserWallet', JSON.stringify(userWalletData));
+            updateWalletUI();
+            alert(`✅ Deposit Berhasil Diajukan!\nDitambahkan ke Saldo USDT: ${addedUsdt.toFixed(2)} USDT`);
+            backToDepositMethods();
+            document.getElementById('depAmount').value = '';
+        }
+
+        function processWithdrawal() {
+            let acc = document.getElementById('wdAccount').value;
+            let amtIdr = parseFloat(document.getElementById('wdAmount').value);
+            if(!acc || !amtIdr || amtIdr <= 0) {
+                alert('Lengkapi data penarikan bank lokal dengan benar.');
+                return;
+            }
+            let requiredUsdt = amtIdr / userWalletData.rateUsdtIdr;
+            if(userWalletData.usdtBalance < requiredUsdt) {
+                alert('❌ Saldo USDT Anda tidak mencukupi untuk penarikan ini.');
+                return;
+            }
+            userWalletData.usdtBalance -= requiredUsdt;
+            localStorage.setItem('fafiUserWallet', JSON.stringify(userWalletData));
+            updateWalletUI();
+            alert(`✅ Penarikan sebesar Rp ${amtIdr.toLocaleString('id-ID')} berhasil diproses ke rekening ${acc}`);
+            document.getElementById('wdAccount').value = '';
+            document.getElementById('wdAmount').value = '';
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Berhasil disalin ke clipboard: ' + text);
+            });
         }
 
         window.onload = function() {
