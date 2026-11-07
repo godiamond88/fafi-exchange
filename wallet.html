@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dompet & Kemitraan - FARA Pro</title>
+    <title>FAFI Wallet</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 70px; user-select: none; }
         header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
@@ -37,7 +37,6 @@
         .copy-btn { background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75em; white-space: nowrap; }
         .copy-btn:hover { background: #333; }
 
-        /* Styling ala Referensi Gambar Deposit */
         .step-indicator { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; font-size: 0.75em; color: #888; text-align: center; }
         .step-item.active { color: #00ffcc; font-weight: bold; }
         
@@ -59,7 +58,6 @@
         .tab-btn.buy-tab.active { background: #00ff88; color: #121212; }
         .tab-btn.sell-tab.active { background: #ff4d4d; color: #fff; }
 
-        /* Navigasi Bawah 5 Menu Konsisten */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
         .nav-item.active { color: #00ffcc; }
@@ -68,25 +66,22 @@
 </head>
 <body>
     <header>
-        <div style="font-weight: bold; color: #00ffcc;">⚡ FARA Pro - Dompet & Kemitraan</div>
-        <div style="font-size: 0.8em; color: #00ffcc;">👛 TNEDcy...JD32</div>
+        <div style="font-weight: bold; color: #00ffcc;">⚡ FAFI Wallet</div>
     </header>
 
     <div class="page-section">
-        <!-- Switch Utama Halaman: Aset Saya / Kemitraan -->
         <div class="main-wallet-tabs">
             <div class="main-wtab active" id="tabMenuAsset" onclick="switchMainWalletTab('asset')">Aset Saya</div>
             <div class="main-wtab" id="tabMenuPartner" onclick="switchMainWalletTab('partner')">Kemitraan (Affiliate)</div>
         </div>
 
-        <!-- SECTION 1: ASET DOMPET & GATEWAY -->
         <div id="sectionAsset">
             <div class="wallet-card">
                 <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Aset Dompet TRC20 Anda</h4>
                 
                 <div class="total-asset-box">
                     <div class="label">Total Estimasi Aset (IDR)</div>
-                    <div class="value" id="totalAssetIdr">Rp 328.000.000</div>
+                    <div class="value" id="totalAssetIdr">Rp 0</div>
                     <div style="font-size: 0.65em; color: #888; margin-top: 4px;">Akumulasi Saldo FARA & USDT</div>
                 </div>
 
@@ -99,18 +94,17 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <div class="wallet-box" style="margin-bottom: 0;">
                         <div class="label">Saldo FARA</div>
-                        <div class="value" style="color: #00ff88;" id="faraBalance">10,000.00</div>
-                        <div style="font-size: 0.65em; color: #888; margin-top: 2px;">≈ Rp 240.000.000</div>
+                        <div class="value" style="color: #00ff88;" id="faraBalance">0,00</div>
+                        <div style="font-size: 0.65em; color: #888; margin-top: 2px;" id="faraIdrVal">≈ Rp 0</div>
                     </div>
                     <div class="wallet-box" style="margin-bottom: 0;">
                         <div class="label">Saldo USDT</div>
-                        <div class="value" style="color: #00ffcc;" id="usdtBalance">500.00</div>
-                        <div style="font-size: 0.65em; color: #888; margin-top: 2px;">≈ Rp 8.000.000</div>
+                        <div class="value" style="color: #00ffcc;" id="usdtBalance">0,00</div>
+                        <div style="font-size: 0.65em; color: #888; margin-top: 2px;" id="usdtIdrVal">≈ Rp 0</div>
                     </div>
                 </div>
             </div>
 
-            <!-- GATEWAY KEUANGAN (DEPOSIT & WD TANPA BCA VA) -->
             <div class="wallet-card">
                 <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Gateway Keuangan</h4>
                 <div class="tab-switch">
@@ -118,7 +112,6 @@
                     <div class="tab-btn sell-tab" id="tabWd" onclick="switchFinTab('wd')">WD Bank Lokal</div>
                 </div>
                 
-                <!-- TAMPILAN UTAMA DEPOSIT -->
                 <div id="formDeposit">
                     <div class="step-indicator">
                         <span class="step-item active">📦 1. Metode Deposit</span>
@@ -148,7 +141,6 @@
                     </div>
                 </div>
 
-                <!-- FORM LANJUTAN KETIKA METODE DIPILIH -->
                 <div id="formDepositDetail" style="display: none;">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
                         <span style="font-size: 0.85em; color: #00ffcc; font-weight: bold;" id="selectedMethodTitle">Metode: USDT TRC20</span>
@@ -167,7 +159,6 @@
                     <button class="action-btn secondary" onclick="alert('Permintaan deposit berhasil diajukan!')">Lanjutkan Pembayaran</button>
                 </div>
 
-                <!-- FORM WD BANK LOKAL -->
                 <div id="formWd" style="display: none;">
                     <div class="input-group"><label>Pilih Bank Lokal</label><div class="input-box"><select id="bankName" style="background: transparent; border: none; color: #fff; width: 100%; outline: none;"><option value="BCA">BANK BCA</option><option value="Mandiri">BANK MANDIRI</option><option value="BNI">BANK BNI</option><option value="BRI">BANK BRI</option></select></div></div>
                     <div class="input-group"><label>Nomor Rekening</label><div class="input-box"><input type="text" placeholder="Masukkan No Rekening"></div></div>
@@ -177,7 +168,6 @@
             </div>
         </div>
 
-        <!-- SECTION 2: KEMITRAAN & REFERRAL -->
         <div id="sectionPartner" style="display: none;">
             <div class="wallet-card">
                 <div class="partner-tab-switch">
@@ -185,31 +175,29 @@
                     <div class="partner-tab" id="subTabRef" onclick="switchPartnerSubTab('referral')">Referral</div>
                 </div>
 
-                <!-- SUB TAB 1: RINGKASAN -->
                 <div id="partnerSummaryView">
                     <div class="commission-box">
                         <div style="font-size: 0.8em; color: #888; display: flex; justify-content: space-between; align-items: center;">
                             <span>Komisi yang diperoleh</span>
                             <span>📊</span>
                         </div>
-                        <div style="font-size: 1.8em; font-weight: bold; color: #00ff88; margin: 6px 0;">1,250.50 FARA</div>
+                        <div style="font-size: 1.8em; font-weight: bold; color: #00ff88; margin: 6px 0;" id="earnedCommission">0,00 FARA</div>
                     </div>
 
                     <div class="wallet-box" style="margin-bottom: 10px;">
                         <div class="label">Klien yang Direferensikan</div>
-                        <div class="value" style="color: #00ffcc;">14 Orang</div>
+                        <div class="value" style="color: #00ffcc;" id="refCount">0 Orang</div>
                     </div>
 
                     <div class="wallet-box">
                         <div class="label">Tersedia untuk Penarikan Komisi</div>
-                        <div class="value" style="color: #00ff88; font-size: 1.3em;">450.20 FARA</div>
+                        <div class="value" style="color: #00ff88; font-size: 1.3em;" id="withdrawableCommission">0,00 FARA</div>
                         <div style="font-size: 0.75em; color: #888; margin-top: 4px; cursor: pointer; color: #00ffcc;" onclick="alert('Riwayat penarikan komisi FARA terbuka.')">📜 Riwayat penarikan</div>
                     </div>
 
                     <button class="action-btn" onclick="alert('Komisi FARA berhasil ditarik ke Saldo Dompet Utama!')">↓ Tarik ke Dompet</button>
                 </div>
 
-                <!-- SUB TAB 2: REFERRAL -->
                 <div id="partnerRefView" style="display: none;">
                     <h4 style="margin: 0 0 4px 0; color: #fff; font-size: 1em;">Referral</h4>
                     <p style="font-size: 0.75em; color: #888; margin-bottom: 12px;">Undang teman dan mulai hasilkan komisi token FARA.</p>
@@ -237,7 +225,6 @@
         </div>
     </div>
 
-    <!-- Navigasi Bawah 5 Menu Utama -->
     <div class="bottom-nav">
         <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
         <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
@@ -247,6 +234,33 @@
     </div>
 
     <script>
+        let userWalletData = {
+            faraBalance: 0,
+            usdtBalance: 0,
+            rateFaraIdr: 24000,
+            rateUsdtIdr: 16000,
+            referredClients: 0,
+            totalCommission: 0,
+            withdrawableCommission: 0
+        };
+
+        function updateWalletUI() {
+            const faraIdr = userWalletData.faraBalance * userWalletData.rateFaraIdr;
+            const usdtIdr = userWalletData.usdtBalance * userWalletData.rateUsdtIdr;
+            const totalAsset = faraIdr + usdtIdr;
+
+            document.getElementById('totalAssetIdr').innerText = 'Rp ' + totalAsset.toLocaleString('id-ID');
+            document.getElementById('faraBalance').innerText = userWalletData.faraBalance.toLocaleString('id-ID', { minimumFractionDigits: 2 });
+            document.getElementById('usdtBalance').innerText = userWalletData.usdtBalance.toLocaleString('id-ID', { minimumFractionDigits: 2 });
+            
+            document.getElementById('faraIdrVal').innerText = '≈ Rp ' + faraIdr.toLocaleString('id-ID');
+            document.getElementById('usdtIdrVal').innerText = '≈ Rp ' + usdtIdr.toLocaleString('id-ID');
+
+            document.getElementById('earnedCommission').innerText = userWalletData.totalCommission.toLocaleString('id-ID', { minimumFractionDigits: 2 }) + ' FARA';
+            document.getElementById('refCount').innerText = userWalletData.referredClients + ' Orang';
+            document.getElementById('withdrawableCommission').innerText = userWalletData.withdrawableCommission.toLocaleString('id-ID', { minimumFractionDigits: 2 }) + ' FARA';
+        }
+
         function switchMainWalletTab(type) {
             const tabAsset = document.getElementById('tabMenuAsset');
             const tabPartner = document.getElementById('tabMenuPartner');
@@ -333,17 +347,8 @@
             });
         }
 
-        function calculateTotalAsset() {
-            const faraAmount = 10000.00;
-            const usdtAmount = 500.00;
-            const rateFaraIdr = 24000;
-            const rateUsdtIdr = 16000;
-            const totalIdr = (faraAmount * rateFaraIdr) + (usdtAmount * rateUsdtIdr);
-            document.getElementById('totalAssetIdr').innerText = 'Rp ' + totalIdr.toLocaleString('id-ID');
-        }
-
         window.onload = function() {
-            calculateTotalAsset();
+            updateWalletUI();
         };
     </script>
 </body>

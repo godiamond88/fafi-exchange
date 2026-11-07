@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spot Trading - FARA Pro</title>
+    <title>FAFI Trading</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 70px; user-select: none; }
         header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
@@ -74,13 +74,14 @@
 </head>
 <body>
     <header>
-        <div style="font-weight: bold; color: #00ffcc;">⚡ FARA Pro</div>
-        <div style="font-size: 0.8em; color: #00ffcc;">👛 TNEDcy...JD32</div>
+        <div style="font-weight: bold; color: #00ffcc;">⚡ FAFI Trading</div>
+        <!-- Address wallet di pojok kanan atas disembunyikan -->
+        <div></div>
     </header>
 
     <div class="page-section">
         <div class="trading-pair-bar">
-            <span style="font-weight: bold; font-size: 1.1em;">FARA/USDT <span style="font-size: 0.65em; background: #2a2a2a; padding: 2px 6px; border-radius: 4px; color: #00ffcc;">Spot</span></span>
+            <span style="font-weight: bold; font-size: 1.1em;">FAFI/USDT <span style="font-size: 0.65em; background: #2a2a2a; padding: 2px 6px; border-radius: 4px; color: #00ffcc;">Spot</span></span>
             <span style="font-size: 0.85em; color: #00ff88;">+4.15%</span>
         </div>
 
@@ -144,11 +145,11 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Jumlah FARA</label>
-                    <div class="input-box"><input type="number" placeholder="0"><span>FARA</span></div>
+                    <label>Jumlah FAFI</label>
+                    <div class="input-box"><input type="number" placeholder="0"><span>FAFI</span></div>
                 </div>
 
-                <button class="action-btn" id="btnAction" onclick="executeOrder()">Beli FARA</button>
+                <button class="action-btn" id="btnAction" onclick="executeOrder()">Beli FAFI</button>
             </div>
 
             <div class="orderbook-panel">
@@ -324,18 +325,18 @@
                 sellTab.classList.remove('active');
                 btnAction.style.background = '#00ff88';
                 btnAction.style.color = '#121212';
-                btnAction.innerText = 'Beli FARA';
+                btnAction.innerText = 'Beli FAFI';
             } else {
                 sellTab.classList.add('active');
                 buyTab.classList.remove('active');
                 btnAction.style.background = '#ff4d4d';
                 btnAction.style.color = '#fff';
-                btnAction.innerText = 'Jual FARA';
+                btnAction.innerText = 'Jual FAFI';
             }
         }
 
         function executeOrder() {
-            alert('Order ' + (currentAction === 'buy' ? 'Beli' : 'Jual') + ' FARA Berhasil Dipasang!');
+            alert('Order ' + (currentAction === 'buy' ? 'Beli' : 'Jual') + ' FAFI Berhasil Dipasang!');
         }
     </script>
 </body>

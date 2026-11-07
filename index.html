@@ -78,18 +78,18 @@
             </div>
             <div class="asset-main">
                 <div>
-                    <div class="asset-value" id="totalAssetDisplay">11.004.344 <span>IDR</span></div>
+                    <div class="asset-value" id="totalAssetDisplay">0 <span>IDR</span></div>
                 </div>
                 <!-- Mini Grafik Tren -->
                 <div class="mini-chart">
                     <svg viewBox="0 0 100 40">
-                        <path d="M 0 25 Q 25 10, 50 20 T 100 5 L 100 40 L 0 40 Z" fill="rgba(255, 77, 77, 0.1)"></path>
-                        <path d="M 0 25 Q 25 10, 50 20 T 100 5" fill="none" stroke="#ff4d4d" stroke-width="2.5"></path>
+                        <path d="M 0 25 Q 25 10, 50 20 T 100 5 L 100 40 L 0 40 Z" fill="rgba(0, 255, 136, 0.1)"></path>
+                        <path d="M 0 25 Q 25 10, 50 20 T 100 5" fill="none" stroke="#00ff88" stroke-width="2.5"></path>
                     </svg>
                 </div>
             </div>
-            <div class="pnl-info" id="pnlDisplay">
-                <span>PnL 1 Bln</span> -Rp828.451 (-5,29%)
+            <div class="pnl-info positive" id="pnlDisplay">
+                <span>PnL 1 Bln</span> Rp0 (0,00%)
             </div>
         </div>
 
@@ -99,7 +99,7 @@
             <a href="/trading" class="action-main-btn btn-buy">Beli FARA</a>
         </div>
 
-        <!-- Pintasan Menu FARA Ecosystem (Ditambahkan kembali) -->
+        <!-- Pintasan Menu FARA Ecosystem -->
         <div class="menu-grid">
             <a href="/trading" class="menu-card">
                 <div class="icon">📊</div>
@@ -139,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Navigasi Bawah 5 Menu Utama Sesuai Standar -->
+    <!-- Navigasi Bawah 5 Menu Utama -->
     <div class="bottom-nav">
         <a href="/" class="nav-item active"><div>🏠</div><span>Home</span></a>
         <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
@@ -150,6 +150,14 @@
 
     <script>
         let isHidden = false;
+        let userWallet = {
+            totalAsset: 0,
+            usdt: 0,
+            fafi: 0,
+            fara: 0,
+            pnlValue: 0
+        };
+
         function togglePrivacy() {
             isHidden = !isHidden;
             const assetEl = document.getElementById('totalAssetDisplay');
@@ -161,7 +169,7 @@
                 eyeEl.innerText = '🙈';
                 pnlEl.style.display = 'none';
             } else {
-                assetEl.innerHTML = '11.004.344 <span>IDR</span>';
+                assetEl.innerHTML = userWallet.totalAsset.toLocaleString('id-ID') + ' <span>IDR</span>';
                 eyeEl.innerText = '👁️';
                 pnlEl.style.display = 'flex';
             }

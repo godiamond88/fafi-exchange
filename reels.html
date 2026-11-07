@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FARA Reels - SocialFi Pro</title>
+    <title>FAFI Reels - SocialFi Pro</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #000; color: #fff; margin: 0; padding: 0; user-select: none; overflow: hidden; }
         
@@ -27,6 +27,7 @@
         
         /* Tombol Upload Mengambang di atas */
         .upload-floating-btn { position: absolute; top: 70px; right: 20px; z-index: 40; background: rgba(0, 255, 204, 0.2); border: 1px solid #00ffcc; color: #00ffcc; padding: 6px 12px; border-radius: 20px; font-size: 0.75em; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; gap: 5px; }
+        .upload-floating-btn.locked { background: rgba(255, 165, 0, 0.2); border-color: #ffa500; color: #ffa500; }
 
         /* Overlay Konten Bawah & Kanan ala TikTok */
         .reel-overlay { position: relative; z-index: 10; padding: 20px 15px; background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.4) 50%, transparent 100%); display: flex; justify-content: space-between; align-items: flex-end; width: 100%; box-sizing: border-box; }
@@ -36,7 +37,7 @@
         .reel-info p { margin: 0; color: #ddd; font-size: 0.8em; line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         .music-tag { display: inline-block; margin-top: 6px; font-size: 0.75em; color: #00ffcc; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-        /* Tombol Aksi Samping Kanan (Like, Tip, Share) */
+        /* Tombol Aksi Samping Kanan (Like, Komentar, Hadiah, Share) */
         .reel-actions { display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 5px; }
         .action-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
         .reel-btn { background: rgba(255, 255, 255, 0.15); border: none; width: 42px; height: 42px; border-radius: 50%; color: #fff; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: transform 0.2s; }
@@ -52,9 +53,9 @@
 </head>
 <body>
     <header>
-        <a href="/" class="nav-brand">⚡ FARA</a>
+        <a href="/" class="nav-brand">⚡ FAFI Reels</a>
 
-        <!-- Tab Navigasi Atas: SARAN | TEMAN | MENGIKUTI | KARYA -->
+        <!-- Tab Navigasi Atas -->
         <div class="reels-tabs">
             <span class="reels-tab-item" id="tabSaran" onclick="switchReelsTab('saran')">SARAN</span>
             <span class="reels-tab-item" id="tabTeman" onclick="switchReelsTab('teman')">TEMAN</span>
@@ -62,45 +63,46 @@
             <span class="reels-tab-item active" id="tabKarya" onclick="switchReelsTab('karya')">KARYA</span>
         </div>
 
-        <div style="font-size: 0.75em; color: #00ffcc;" id="headerWallet">👛 TNEDcy...</div>
+        <!-- Alamat dompet di pojok kanan atas disembunyikan -->
+        <div></div>
     </header>
 
     <div class="reels-feed-container">
         <div class="reels-container">
-            <!-- Tombol Upload Melayang -->
+            <!-- Tombol Upload Melayang dengan Validasi KYC & Referral -->
             <input type="file" id="videoFileInput" accept="video/*" style="display: none;" onchange="handleVideoUpload(event)">
-            <button class="upload-floating-btn" onclick="document.getElementById('videoFileInput').click()">+ Upload Video</button>
+            <button class="upload-floating-btn" id="uploadTriggerBtn" onclick="triggerUploadCheck()">+ Upload Video</button>
 
             <!-- Video Player & Placeholder -->
             <video id="reelVideoPlayer" class="reel-video-element" loop playsinline style="display: none;"></video>
             <div id="reelPlaceholder" class="reel-video-placeholder">
                 <div style="font-size: 2.5em; margin-bottom: 10px;">🎬</div>
                 <div id="feedTitleState">Karya Video Pribadi Anda</div>
-                <span style="font-size: 0.75em; color: #888; font-weight: normal; margin-top: 6px;">Klik "+ Upload Video" untuk mengunggah karya baru</span>
+                <span style="font-size: 0.75em; color: #888; font-weight: normal; margin-top: 6px;" id="placeholderSubtitle">Selesaikan KYC di Profil untuk mulai upload & hitung referral</span>
             </div>
 
-            <!-- Overlay Kiri & Kanan ala TikTok -->
+            <!-- Overlay Kiri & Kanan -->
             <div class="reel-overlay">
                 <div class="reel-info">
                     <h4 id="reelAuthor">@Ryank_Creative</h4>
-                    <p id="reelCaption">Eksplorasi Hydroponic & Smart Contract FARA Token di Sorong Raya 🚀🔥</p>
-                    <span class="music-tag">🎵 Original Sound - FARA Creator Network</span>
+                    <p id="reelCaption">Eksplorasi Hydroponic & Smart Contract FAFI Token di Sorong Raya 🚀🔥</p>
+                    <span class="music-tag">🎵 Original Sound - FAFI Creator Network</span>
                 </div>
                 <div class="reel-actions">
                     <div class="action-item">
                         <button class="reel-btn" onclick="handleLike()">❤️</button>
-                        <span id="likeCount">12.4K</span>
+                        <span id="likeCount">0</span>
                     </div>
                     <div class="action-item">
-                        <button class="reel-btn" onclick="alert('Fitur Komentar Segera Hadir!')">💬</button>
-                        <span>842</span>
+                        <button class="reel-btn" onclick="handleComment()">💬</button>
+                        <span id="commentCount">0</span>
                     </div>
                     <div class="action-item">
-                        <button class="reel-btn" onclick="alert('Tip FARA berhasil dikirim via Smart Contract TRC20!')">🎁</button>
-                        <span style="color: #00ffcc;">Tip FARA</span>
+                        <button class="reel-btn" onclick="handleGift()">🎁</button>
+                        <span style="color: #00ffcc;" id="giftLabel">Hadiah</span>
                     </div>
                     <div class="action-item">
-                        <button class="reel-btn" onclick="alert('Link video berhasil disalin!')">🔗</button>
+                        <button class="reel-btn" onclick="handleShare()">🔗</button>
                         <span>Share</span>
                     </div>
                 </div>
@@ -108,7 +110,7 @@
         </div>
     </div>
 
-    <!-- Navigasi Bawah 5 Menu (Home | Trading | Reels | Wallet | Profile) -->
+    <!-- Navigasi Bawah 5 Menu -->
     <div class="bottom-nav">
         <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
         <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
@@ -118,6 +120,33 @@
     </div>
 
     <script>
+        // Cek status KYC saat halaman dimuat
+        function checkKycStatus() {
+            const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
+            const uploadBtn = document.getElementById('uploadTriggerBtn');
+            const subtext = document.getElementById('placeholderSubtitle');
+
+            if (!isVerified) {
+                uploadBtn.classList.add('locked');
+                uploadBtn.innerText = '🔒 Upload (KYC Required)';
+                subtext.innerText = '⚠️ Akses upload dikunci. Selesaikan verifikasi KYC di menu Profile.';
+            } else {
+                uploadBtn.classList.remove('locked');
+                uploadBtn.innerText = '+ Upload Video';
+                subtext.innerText = 'Klik "+ Upload Video" untuk mengunggah karya & aktifkan referral';
+            }
+        }
+
+        function triggerUploadCheck() {
+            const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
+            if (!isVerified) {
+                alert('❌ AKSES DITOLAK!\nHanya akun yang sudah melakukan Verifikasi KYC di menu Profil yang dapat mengunggah video dan mengaktifkan poin referral.');
+                window.location.href = '/profile';
+                return;
+            }
+            document.getElementById('videoFileInput').click();
+        }
+
         function switchReelsTab(tabName) {
             document.getElementById('tabSaran').classList.remove('active');
             document.getElementById('tabTeman').classList.remove('active');
@@ -126,13 +155,13 @@
 
             if(tabName === 'saran') {
                 document.getElementById('tabSaran').classList.add('active');
-                document.getElementById('feedTitleState').innerText = 'FARA Web3 Video Feed (Saran)';
+                document.getElementById('feedTitleState').innerText = 'FAFI Web3 Video Feed (Saran)';
             } else if(tabName === 'teman') {
                 document.getElementById('tabTeman').classList.add('active');
-                document.getElementById('feedTitleState').innerText = 'FARA Web3 Video Feed (Teman)';
+                document.getElementById('feedTitleState').innerText = 'FAFI Web3 Video Feed (Teman)';
             } else if(tabName === 'mengikuti') {
                 document.getElementById('tabMengikuti').classList.add('active');
-                document.getElementById('feedTitleState').innerText = 'FARA Web3 Video Feed (Mengikuti)';
+                document.getElementById('feedTitleState').innerText = 'FAFI Web3 Video Feed (Mengikuti)';
             } else {
                 document.getElementById('tabKarya').classList.add('active');
                 document.getElementById('feedTitleState').innerText = 'Karya Video Pribadi Anda';
@@ -140,11 +169,31 @@
         }
 
         let isLiked = false;
+        let likesNum = 0;
         function handleLike() {
             isLiked = !isLiked;
             const btn = event.target;
             btn.style.color = isLiked ? '#ff4d4d' : '#fff';
-            alert(isLiked ? 'Liked! +1 FARA Reward Terkirim' : 'Like dibatalkan');
+            likesNum += isLiked ? 1 : -1;
+            document.getElementById('likeCount').innerText = likesNum.toLocaleString('id-ID');
+        }
+
+        let commentsNum = 0;
+        function handleComment() {
+            commentsNum += 1;
+            document.getElementById('commentCount').innerText = commentsNum;
+            alert('Komentar berhasil ditambahkan!');
+        }
+
+        let giftsNum = 0;
+        function handleGift() {
+            giftsNum += 10;
+            document.getElementById('giftLabel').innerText = 'Hadiah (' + giftsNum + ')';
+            alert('🎁 Hadiah token berhasil dikirim ke kreator melalui Smart Contract TRC20!');
+        }
+
+        function handleShare() {
+            alert('🔗 Tautan video referral berhasil disalin ke clipboard!');
         }
 
         function handleVideoUpload(event) {
@@ -159,9 +208,13 @@
                 player.play();
                 placeholder.style.display = 'none';
                 
-                alert('Karya Video Berhasil Diunggah! Smart Contract FARA aktif memproses reward kreator.');
+                alert('🎉 Karya Video Berhasil Diunggah!\nSmart Contract aktif dan video Anda resmi terhitung ke dalam jaringan referral.');
             }
         }
+
+        window.onload = function() {
+            checkKycStatus();
+        };
     </script>
 </body>
 </html>
