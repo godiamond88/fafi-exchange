@@ -140,6 +140,21 @@
             idNo: '', npwp: '', bankName: '', bankHolder: '', bankAcc: '', isKycVerified: false
         };
 
+        // Otomatis muat data dari LocalStorage saat halaman dibuka/refresh
+        window.onload = function() {
+            const savedUser = localStorage.getItem('faFiUserData');
+            const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
+
+            if (savedUser) {
+                userData = JSON.parse(savedUser);
+                userData.isKycVerified = isVerified;
+                
+                updateProfileDisplay();
+                document.getElementById('authCard').style.display = 'none';
+                document.getElementById('profileCard').style.display = 'block';
+            }
+        };
+
         function toggleAuthMode(mode) {
             const regSection = document.getElementById('registerFormSection');
             const loginSection = document.getElementById('loginFormSection');
@@ -167,6 +182,11 @@
             userData.fullName = fullName;
             userData.email = email;
             userData.phone = phone;
+            userData.isKycVerified = false;
+
+            // Simpan sesi ke LocalStorage
+            localStorage.setItem('faFiUserData', JSON.stringify(userData));
+            localStorage.setItem('faFiKycVerified', 'false');
 
             updateProfileDisplay();
             document.getElementById('authCard').style.display = 'none';
@@ -185,6 +205,13 @@
             userData.fullName = loginId;
             userData.email = loginId;
             userData.phone = '081234567890';
+            
+            // Cek apakah sebelumnya akun ini sudah pernah KYC
+            const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
+            userData.isKycVerified = isVerified;
+
+            // Simpan sesi login ke LocalStorage
+            localStorage.setItem('faFiUserData', JSON.stringify(userData));
 
             updateProfileDisplay();
             document.getElementById('authCard').style.display = 'none';
@@ -193,6 +220,15 @@
         }
 
         function logoutUser() {
+            // Hapus sesi tersimpan
+            localStorage.removeItem('faFiUserData');
+            localStorage.removeItem('faFiKycVerified');
+
+            userData = {
+                username: '', fullName: '', email: '', phone: '',
+                idNo: '', npwp: '', bankName: '', bankHolder: '', bankAcc: '', isKycVerified: false
+            };
+
             document.getElementById('profileCard').style.display = 'none';
             document.getElementById('kycCard').style.display = 'none';
             document.getElementById('authCard').style.display = 'block';
@@ -201,12 +237,15 @@
         }
 
         function updateProfileDisplay() {
-            document.getElementById('displayFullName').innerText = userData.fullName;
-            document.getElementById('valUsername').innerText = '@' + userData.username.replace('@', '');
-            document.getElementById('valFullName').innerText = userData.fullName;
-            document.getElementById('valEmail').innerText = userData.email;
-            document.getElementById('valPhone').innerText = userData.phone;
-            document.getElementById('userAvatar').innerText = userData.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('displayFullName').innerText = userData.fullName || 'User FAFI';
+            document.getElementById('valUsername').innerText = '@' + (userData.username || 'user').replace('@', '');
+            document.getElementById('valFullName').innerText = userData.fullName || '-';
+            document.getElementById('valEmail').innerText = userData.email || '-';
+            document.getElementById('valPhone').innerText = userData.phone || '-';
+            
+            if(userData.fullName) {
+                document.getElementById('userAvatar').innerText = userData.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            }
 
             if(userData.isKycVerified) {
                 document.getElementById('kycStatusBadge').innerText = '✅ Status: Verified KYC';
@@ -214,11 +253,11 @@
                 document.getElementById('btnKyc').style.display = 'none';
                 document.getElementById('kycApprovedSection').style.display = 'block';
 
-                document.getElementById('valIdNo').innerText = userData.idNo;
-                document.getElementById('valNpwp').innerText = userData.npwp;
-                document.getElementById('valBankName').innerText = userData.bankName;
-                document.getElementById('valBankHolder').innerText = userData.bankHolder;
-                document.getElementById('valBankAcc').innerText = userData.bankAcc;
+                document.getElementById('valIdNo').innerText = userData.idNo || '-';
+                document.getElementById('valNpwp').innerText = userData.npwp || '-';
+                document.getElementById('valBankName').innerText = userData.bankName || '-';
+                document.getElementById('valBankHolder').innerText = userData.bankHolder || '-';
+                document.getElementById('valBankAcc').innerText = userData.bankAcc || '-';
             } else {
                 document.getElementById('kycStatusBadge').innerText = '⚠️ Status: Belum Verifikasi KYC';
                 document.getElementById('kycStatusBadge').style.color = '#ffa500';
@@ -262,10 +301,14 @@
             userData.bankAcc = bankAcc;
             userData.isKycVerified = true;
 
+            // SIMPAN PERMANEN KE LOCALSTORAGE
+            localStorage.setItem('faFiUserData', JSON.stringify(userData));
+            localStorage.setItem('faFiKycVerified', 'true');
+
             updateProfileDisplay();
             document.getElementById('kycCard').style.display = 'none';
             document.getElementById('profileCard').style.display = 'block';
-            alert('🎉 SELAMAT! Verifikasi KYC Anda Berhasil Disetujui.');
+            alert('🎉 SELAMAT! Verifikasi KYC Anda Berhasil Disetujui dan Tersimpan di Sistem.');
         }
     </script>
 </body>
