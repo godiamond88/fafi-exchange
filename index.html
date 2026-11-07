@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - FARA Exchange & SocialFi Pro</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 75px; user-select: none; }
+        
+        /* Header Search Bar */
+        .home-header { background: #1a1a1a; padding: 12px 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #2a2a2a; position: sticky; top: 0; z-index: 50; }
+        .search-box { flex-grow: 1; background: #121212; border: 1px solid #333; border-radius: 20px; padding: 8px 15px; display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: #888; }
+        .search-box input { background: transparent; border: none; outline: none; width: 100%; font-size: 0.95em; color: #fff; }
+        .scan-btn { background: #121212; border: 1px solid #333; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1em; color: #00ffcc; }
+
+        .page-section { max-width: 520px; margin: auto; padding: 15px; }
+
+        /* Est. Total Aset Card */
+        .asset-overview { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #2a2a2a; margin-bottom: 15px; position: relative; }
+        .asset-top { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: #888; margin-bottom: 8px; }
+        .asset-main { display: flex; justify-content: space-between; align-items: flex-end; }
+        .asset-value { font-size: 1.8em; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+        .asset-value span { font-size: 0.7em; font-weight: 600; color: #888; margin-left: 2px; }
+        
+        /* Mini Chart Preview di Kanan */
+        .mini-chart { width: 90px; height: 45px; position: relative; }
+        .mini-chart svg { width: 100%; height: 100%; overflow: visible; }
+
+        .pnl-info { font-size: 0.8em; color: #ff4d4d; margin-top: 8px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+        .pnl-info.positive { color: #00ff88; }
+
+        /* Tombol Aksi Cepat (Deposit & Beli) */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .action-main-btn { padding: 12px; border-radius: 24px; font-weight: bold; font-size: 0.95em; text-align: center; cursor: pointer; border: none; transition: opacity 0.2s; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .btn-deposit { background: #1e2923; border: 1px solid #00ff88; color: #00ff88; }
+        .btn-buy { background: #00ff88; color: #121212; }
+        .action-main-btn:active { opacity: 0.85; }
+
+        /* Grid Menu Utama FARA (Pintasan Dashboard) */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .menu-card { background: #1e1e1e; padding: 15px; border-radius: 10px; border: 1px solid #2a2a2a; text-decoration: none; color: #fff; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: border-color 0.2s; }
+        .menu-card:hover { border-color: #00ffcc; }
+        .menu-card .icon { font-size: 1.4em; }
+        .menu-card .title { font-weight: bold; font-size: 0.9em; color: #fff; }
+        .menu-card .desc { font-size: 0.7em; color: #888; line-height: 1.3; }
+
+        /* Kartu Promo / Hold to Earn FARA */
+        .promo-card { background: #1e1e1e; border-radius: 12px; padding: 15px; border: 1px solid #2a2a2a; display: flex; flex-direction: column; gap: 10px; position: relative; }
+        .promo-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: #888; }
+        .promo-content { display: flex; gap: 12px; align-items: center; }
+        .promo-icon { font-size: 2em; background: #121212; padding: 10px; border-radius: 10px; border: 1px solid #333; }
+        .promo-title { font-weight: bold; font-size: 0.95em; color: #fff; margin-bottom: 3px; }
+        .promo-desc { font-size: 0.75em; color: #888; line-height: 1.4; }
+
+        /* Navigasi Bawah 5 Menu Konsisten */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
+        .nav-item.active { color: #00ffcc; font-weight: bold; }
+        .nav-item div { font-size: 1.2em; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+    <!-- Header dengan Search Bar ala Aplikasi Crypto -->
+    <div class="home-header">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Cari koin, fitur, atau token FARA...">
+        </div>
+        <button class="scan-btn" onclick="alert('Fitur QR Scanner aktif!')">📷</button>
+    </div>
+
+    <div class="page-section">
+        <!-- Kartu Estimasi Total Aset -->
+        <div class="asset-overview">
+            <div class="asset-top">
+                <span>Est. Total Aset</span>
+                <span style="cursor: pointer;" onclick="togglePrivacy()" id="eyeIcon">👁️</span>
+            </div>
+            <div class="asset-main">
+                <div>
+                    <div class="asset-value" id="totalAssetDisplay">11.004.344 <span>IDR</span></div>
+                </div>
+                <!-- Mini Grafik Tren -->
+                <div class="mini-chart">
+                    <svg viewBox="0 0 100 40">
+                        <path d="M 0 25 Q 25 10, 50 20 T 100 5 L 100 40 L 0 40 Z" fill="rgba(255, 77, 77, 0.1)"></path>
+                        <path d="M 0 25 Q 25 10, 50 20 T 100 5" fill="none" stroke="#ff4d4d" stroke-width="2.5"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="pnl-info" id="pnlDisplay">
+                <span>PnL 1 Bln</span> -Rp828.451 (-5,29%)
+            </div>
+        </div>
+
+        <!-- Tombol Aksi Cepat: Deposit & Beli -->
+        <div class="action-grid">
+            <a href="/wallet" class="action-main-btn btn-deposit">Deposit Kripto</a>
+            <a href="/trading" class="action-main-btn btn-buy">Beli FARA</a>
+        </div>
+
+        <!-- Pintasan Menu FARA Ecosystem (Ditambahkan kembali) -->
+        <div class="menu-grid">
+            <a href="/trading" class="menu-card">
+                <div class="icon">📊</div>
+                <div class="title">Spot Trading</div>
+                <div class="desc">Grafik interaktif murni & orderbook real-time.</div>
+            </a>
+            <a href="/reels" class="menu-card">
+                <div class="icon">🔥</div>
+                <div class="title">FARA Reels</div>
+                <div class="desc">Jelajahi video kreator & reward token FARA.</div>
+            </a>
+            <a href="/wallet" class="menu-card">
+                <div class="icon">👛</div>
+                <div class="title">Dompet & Aset</div>
+                <div class="desc">Kelola saldo USDT, FARA, deposit & WD bank.</div>
+            </a>
+            <a href="/profile" class="menu-card">
+                <div class="icon">👤</div>
+                <div class="title">Profil Akun</div>
+                <div class="desc">Pengaturan akun web3 & verifikasi identitas.</div>
+            </a>
+        </div>
+
+        <!-- Kartu Promo / Hold to Earn FARA -->
+        <div class="promo-card">
+            <div class="promo-header">
+                <span style="font-weight: 600; color: #fff;">Hold to Earn FARA</span>
+                <span style="font-size: 0.8em; background: #2a2a2a; padding: 2px 8px; border-radius: 10px; color: #aaa;">3/8</span>
+            </div>
+            <div class="promo-content">
+                <div class="promo-icon">💎</div>
+                <div>
+                    <div class="promo-title">Staking Token FARA $100+.</div>
+                    <div class="promo-desc">Dapatkan reward pasif harian dari ekosistem SocialFi & Smart Contract TRC20 FARA.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigasi Bawah 5 Menu Utama Sesuai Standar -->
+    <div class="bottom-nav">
+        <a href="/" class="nav-item active"><div>🏠</div><span>Home</span></a>
+        <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
+        <a href="/reels" class="nav-item"><div>🔥</div><span>Reels</span></a>
+        <a href="/wallet" class="nav-item"><div>👛</div><span>Wallet</span></a>
+        <a href="/profile" class="nav-item"><div>👤</div><span>Profile</span></a>
+    </div>
+
+    <script>
+        let isHidden = false;
+        function togglePrivacy() {
+            isHidden = !isHidden;
+            const assetEl = document.getElementById('totalAssetDisplay');
+            const eyeEl = document.getElementById('eyeIcon');
+            const pnlEl = document.getElementById('pnlDisplay');
+
+            if(isHidden) {
+                assetEl.innerHTML = '******** <span>IDR</span>';
+                eyeEl.innerText = '🙈';
+                pnlEl.style.display = 'none';
+            } else {
+                assetEl.innerHTML = '11.004.344 <span>IDR</span>';
+                eyeEl.innerText = '👁️';
+                pnlEl.style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>

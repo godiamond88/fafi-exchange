@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FARA Reels - SocialFi Pro</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #000; color: #fff; margin: 0; padding: 0; user-select: none; overflow: hidden; }
+        
+        /* Header & Tab Navigasi Atas ala TikTok */
+        header { position: absolute; top: 0; left: 0; right: 0; z-index: 50; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); padding: 15px 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .reels-tabs { display: flex; gap: 12px; font-weight: 600; font-size: 0.8em; position: absolute; left: 50%; transform: translateX(-50%); }
+        .reels-tab-item { color: #888; text-decoration: none; cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,0.8); transition: color 0.2s; white-space: nowrap; }
+        .reels-tab-item.active { color: #fff; border-bottom: 2px solid #00ffcc; padding-bottom: 2px; }
+
+        .nav-brand { font-weight: bold; color: #00ffcc; font-size: 0.9em; text-decoration: none; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+        /* Container Utama Full Screen ala TikTok (Vertical Feed) */
+        .reels-feed-container { width: 100vw; height: 100vh; position: relative; background: #0a0a0a; display: flex; justify-content: center; align-items: center; }
+        
+        .reels-container { width: 100%; max-width: 420px; height: 100%; background: #000; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        
+        /* Elemen Video Full Layar */
+        .reel-video-element { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+        .reel-video-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a1a, #050505); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #777; font-weight: bold; font-size: 0.95em; text-align: center; padding: 30px; z-index: 2; }
+        
+        /* Tombol Upload Mengambang di atas */
+        .upload-floating-btn { position: absolute; top: 70px; right: 20px; z-index: 40; background: rgba(0, 255, 204, 0.2); border: 1px solid #00ffcc; color: #00ffcc; padding: 6px 12px; border-radius: 20px; font-size: 0.75em; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; gap: 5px; }
+
+        /* Overlay Konten Bawah & Kanan ala TikTok */
+        .reel-overlay { position: relative; z-index: 10; padding: 20px 15px; background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.4) 50%, transparent 100%); display: flex; justify-content: space-between; align-items: flex-end; width: 100%; box-sizing: border-box; }
+        
+        .reel-info { max-width: 75%; }
+        .reel-info h4 { margin: 0 0 6px 0; color: #fff; font-size: 1em; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .reel-info p { margin: 0; color: #ddd; font-size: 0.8em; line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .music-tag { display: inline-block; margin-top: 6px; font-size: 0.75em; color: #00ffcc; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+        /* Tombol Aksi Samping Kanan (Like, Tip, Share) */
+        .reel-actions { display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 5px; }
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+        .reel-btn { background: rgba(255, 255, 255, 0.15); border: none; width: 42px; height: 42px; border-radius: 50%; color: #fff; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: transform 0.2s; }
+        .reel-btn:active { transform: scale(0.9); }
+        .action-item span { font-size: 0.7em; color: #fff; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+        /* Navigasi Bawah FARA (5 Menu) */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #222; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 0.65em; text-decoration: none; cursor: pointer; flex: 1; }
+        .nav-item.active { color: #00ffcc; }
+        .nav-item div { font-size: 1.2em; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="nav-brand">⚡ FARA</a>
+
+        <!-- Tab Navigasi Atas: SARAN | TEMAN | MENGIKUTI | KARYA -->
+        <div class="reels-tabs">
+            <span class="reels-tab-item" id="tabSaran" onclick="switchReelsTab('saran')">SARAN</span>
+            <span class="reels-tab-item" id="tabTeman" onclick="switchReelsTab('teman')">TEMAN</span>
+            <span class="reels-tab-item" id="tabMengikuti" onclick="switchReelsTab('mengikuti')">MENGIKUTI</span>
+            <span class="reels-tab-item active" id="tabKarya" onclick="switchReelsTab('karya')">KARYA</span>
+        </div>
+
+        <div style="font-size: 0.75em; color: #00ffcc;" id="headerWallet">👛 TNEDcy...</div>
+    </header>
+
+    <div class="reels-feed-container">
+        <div class="reels-container">
+            <!-- Tombol Upload Melayang -->
+            <input type="file" id="videoFileInput" accept="video/*" style="display: none;" onchange="handleVideoUpload(event)">
+            <button class="upload-floating-btn" onclick="document.getElementById('videoFileInput').click()">+ Upload Video</button>
+
+            <!-- Video Player & Placeholder -->
+            <video id="reelVideoPlayer" class="reel-video-element" loop playsinline style="display: none;"></video>
+            <div id="reelPlaceholder" class="reel-video-placeholder">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">🎬</div>
+                <div id="feedTitleState">Karya Video Pribadi Anda</div>
+                <span style="font-size: 0.75em; color: #888; font-weight: normal; margin-top: 6px;">Klik "+ Upload Video" untuk mengunggah karya baru</span>
+            </div>
+
+            <!-- Overlay Kiri & Kanan ala TikTok -->
+            <div class="reel-overlay">
+                <div class="reel-info">
+                    <h4 id="reelAuthor">@Ryank_Creative</h4>
+                    <p id="reelCaption">Eksplorasi Hydroponic & Smart Contract FARA Token di Sorong Raya 🚀🔥</p>
+                    <span class="music-tag">🎵 Original Sound - FARA Creator Network</span>
+                </div>
+                <div class="reel-actions">
+                    <div class="action-item">
+                        <button class="reel-btn" onclick="handleLike()">❤️</button>
+                        <span id="likeCount">12.4K</span>
+                    </div>
+                    <div class="action-item">
+                        <button class="reel-btn" onclick="alert('Fitur Komentar Segera Hadir!')">💬</button>
+                        <span>842</span>
+                    </div>
+                    <div class="action-item">
+                        <button class="reel-btn" onclick="alert('Tip FARA berhasil dikirim via Smart Contract TRC20!')">🎁</button>
+                        <span style="color: #00ffcc;">Tip FARA</span>
+                    </div>
+                    <div class="action-item">
+                        <button class="reel-btn" onclick="alert('Link video berhasil disalin!')">🔗</button>
+                        <span>Share</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigasi Bawah 5 Menu (Home | Trading | Reels | Wallet | Profile) -->
+    <div class="bottom-nav">
+        <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
+        <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
+        <a href="/reels" class="nav-item active"><div>🔥</div><span>Reels</span></a>
+        <a href="/wallet" class="nav-item"><div>👛</div><span>Wallet</span></a>
+        <a href="/profile" class="nav-item"><div>👤</div><span>Profile</span></a>
+    </div>
+
+    <script>
+        function switchReelsTab(tabName) {
+            document.getElementById('tabSaran').classList.remove('active');
+            document.getElementById('tabTeman').classList.remove('active');
+            document.getElementById('tabMengikuti').classList.remove('active');
+            document.getElementById('tabKarya').classList.remove('active');
+
+            if(tabName === 'saran') {
+                document.getElementById('tabSaran').classList.add('active');
+                document.getElementById('feedTitleState').innerText = 'FARA Web3 Video Feed (Saran)';
+            } else if(tabName === 'teman') {
+                document.getElementById('tabTeman').classList.add('active');
+                document.getElementById('feedTitleState').innerText = 'FARA Web3 Video Feed (Teman)';
+            } else if(tabName === 'mengikuti') {
+                document.getElementById('tabMengikuti').classList.add('active');
+                document.getElementById('feedTitleState').innerText = 'FARA Web3 Video Feed (Mengikuti)';
+            } else {
+                document.getElementById('tabKarya').classList.add('active');
+                document.getElementById('feedTitleState').innerText = 'Karya Video Pribadi Anda';
+            }
+        }
+
+        let isLiked = false;
+        function handleLike() {
+            isLiked = !isLiked;
+            const btn = event.target;
+            btn.style.color = isLiked ? '#ff4d4d' : '#fff';
+            alert(isLiked ? 'Liked! +1 FARA Reward Terkirim' : 'Like dibatalkan');
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const videoURL = URL.createObjectURL(file);
+                const player = document.getElementById('reelVideoPlayer');
+                const placeholder = document.getElementById('reelPlaceholder');
+                
+                player.src = videoURL;
+                player.style.display = 'block';
+                player.play();
+                placeholder.style.display = 'none';
+                
+                alert('Karya Video Berhasil Diunggah! Smart Contract FARA aktif memproses reward kreator.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dompet & Kemitraan - FARA Pro</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 70px; user-select: none; }
+        header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+        
+        .page-section { max-width: 520px; margin: auto; padding: 10px; }
+        .wallet-card { background: #1e1e1e; padding: 15px; border-radius: 10px; border: 1px solid #2a2a2a; margin-bottom: 10px; font-size: 0.85em; }
+        
+        /* Total Aset IDR Card */
+        .total-asset-box { background: linear-gradient(135deg, #182822, #121212); padding: 18px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #00ff88; text-align: center; }
+        .total-asset-box .label { color: #888; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; }
+        .total-asset-box .value { font-size: 1.5em; font-weight: bold; color: #00ff88; margin-top: 5px; }
+
+        .wallet-box { background: #121212; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #2a2a2a; }
+        .wallet-box .label { color: #888; font-size: 0.75em; }
+        .wallet-box .value { font-size: 1.1em; font-weight: bold; color: #fff; margin-top: 4px; }
+
+        /* Menu Utama / Tab Switch Halaman Wallet */
+        .main-wallet-tabs { display: flex; background: #1a1a1a; border-radius: 8px; padding: 4px; margin-bottom: 12px; border: 1px solid #2a2a2a; }
+        .main-wtab { flex: 1; text-align: center; padding: 8px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 0.85em; color: #888; }
+        .main-wtab.active { background: #2a2a2a; color: #00ffcc; border: 1px solid #333; }
+
+        /* Kemitraan & Referral Styles */
+        .partner-tab-switch { display: flex; border-bottom: 1px solid #2a2a2a; margin-bottom: 15px; }
+        .partner-tab { flex: 1; text-align: center; padding: 10px; font-weight: bold; cursor: pointer; font-size: 0.9em; color: #888; border-bottom: 2px solid transparent; }
+        .partner-tab.active { color: #00ffcc; border-bottom: 2px solid #00ffcc; }
+
+        .commission-box { background: #151515; padding: 15px; border-radius: 8px; border: 1px solid #2a2a2a; margin-bottom: 10px; }
+        
+        .ref-input-group { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+        .ref-input-group span { font-size: 0.8em; color: #00ffcc; word-break: break-all; margin-right: 8px; }
+        .copy-btn { background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75em; white-space: nowrap; }
+        .copy-btn:hover { background: #333; }
+
+        /* Styling ala Referensi Gambar Deposit */
+        .step-indicator { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; font-size: 0.75em; color: #888; text-align: center; }
+        .step-item.active { color: #00ffcc; font-weight: bold; }
+        
+        .method-card { background: #151515; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s; }
+        .method-card:hover { border-color: #00ffcc; }
+        .method-info { display: flex; align-items: center; gap: 10px; font-weight: bold; color: #fff; font-size: 0.9em; }
+        
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; font-size: 0.75em; color: #888; margin-bottom: 3px; }
+        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.85em; }
+        .input-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9em; }
+        
+        .action-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9em; cursor: pointer; margin-top: 8px; background: #00ff88; color: #121212; }
+        .action-btn.secondary { background: #00ffcc; }
+        .action-btn.danger { background: #ff4d4d; color: #fff; }
+
+        .tab-switch { display: flex; background: #121212; border-radius: 6px; padding: 3px; margin-bottom: 12px; gap: 4px; }
+        .tab-btn { flex: 1; text-align: center; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.85em; color: #888; }
+        .tab-btn.buy-tab.active { background: #00ff88; color: #121212; }
+        .tab-btn.sell-tab.active { background: #ff4d4d; color: #fff; }
+
+        /* Navigasi Bawah 5 Menu Konsisten */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
+        .nav-item.active { color: #00ffcc; }
+        .nav-item div { font-size: 1.1em; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="font-weight: bold; color: #00ffcc;">⚡ FARA Pro - Dompet & Kemitraan</div>
+        <div style="font-size: 0.8em; color: #00ffcc;">👛 TNEDcy...JD32</div>
+    </header>
+
+    <div class="page-section">
+        <!-- Switch Utama Halaman: Aset Saya / Kemitraan -->
+        <div class="main-wallet-tabs">
+            <div class="main-wtab active" id="tabMenuAsset" onclick="switchMainWalletTab('asset')">Aset Saya</div>
+            <div class="main-wtab" id="tabMenuPartner" onclick="switchMainWalletTab('partner')">Kemitraan (Affiliate)</div>
+        </div>
+
+        <!-- SECTION 1: ASET DOMPET & GATEWAY -->
+        <div id="sectionAsset">
+            <div class="wallet-card">
+                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Aset Dompet TRC20 Anda</h4>
+                
+                <div class="total-asset-box">
+                    <div class="label">Total Estimasi Aset (IDR)</div>
+                    <div class="value" id="totalAssetIdr">Rp 328.000.000</div>
+                    <div style="font-size: 0.65em; color: #888; margin-top: 4px;">Akumulasi Saldo FARA & USDT</div>
+                </div>
+
+                <div class="wallet-box">
+                    <div class="label">Alamat Dompet Unik TRC20</div>
+                    <div style="font-size: 0.8em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TRGZVJ5FXB9zwaOA3539</div>
+                    <div style="font-size: 0.7em; color: #666; margin-top: 2px;">FARA Contract: TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div class="wallet-box" style="margin-bottom: 0;">
+                        <div class="label">Saldo FARA</div>
+                        <div class="value" style="color: #00ff88;" id="faraBalance">10,000.00</div>
+                        <div style="font-size: 0.65em; color: #888; margin-top: 2px;">≈ Rp 240.000.000</div>
+                    </div>
+                    <div class="wallet-box" style="margin-bottom: 0;">
+                        <div class="label">Saldo USDT</div>
+                        <div class="value" style="color: #00ffcc;" id="usdtBalance">500.00</div>
+                        <div style="font-size: 0.65em; color: #888; margin-top: 2px;">≈ Rp 8.000.000</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GATEWAY KEUANGAN (DEPOSIT & WD TANPA BCA VA) -->
+            <div class="wallet-card">
+                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Gateway Keuangan</h4>
+                <div class="tab-switch">
+                    <div class="tab-btn buy-tab active" id="tabDep" onclick="switchFinTab('deposit')">Deposit</div>
+                    <div class="tab-btn sell-tab" id="tabWd" onclick="switchFinTab('wd')">WD Bank Lokal</div>
+                </div>
+                
+                <!-- TAMPILAN UTAMA DEPOSIT -->
+                <div id="formDeposit">
+                    <div class="step-indicator">
+                        <span class="step-item active">📦 1. Metode Deposit</span>
+                        <span class="step-item">💳 2. Jumlah</span>
+                        <span class="step-item">✅ 3. Selesai</span>
+                    </div>
+
+                    <div style="font-size: 0.8em; color: #888; margin-bottom: 6px; font-weight: bold; text-transform: uppercase;">Crypto</div>
+                    <div class="method-card" onclick="selectDepositMethod('USDT TRC20')">
+                        <div class="method-info"><span>🟢</span> USDT TRC20</div>
+                        <span style="color: #888;">➔</span>
+                    </div>
+
+                    <div style="font-size: 0.8em; color: #888; margin: 12px 0 6px 0; font-weight: bold; text-transform: uppercase;">Bank Transfer</div>
+                    <div class="method-card" onclick="selectDepositMethod('Bank Transfer')">
+                        <div class="method-info"><span>🏦</span> Bank Transfer (Manual)</div>
+                        <span style="color: #888;">➔</span>
+                    </div>
+                    <div class="method-card" onclick="selectDepositMethod('QRIS')">
+                        <div class="method-info"><span>📱</span> QRIS Instant</div>
+                        <span style="color: #888;">➔</span>
+                    </div>
+
+                    <div style="font-size: 0.7em; color: #777; margin-top: 10px; line-height: 1.4; background: #121212; padding: 8px; border-radius: 6px;">
+                        ⏱️ Waktu rata-rata: 1 jam &nbsp;|&nbsp; 💸 Biaya: 0%<br>
+                        📊 Batasan: 20.000,00 - 10.000.000,00 IDR
+                    </div>
+                </div>
+
+                <!-- FORM LANJUTAN KETIKA METODE DIPILIH -->
+                <div id="formDepositDetail" style="display: none;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="font-size: 0.85em; color: #00ffcc; font-weight: bold;" id="selectedMethodTitle">Metode: USDT TRC20</span>
+                        <span style="font-size: 0.75em; color: #888; cursor: pointer; text-decoration: underline;" onclick="backToDepositMethods()">⬅ Ganti Metode</span>
+                    </div>
+
+                    <div id="cryptoAddressBox" style="display: none;">
+                        <div class="wallet-box" style="background: #151515;">
+                            <div class="label">Alamat Dompet Tujuan (TRC20)</div>
+                            <div style="font-size: 0.8em; color: #00ffcc; word-break: break-all; margin-top: 4px;">TRGZVJ5FXB9zwaOA3539</div>
+                            <button class="copy-btn" style="margin-top: 6px;" onclick="copyText('TRGZVJ5FXB9zwaOA3539')">Salin Alamat</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 10px;"><label>Jumlah Deposit</label><div class="input-box"><input type="number" id="depAmount" placeholder="Masukkan jumlah"></div></div>
+                    <button class="action-btn secondary" onclick="alert('Permintaan deposit berhasil diajukan!')">Lanjutkan Pembayaran</button>
+                </div>
+
+                <!-- FORM WD BANK LOKAL -->
+                <div id="formWd" style="display: none;">
+                    <div class="input-group"><label>Pilih Bank Lokal</label><div class="input-box"><select id="bankName" style="background: transparent; border: none; color: #fff; width: 100%; outline: none;"><option value="BCA">BANK BCA</option><option value="Mandiri">BANK MANDIRI</option><option value="BNI">BANK BNI</option><option value="BRI">BANK BRI</option></select></div></div>
+                    <div class="input-group"><label>Nomor Rekening</label><div class="input-box"><input type="text" placeholder="Masukkan No Rekening"></div></div>
+                    <div class="input-group"><label>Jumlah Penarikan (IDR)</label><div class="input-box"><input type="number" placeholder="500000"></div></div>
+                    <button class="action-btn danger" onclick="alert('Penarikan bank lokal berhasil diproses!')">Tarik ke Bank Lokal</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: KEMITRAAN & REFERRAL -->
+        <div id="sectionPartner" style="display: none;">
+            <div class="wallet-card">
+                <div class="partner-tab-switch">
+                    <div class="partner-tab active" id="subTabSummary" onclick="switchPartnerSubTab('summary')">Ringkasan</div>
+                    <div class="partner-tab" id="subTabRef" onclick="switchPartnerSubTab('referral')">Referral</div>
+                </div>
+
+                <!-- SUB TAB 1: RINGKASAN -->
+                <div id="partnerSummaryView">
+                    <div class="commission-box">
+                        <div style="font-size: 0.8em; color: #888; display: flex; justify-content: space-between; align-items: center;">
+                            <span>Komisi yang diperoleh</span>
+                            <span>📊</span>
+                        </div>
+                        <div style="font-size: 1.8em; font-weight: bold; color: #00ff88; margin: 6px 0;">1,250.50 FARA</div>
+                    </div>
+
+                    <div class="wallet-box" style="margin-bottom: 10px;">
+                        <div class="label">Klien yang Direferensikan</div>
+                        <div class="value" style="color: #00ffcc;">14 Orang</div>
+                    </div>
+
+                    <div class="wallet-box">
+                        <div class="label">Tersedia untuk Penarikan Komisi</div>
+                        <div class="value" style="color: #00ff88; font-size: 1.3em;">450.20 FARA</div>
+                        <div style="font-size: 0.75em; color: #888; margin-top: 4px; cursor: pointer; color: #00ffcc;" onclick="alert('Riwayat penarikan komisi FARA terbuka.')">📜 Riwayat penarikan</div>
+                    </div>
+
+                    <button class="action-btn" onclick="alert('Komisi FARA berhasil ditarik ke Saldo Dompet Utama!')">↓ Tarik ke Dompet</button>
+                </div>
+
+                <!-- SUB TAB 2: REFERRAL -->
+                <div id="partnerRefView" style="display: none;">
+                    <h4 style="margin: 0 0 4px 0; color: #fff; font-size: 1em;">Referral</h4>
+                    <p style="font-size: 0.75em; color: #888; margin-bottom: 12px;">Undang teman dan mulai hasilkan komisi token FARA.</p>
+
+                    <div style="font-size: 0.8em; color: #aaa; margin-bottom: 4px;">Bagikan tautan referral unik Anda</div>
+                    <div class="ref-input-group">
+                        <span id="refLinkText">https://fara-exchange.pro/ref/ryank5336</span>
+                        <button class="copy-btn" onclick="copyText('https://fara-exchange.pro/ref/ryank5336')">Salin</button>
+                    </div>
+
+                    <div style="font-size: 0.8em; color: #aaa; margin: 12px 0 4px 0;">Bagikan kode referral Anda</div>
+                    <div class="ref-input-group">
+                        <span id="refCodeText" style="font-size: 0.95em; font-weight: bold; color: #fff;">5336280</span>
+                        <button class="copy-btn" onclick="copyText('5336280')">Salin</button>
+                    </div>
+
+                    <div class="wallet-box" style="margin-top: 15px; text-align: center; padding: 15px;">
+                        <div style="font-size: 2em; margin-bottom: 5px;">📷</div>
+                        <div style="font-size: 0.85em; font-weight: bold; color: #fff; margin-bottom: 3px;">Bagikan sebagai kode QR</div>
+                        <div style="font-size: 0.75em; color: #888; margin-bottom: 10px;">Pindai QR untuk mendaftar melalui tautan Anda</div>
+                        <button class="copy-btn" style="padding: 6px 15px;" onclick="alert('Kode QR referral berhasil disalin!')">Salin kode QR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigasi Bawah 5 Menu Utama -->
+    <div class="bottom-nav">
+        <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
+        <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
+        <a href="/reels" class="nav-item"><div>🔥</div><span>Reels</span></a>
+        <a href="/wallet" class="nav-item active"><div>👛</div><span>Wallet</span></a>
+        <a href="/profile" class="nav-item"><div>👤</div><span>Profile</span></a>
+    </div>
+
+    <script>
+        function switchMainWalletTab(type) {
+            const tabAsset = document.getElementById('tabMenuAsset');
+            const tabPartner = document.getElementById('tabMenuPartner');
+            const secAsset = document.getElementById('sectionAsset');
+            const secPartner = document.getElementById('sectionPartner');
+
+            if(type === 'asset') {
+                tabAsset.classList.add('active');
+                tabPartner.classList.remove('active');
+                secAsset.style.display = 'block';
+                secPartner.style.display = 'none';
+            } else {
+                tabPartner.classList.add('active');
+                tabAsset.classList.remove('active');
+                secPartner.style.display = 'block';
+                secAsset.style.display = 'none';
+            }
+        }
+
+        function switchPartnerSubTab(type) {
+            const subSum = document.getElementById('subTabSummary');
+            const subRef = document.getElementById('subTabRef');
+            const viewSum = document.getElementById('partnerSummaryView');
+            const viewRef = document.getElementById('partnerRefView');
+
+            if(type === 'summary') {
+                subSum.classList.add('active');
+                subRef.classList.remove('active');
+                viewSum.style.display = 'block';
+                viewRef.style.display = 'none';
+            } else {
+                subRef.classList.add('active');
+                subSum.classList.remove('active');
+                viewRef.style.display = 'block';
+                viewSum.style.display = 'none';
+            }
+        }
+
+        function switchFinTab(type) {
+            const tabDep = document.getElementById('tabDep');
+            const tabWd = document.getElementById('tabWd');
+            const formDep = document.getElementById('formDeposit');
+            const formWd = document.getElementById('formWd');
+            const formDetail = document.getElementById('formDepositDetail');
+
+            formDetail.style.display = 'none';
+
+            if(type === 'deposit') {
+                tabDep.classList.add('active');
+                tabWd.classList.remove('active');
+                formDep.style.display = 'block';
+                formWd.style.display = 'none';
+            } else {
+                tabWd.classList.add('active');
+                tabDep.classList.remove('active');
+                formWd.style.display = 'block';
+                formDep.style.display = 'none';
+            }
+        }
+
+        function selectDepositMethod(methodName) {
+            document.getElementById('formDeposit').style.display = 'none';
+            document.getElementById('formDepositDetail').style.display = 'block';
+            document.getElementById('selectedMethodTitle').innerText = 'Metode: ' + methodName;
+
+            const cryptoBox = document.getElementById('cryptoAddressBox');
+            if(methodName === 'USDT TRC20') {
+                cryptoBox.style.display = 'block';
+            } else {
+                cryptoBox.style.display = 'none';
+            }
+        }
+
+        function backToDepositMethods() {
+            document.getElementById('formDepositDetail').style.display = 'none';
+            document.getElementById('formDeposit').style.display = 'block';
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Berhasil disalin ke clipboard: ' + text);
+            }).catch(err => {
+                alert('Gagal menyalin teks.');
+            });
+        }
+
+        function calculateTotalAsset() {
+            const faraAmount = 10000.00;
+            const usdtAmount = 500.00;
+            const rateFaraIdr = 24000;
+            const rateUsdtIdr = 16000;
+            const totalIdr = (faraAmount * rateFaraIdr) + (usdtAmount * rateUsdtIdr);
+            document.getElementById('totalAssetIdr').innerText = 'Rp ' + totalIdr.toLocaleString('id-ID');
+        }
+
+        window.onload = function() {
+            calculateTotalAsset();
+        };
+    </script>
+</body>
+</html>
