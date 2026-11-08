@@ -5,133 +5,201 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAFI Profile</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 70px; user-select: none; }
-        header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+        /* Tampilan Utama Layar / Browser (Bingkai HP di Tengah Monitor) */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background-color: #121214; 
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none; 
+        }
+
+        /* Frame Kotak ala Layar HP di Tengah Monitor (Konsisten Semua Halaman) */
+        .profile-container {
+            position: relative;
+            width: 380px;
+            height: 720px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 2px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header { 
+            background: #1a1a1a; 
+            padding: 10px 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #2a2a2a; 
+            flex-shrink: 0;
+        }
         
-        .page-section { max-width: 520px; margin: auto; padding: 10px; }
-        .profile-card { background: #1e1e1e; padding: 15px; border-radius: 10px; border: 1px solid #2a2a2a; margin-bottom: 10px; font-size: 0.85em; }
-        .profile-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .avatar { width: 50px; height: 50px; background: #00ffcc; color: #121212; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.3em; }
+        /* Area Konten Scrollable di dalam Frame HP (Tanpa Garis Scrollbar Putih) */
+        .page-scroll-area { 
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            box-sizing: border-box;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        .page-scroll-area::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        .profile-card { background: #1e1e1e; padding: 12px; border-radius: 10px; border: 1px solid #2a2a2a; margin-bottom: 10px; font-size: 0.8em; }
+        .profile-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .avatar { width: 44px; height: 44px; background: #00ffcc; color: #121212; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; }
         
-        .input-group { margin-bottom: 10px; }
-        .input-group label { display: block; font-size: 0.75em; color: #888; margin-bottom: 3px; }
-        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 8px 10px; display: flex; align-items: center; color: #fff; font-size: 0.85em; }
-        .input-box input, .input-box select { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9em; }
+        .input-group { margin-bottom: 8px; }
+        .input-group label { display: block; font-size: 0.7em; color: #888; margin-bottom: 2px; }
+        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 6px 8px; display: flex; align-items: center; color: #fff; font-size: 0.8em; }
+        .input-box input, .input-box select { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.85em; }
         .input-box select option { background: #121212; color: #fff; }
         
-        .action-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.9em; cursor: pointer; margin-top: 8px; background: #00ff88; color: #121212; }
+        .action-btn { width: 100%; padding: 8px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.85em; cursor: pointer; margin-top: 6px; background: #00ff88; color: #121212; }
         .action-btn.secondary { background: #00ffcc; }
         .action-btn.warning { background: #ffa500; color: #121212; }
         .action-btn.danger { background: #ff4d4d; color: #fff; }
 
-        .info-box { background: #121212; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #2a2a2a; }
-        .info-label { color: #888; font-size: 0.75em; }
-        .info-value { font-size: 0.95em; font-weight: bold; color: #fff; margin-top: 2px; }
+        .info-box { background: #121212; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #2a2a2a; }
+        .info-label { color: #888; font-size: 0.68em; }
+        .info-value { font-size: 0.85em; font-weight: bold; color: #fff; margin-top: 2px; }
 
-        /* Navigasi Bawah 5 Menu Konsisten */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
-        .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
-        .nav-item.active { color: #00ffcc; }
-        .nav-item div { font-size: 1.1em; margin-bottom: 2px; }
+        /* Navigasi Bawah Konsisten 5 Menu */
+        .bottom-nav { height: 60px; background: #09090b; border-top: 1px solid #27272a; display: flex; justify-content: space-around; align-items: center; z-index: 100; flex-shrink: 0; }
+        .nav-item { text-align: center; color: #71717a; font-size: 10px; text-decoration: none; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .nav-item.active { color: #10b981; font-weight: bold; }
+        .nav-item span.icon { font-size: 16px; }
     </style>
 </head>
 <body>
-    <header>
-        <div style="font-weight: bold; color: #00ffcc;">⚡ FAFI Profile</div>
-        <div style="font-size: 0.8em; color: #00ffcc;" id="headerStatus">👤 Akun</div>
-    </header>
+    <div class="profile-container">
+        <header>
+            <div style="font-weight: bold; color: #00ffcc; font-size: 0.9em;">⚡ FAFI Profile</div>
+            <div style="font-size: 0.75em; color: #00ffcc;" id="headerStatus">👤 Akun</div>
+        </header>
 
-    <div class="page-section">
-        <!-- 1. FORM PENDAFTARAN & LOGIN AWAL -->
-        <div class="profile-card" id="authCard">
-            <div id="registerFormSection">
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Pendaftaran Akun Web3 FAFI Baru</h4>
-                <div class="input-group"><label>User Name</label><div class="input-box"><input type="text" id="regUsernameInput" placeholder="Contoh: @ryank_creative"></div></div>
-                <div class="input-group"><label>Nama Lengkap (Harus Sesuai KTP)</label><div class="input-box"><input type="text" id="regFullNameInput" placeholder="Contoh: Rian Rawalangi"></div></div>
-                <div class="input-group"><label>Email</label><div class="input-box"><input type="email" id="regEmailInput" placeholder="Contoh: email@domain.com"></div></div>
-                <div class="input-group"><label>No WA</label><div class="input-box"><input type="tel" id="regPhoneInput" placeholder="Contoh: 081234567890"></div></div>
+        <!-- Area Scrollable Utama -->
+        <div class="page-scroll-area">
+            <!-- 1. FORM PENDAFTARAN & LOGIN AWAL -->
+            <div class="profile-card" id="authCard">
+                <div id="registerFormSection">
+                    <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 0.9em;">Pendaftaran Akun Web3 FAFI Baru</h4>
+                    <div class="input-group"><label>User Name</label><div class="input-box"><input type="text" id="regUsernameInput" placeholder="Contoh: @ryank_creative"></div></div>
+                    <div class="input-group"><label>Nama Lengkap (Sesuai KTP)</label><div class="input-box"><input type="text" id="regFullNameInput" placeholder="Contoh: Rian Rawalangi"></div></div>
+                    <div class="input-group"><label>Email</label><div class="input-box"><input type="email" id="regEmailInput" placeholder="Contoh: email@domain.com"></div></div>
+                    <div class="input-group"><label>No WA</label><div class="input-box"><input type="tel" id="regPhoneInput" placeholder="Contoh: 081234567890"></div></div>
 
-                <button class="action-btn secondary" onclick="registerUser()">Buat Akun & Masuk</button>
-                <div style="text-align: center; margin-top: 12px; font-size: 0.8em; color: #888;">Sudah terdaftar? <span style="color: #00ffcc; cursor: pointer; font-weight: bold;" onclick="toggleAuthMode('login')">Masuk di sini ➔</span></div>
+                    <button class="action-btn secondary" onclick="registerUser()">Buat Akun & Masuk</button>
+                    <div style="text-align: center; margin-top: 10px; font-size: 0.75em; color: #888;">Sudah terdaftar? <span style="color: #00ffcc; cursor: pointer; font-weight: bold;" onclick="toggleAuthMode('login')">Masuk di sini ➔</span></div>
+                </div>
+
+                <div id="loginFormSection" style="display: none;">
+                    <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 0.9em;">Masuk (Login) Akun Web3</h4>
+                    <div class="input-group"><label>Email atau Username</label><div class="input-box"><input type="text" id="loginIdInput" placeholder="Masukkan Email / Username"></div></div>
+                    <button class="action-btn" onclick="processLogin()">Masuk ke Akun</button>
+                    <div style="text-align: center; margin-top: 10px; font-size: 0.75em; color: #888;">Belum punya akun? <span style="color: #00ffcc; cursor: pointer; font-weight: bold;" onclick="toggleAuthMode('register')">Daftar sekarang ➔</span></div>
+                </div>
             </div>
 
-            <div id="loginFormSection" style="display: none;">
-                <h4 style="margin: 0 0 10px 0; color: #fff; font-size: 0.95em;">Masuk (Login) Akun Web3</h4>
-                <div class="input-group"><label>Email atau Username</label><div class="input-box"><input type="text" id="loginIdInput" placeholder="Masukkan Email / Username"></div></div>
-                <button class="action-btn" onclick="processLogin()">Masuk ke Akun</button>
-                <div style="text-align: center; margin-top: 12px; font-size: 0.8em; color: #888;">Belum punya akun? <span style="color: #00ffcc; cursor: pointer; font-weight: bold;" onclick="toggleAuthMode('register')">Daftar sekarang ➔</span></div>
+            <!-- 2. DASHBOARD PROFIL UTAMA -->
+            <div class="profile-card" id="profileCard" style="display: none;">
+                <div class="profile-header">
+                    <div class="avatar" id="userAvatar">RR</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 1em; color: #fff;" id="displayFullName">Rian Rawalangi</div>
+                        <div style="color: #ffa500; font-size: 0.7em;" id="kycStatusBadge">⚠️ Status: Belum Verifikasi KYC</div>
+                    </div>
+                </div>
+
+                <div id="viewMode">
+                    <div class="info-box"><div class="info-label">User Name</div><div class="info-value" id="valUsername">@ryank_creative</div></div>
+                    <div class="info-box"><div class="info-label">Nama Lengkap (Sesuai KTP)</div><div class="info-value" id="valFullName">Rian Rawalangi</div></div>
+                    <div class="info-box"><div class="info-label">Email</div><div class="info-value" id="valEmail">email@domain.com</div></div>
+                    <div class="info-box"><div class="info-label">Nomor WhatsApp</div><div class="info-value" id="valPhone">081234567890</div></div>
+
+                    <div id="kycApprovedSection" style="display: none;">
+                        <h4 style="margin: 12px 0 6px 0; color: #00ffcc; font-size: 0.85em;">Data Verifikasi KYC & Bank</h4>
+                        <div class="info-box"><div class="info-label">Nomor ID / KTP</div><div class="info-value" id="valIdNo">-</div></div>
+                        <div class="info-box"><div class="info-label">Nomor NPWP</div><div class="info-value" id="valNpwp">-</div></div>
+                        <div class="info-box"><div class="info-label">Nama Bank</div><div class="info-value" id="valBankName">-</div></div>
+                        <div class="info-box"><div class="info-label">Nama di Rekening Bank</div><div class="info-value" id="valBankHolder">-</div></div>
+                        <div class="info-box"><div class="info-label">Nomor Rekening Bank</div><div class="info-value" id="valBankAcc">-</div></div>
+                    </div>
+
+                    <div class="info-box" style="border-color: #333;">
+                        <div class="info-label">ID Smart Contract Utama (TRC20)</div>
+                        <div style="font-size: 0.7em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
+                    </div>
+
+                    <button class="action-btn warning" id="btnKyc" onclick="openKycModal()">🛡️ Lakukan Verifikasi KYC</button>
+                    <button class="action-btn danger" onclick="logoutUser()" style="margin-top: 5px;">Keluar (Logout)</button>
+                </div>
+            </div>
+
+            <!-- 3. FORM MENU KYC -->
+            <div class="profile-card" id="kycCard" style="display: none;">
+                <h4 style="margin: 0 0 4px 0; color: #00ffcc; font-size: 0.9em;">Form Verifikasi KYC (Know Your Customer)</h4>
+                <p style="font-size: 0.7em; color: #888; margin-bottom: 10px;">Lengkapi data di bawah ini untuk membuka akses penuh penarikan dana.</p>
+                
+                <div class="input-group"><label>Nomor ID / KTP</label><div class="input-box"><input type="text" id="kycIdNo" placeholder="Masukkan 16 digit No KTP"></div></div>
+                <div class="input-group"><label>Nomor NPWP</label><div class="input-box"><input type="text" id="kycNpwp" placeholder="Masukkan Nomor NPWP"></div></div>
+
+                <h4 style="margin: 12px 0 6px 0; color: #00ffcc; font-size: 0.85em;">Detail Rekening Bank (Validasi Nama)</h4>
+                <div class="input-group"><label>Nama Bank</label>
+                    <div class="input-box">
+                        <select id="kycBankName">
+                            <option value="BANK BCA">BANK BCA</option>
+                            <option value="BANK MANDIRI">BANK MANDIRI</option>
+                            <option value="BANK BNI">BANK BNI</option>
+                            <option value="BANK BRI">BANK BRI</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group"><label>Nama di Rekening Bank (Wajib Sesuai KTP)</label><div class="input-box"><input type="text" id="kycBankHolder" placeholder="Harus sama persis dengan Nama Lengkap"></div></div>
+                <div class="input-group"><label>Nomor Rekening Bank</label><div class="input-box"><input type="text" id="kycBankAcc" placeholder="Masukkan No Rekening Bank"></div></div>
+
+                <button class="action-btn" onclick="submitKycData()">Kirim Verifikasi KYC</button>
+                <button class="action-btn danger" onclick="closeKycModal()" style="margin-top: 5px; background: #333; color: #aaa;">Batal</button>
             </div>
         </div>
 
-        <!-- 2. DASHBOARD PROFIL UTAMA -->
-        <div class="profile-card" id="profileCard" style="display: none;">
-            <div class="profile-header">
-                <div class="avatar" id="userAvatar">RR</div>
-                <div>
-                    <div style="font-weight: bold; font-size: 1.1em; color: #fff;" id="displayFullName">Rian Rawalangi</div>
-                    <div style="color: #ffa500; font-size: 0.75em;" id="kycStatusBadge">⚠️ Status: Belum Verifikasi KYC</div>
-                </div>
-            </div>
-
-            <div id="viewMode">
-                <div class="info-box"><div class="info-label">User Name</div><div class="info-value" id="valUsername">@ryank_creative</div></div>
-                <div class="info-box"><div class="info-label">Nama Lengkap (Sesuai KTP)</div><div class="info-value" id="valFullName">Rian Rawalangi</div></div>
-                <div class="info-box"><div class="info-label">Email</div><div class="info-value" id="valEmail">email@domain.com</div></div>
-                <div class="info-box"><div class="info-label">Nomor WhatsApp</div><div class="info-value" id="valPhone">081234567890</div></div>
-
-                <div id="kycApprovedSection" style="display: none;">
-                    <h4 style="margin: 15px 0 8px 0; color: #00ffcc; font-size: 0.9em;">Data Verifikasi KYC & Bank</h4>
-                    <div class="info-box"><div class="info-label">Nomor ID / KTP</div><div class="info-value" id="valIdNo">-</div></div>
-                    <div class="info-box"><div class="info-label">Nomor NPWP</div><div class="info-value" id="valNpwp">-</div></div>
-                    <div class="info-box"><div class="info-label">Nama Bank</div><div class="info-value" id="valBankName">-</div></div>
-                    <div class="info-box"><div class="info-label">Nama di Rekening Bank</div><div class="info-value" id="valBankHolder">-</div></div>
-                    <div class="info-box"><div class="info-label">Nomor Rekening Bank</div><div class="info-value" id="valBankAcc">-</div></div>
-                </div>
-
-                <div class="info-box" style="border-color: #333;">
-                    <div class="info-label">ID Smart Contract Utama (TRC20)</div>
-                    <div style="font-size: 0.75em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
-                </div>
-
-                <button class="action-btn warning" id="btnKyc" onclick="openKycModal()">🛡️ Lakukan Verifikasi KYC</button>
-                <button class="action-btn danger" onclick="logoutUser()" style="margin-top: 6px;">Keluar (Logout)</button>
-            </div>
+        <!-- Navigasi Bawah Konsisten 5 Menu -->
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="/trading" class="nav-item">
+                <span class="icon">📈</span>
+                <span>Trading</span>
+            </a>
+            <a href="/reels" class="nav-item">
+                <span class="icon">🔥</span>
+                <span>Reels</span>
+            </a>
+            <a href="/wallet" class="nav-item">
+                <span class="icon">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="/profile" class="nav-item active">
+                <span class="icon">👤</span>
+                <span>Profile</span>
+            </a>
         </div>
-
-        <!-- 3. FORM MENU KYC -->
-        <div class="profile-card" id="kycCard" style="display: none;">
-            <h4 style="margin: 0 0 5px 0; color: #00ffcc; font-size: 1em;">Form Verifikasi KYC (Know Your Customer)</h4>
-            <p style="font-size: 0.75em; color: #888; margin-bottom: 12px;">Lengkapi data di bawah ini untuk membuka akses penuh penarikan dana dan transaksi.</p>
-            
-            <div class="input-group"><label>Nomor ID / KTP</label><div class="input-box"><input type="text" id="kycIdNo" placeholder="Masukkan 16 digit No KTP"></div></div>
-            <div class="input-group"><label>Nomor NPWP</label><div class="input-box"><input type="text" id="kycNpwp" placeholder="Masukkan Nomor NPWP"></div></div>
-
-            <h4 style="margin: 15px 0 8px 0; color: #00ffcc; font-size: 0.9em;">Detail Rekening Bank (Validasi Nama)</h4>
-            <div class="input-group"><label>Nama Bank</label>
-                <div class="input-box">
-                    <select id="kycBankName">
-                        <option value="BANK BCA">BANK BCA</option>
-                        <option value="BANK MANDIRI">BANK MANDIRI</option>
-                        <option value="BANK BNI">BANK BNI</option>
-                        <option value="BANK BRI">BANK BRI</option>
-                    </select>
-                </div>
-            </div>
-            <div class="input-group"><label>Nama di Rekening Bank (Wajib Sama Persis dengan KTP)</label><div class="input-box"><input type="text" id="kycBankHolder" placeholder="Harus sama persis dengan Nama Lengkap"></div></div>
-            <div class="input-group"><label>Nomor Rekening Bank</label><div class="input-box"><input type="text" id="kycBankAcc" placeholder="Masukkan No Rekening Bank"></div></div>
-
-            <button class="action-btn" onclick="submitKycData()">Kirim Verifikasi KYC</button>
-            <button class="action-btn danger" onclick="closeKycModal()" style="margin-top: 6px; background: #333; color: #aaa;">Batal</button>
-        </div>
-    </div>
-
-    <!-- Navigasi Bawah 5 Menu Utama -->
-    <div class="bottom-nav">
-        <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
-        <a href="/trading" class="nav-item"><div>📊</div><span>Trading</span></a>
-        <a href="/reels" class="nav-item"><div>🔥</div><span>Reels</span></a>
-        <a href="/wallet" class="nav-item"><div>👛</div><span>Wallet</span></a>
-        <a href="/profile" class="nav-item active"><div>👤</div><span>Profile</span></a>
     </div>
 
     <script>
@@ -140,7 +208,6 @@
             idNo: '', npwp: '', bankName: '', bankHolder: '', bankAcc: '', isKycVerified: false
         };
 
-        // Otomatis muat data dari LocalStorage saat halaman dibuka/refresh
         window.onload = function() {
             const savedUser = localStorage.getItem('faFiUserData');
             const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
@@ -184,14 +251,13 @@
             userData.phone = phone;
             userData.isKycVerified = false;
 
-            // Simpan sesi ke LocalStorage
             localStorage.setItem('faFiUserData', JSON.stringify(userData));
             localStorage.setItem('faFiKycVerified', 'false');
 
             updateProfileDisplay();
             document.getElementById('authCard').style.display = 'none';
             document.getElementById('profileCard').style.display = 'block';
-            alert('✅ Akun berhasil dibuat! Silakan lakukan Verifikasi KYC untuk melengkapi data KTP dan Rekening Bank.');
+            alert('✅ Akun berhasil dibuat! Silakan lakukan Verifikasi KYC.');
         }
 
         function processLogin() {
@@ -206,11 +272,9 @@
             userData.email = loginId;
             userData.phone = '081234567890';
             
-            // Cek apakah sebelumnya akun ini sudah pernah KYC
             const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
             userData.isKycVerified = isVerified;
 
-            // Simpan sesi login ke LocalStorage
             localStorage.setItem('faFiUserData', JSON.stringify(userData));
 
             updateProfileDisplay();
@@ -220,7 +284,6 @@
         }
 
         function logoutUser() {
-            // Hapus sesi tersimpan
             localStorage.removeItem('faFiUserData');
             localStorage.removeItem('faFiKycVerified');
 
@@ -290,7 +353,7 @@
             }
 
             if(bankHolder.toLowerCase() !== userData.fullName.toLowerCase()) {
-                alert('❌ VERIFIKASI KYC GAGAL!\nNama di Rekening Bank ("' + bankHolder + '") tidak sesuai dengan Nama Lengkap di KTP ("' + userData.fullName + '"). Nama pemilik rekening wajib sama persis!');
+                alert('❌ VERIFIKASI KYC GAGAL!\nNama di Rekening Bank tidak sesuai dengan Nama Lengkap di KTP!');
                 return;
             }
 
@@ -301,14 +364,13 @@
             userData.bankAcc = bankAcc;
             userData.isKycVerified = true;
 
-            // SIMPAN PERMANEN KE LOCALSTORAGE
             localStorage.setItem('faFiUserData', JSON.stringify(userData));
             localStorage.setItem('faFiKycVerified', 'true');
 
             updateProfileDisplay();
             document.getElementById('kycCard').style.display = 'none';
             document.getElementById('profileCard').style.display = 'block';
-            alert('🎉 SELAMAT! Verifikasi KYC Anda Berhasil Disetujui dan Tersimpan di Sistem.');
+            alert('🎉 SELAMAT! Verifikasi KYC Berhasil Disetujui.');
         }
     </script>
 </body>

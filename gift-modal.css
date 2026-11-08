@@ -1,0 +1,158 @@
+/* Styling Dasar Modal Pop-up ala Platform Reels/Live */
+.fafi-modal-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: flex-end;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.fafi-modal-content {
+    background: #18181b;
+    width: 100%;
+    max-height: 65vh;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 16px;
+    color: #fff;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #27272a;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Tombol Pemicu Buka Gift */
+.gift-trigger-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.gift-trigger-btn:hover {
+    background: #dc2626;
+}
+
+/* Grid Katalog (4 Kolom per Baris) */
+.gift-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    overflow-y: auto;
+    max-height: 38vh;
+    padding-right: 4px;
+}
+
+/* Kartu Item Gift dengan Background Ikon Samar (Watermark Style) */
+.gift-card {
+    background: #27272a;
+    border-radius: 12px;
+    padding: 12px 6px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.gift-card:hover {
+    border-color: #f59e0b;
+    background: #3f3f46;
+}
+
+/* Efek Gambar Ikon di Belakang Teks (Samar) */
+.gift-card::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    background-image: var(--bg-icon);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.15; /* Tingkat kesamaran background ikon */
+    z-index: 1;
+}
+
+.gift-info {
+    position: relative;
+    z-index: 2;
+}
+
+.gift-name {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gift-price {
+    font-size: 10px;
+    color: #f59e0b;
+    font-weight: bold;
+}
+
+/* Footer Modal */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #27272a;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.user-balance {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.topup-btn {
+    background: #f59e0b;
+    color: #18181b;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.topup-btn:hover {
+    background: #d97706;
+}

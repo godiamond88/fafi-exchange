@@ -1,0 +1,31 @@
+/* Styling Badge Pangkat Gifter FAFI */
+.fafi-badge-container {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #18181b, #27272a);
+    border: 1px solid #f59e0b;
+    border-radius: 20px;
+    padding: 4px 12px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.fafi-badge-level {
+    background: #f59e0b;
+    color: #18181b;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    font-size: 10px;
+}
+
+.fafi-badge-title {
+    letter-spacing: 0.5px;
+    color: #fbbf24;
+}

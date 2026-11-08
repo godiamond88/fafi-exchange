@@ -5,84 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAFI Trading - MT Pro Style</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; padding-bottom: 70px; user-select: none; }
-        header { background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+        /* Tampilan Utama Layar / Browser (Bingkai HP di Tengah Monitor) */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background-color: #121214; 
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none; 
+        }
+
+        /* Frame Kotak ala Layar HP di Tengah Monitor */
+        .trading-container {
+            position: relative;
+            width: 380px;
+            height: 720px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 2px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header { 
+            background: #1a1a1a; 
+            padding: 10px 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #2a2a2a; 
+            flex-shrink: 0;
+        }
         
-        .page-section { max-width: 520px; margin: auto; padding: 10px; }
+        /* Area Konten Scrollable (Bisa digulir ke atas/bawah mulus, tapi garis putih disembunyikan) */
+        .page-scroll-area { 
+            flex: 1;
+            overflow-y: scroll;
+            padding: 10px;
+            box-sizing: border-box;
+            /* Sembunyikan Scrollbar untuk Chrome, Safari, Edge, & Firefox */
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        .page-scroll-area::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
         
-        .market-top-bar { background: #1e1e1e; padding: 12px 15px; border-radius: 8px; border: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .market-top-bar { background: #1e1e1e; padding: 10px 12px; border-radius: 8px; border: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         
-        /* MT Chart Card (DIKUNCI PATEN) */
-        .mt-chart-card { background: #181a20; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px; margin-bottom: 8px; position: relative; }
-        .mt-tf-row { display: flex; gap: 12px; font-size: 0.8em; color: #848e9c; margin-bottom: 8px; align-items: center; border-bottom: 1px solid #2b313a; padding-bottom: 6px; font-weight: bold; }
+        /* MT Chart Card */
+        .mt-chart-card { background: #181a20; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px; margin-bottom: 8px; position: relative; }
+        .mt-tf-row { display: flex; gap: 10px; font-size: 0.75em; color: #848e9c; margin-bottom: 6px; align-items: center; border-bottom: 1px solid #2b313a; padding-bottom: 5px; font-weight: bold; }
         .mt-tf-item { cursor: pointer; padding: 2px 6px; border-radius: 4px; }
         .mt-tf-item.active { color: #00ff88; background: #2b313a; }
         
-        .mt-chart-info { font-size: 0.75em; color: #848e9c; margin-bottom: 6px; font-family: monospace; }
+        .mt-chart-info { font-size: 0.7em; color: #848e9c; margin-bottom: 4px; font-family: monospace; }
 
         /* Wrapper Grafik & Sumbu Luar */
-        .mt-chart-wrapper { display: flex; height: 210px; border: 1px solid #2b313a; position: relative; background: #121418; overflow: hidden; }
+        .mt-chart-wrapper { display: flex; height: 180px; border: 1px solid #2b313a; position: relative; background: #121418; overflow: hidden; }
         
         /* Area Grafik Canvas */
         .mt-visual-area { flex: 1; position: relative; overflow: hidden; cursor: grab; background-image: linear-gradient(to right, #1e2329 1px, transparent 1px), linear-gradient(to bottom, #1e2329 1px, transparent 1px); background-size: 30px 30px; }
         .mt-visual-area:active { cursor: grabbing; }
         
         /* Kolom Sumbu Harga di Kanan */
-        .mt-axis-right-external { width: 95px; background: #181a20; border-left: 1px solid #2b313a; font-size: 0.65em; color: #848e9c; font-family: monospace; position: relative; cursor: ns-resize; overflow: hidden; }
+        .mt-axis-right-external { width: 80px; background: #181a20; border-left: 1px solid #2b313a; font-size: 0.6em; color: #848e9c; font-family: monospace; position: relative; cursor: ns-resize; overflow: hidden; }
         
         /* Label Angka Sumbu Statis */
-        .axis-label { position: absolute; right: 8px; text-align: right; transform: translateY(-50%); pointer-events: none; }
+        .axis-label { position: absolute; right: 6px; text-align: right; transform: translateY(-50%); pointer-events: none; }
         
         /* Kotak Harga Live */
-        .mt-live-tag-external { position: absolute; right: 4px; left: 4px; background: #0ecb81; color: #121212; font-size: 0.78em; padding: 5px 2px; border-radius: 3px; font-weight: bold; text-align: center; box-sizing: border-box; transform: translateY(-50%); z-index: 10; pointer-events: none; }
+        .mt-live-tag-external { position: absolute; right: 3px; left: 3px; background: #0ecb81; color: #121212; font-size: 0.7em; padding: 4px 2px; border-radius: 3px; font-weight: bold; text-align: center; box-sizing: border-box; transform: translateY(-50%); z-index: 10; pointer-events: none; }
 
         /* Garis Harga Lurus Solid */
         .live-price-line { position: absolute; left: 0; right: 0; border-top: 1.5px solid #0ecb81; pointer-events: none; z-index: 5; }
 
-        /* Sumbu Waktu Bawah (Independen: Waktu Sebelum & Sesudahnya Berjejer Rapi) */
-        .mt-time-axis { position: relative; height: 24px; font-size: 0.62em; color: #848e9c; padding-top: 6px; font-family: monospace; overflow: hidden; border-top: 1px solid #2b313a; background: #15171c; cursor: ew-resize; }
+        /* Sumbu Waktu Bawah */
+        .mt-time-axis { position: relative; height: 22px; font-size: 0.58em; color: #848e9c; padding-top: 4px; font-family: monospace; overflow: hidden; border-top: 1px solid #2b313a; background: #15171c; cursor: ew-resize; }
         .time-axis-label { position: absolute; transform: translateX(-50%); white-space: nowrap; pointer-events: none; }
-        .time-axis-label.active-time { color: #00ff88; font-weight: bold; background: rgba(0,255,136,0.1); padding: 1px 4px; border-radius: 3px; }
+        .time-axis-label.active-time { color: #00ff88; font-weight: bold; background: rgba(0,255,136,0.1); padding: 1px 3px; border-radius: 3px; }
 
-        /* Single Candlestick (Sumbu Wick Dijamin Presisi Tepat di Tengah Badan) */
-        .mt-single-candle { position: absolute; width: 22px; }
+        /* Single Candlestick */
+        .mt-single-candle { position: absolute; width: 20px; }
         .candle-wick { width: 1px; position: absolute; left: 50%; transform: translateX(-50%); z-index: 1; }
-        .candle-body { width: 8px; position: absolute; left: 50%; transform: translateX(-50%); border-radius: 1px; z-index: 2; }
+        .candle-body { width: 7px; position: absolute; left: 50%; transform: translateX(-50%); border-radius: 1px; z-index: 2; }
         
         .mt-single-candle.green .candle-wick, .mt-single-candle.green .candle-body { background: #0ecb81; }
         .mt-single-candle.red .candle-wick, .mt-single-candle.red .candle-body { background: #ff4d4d; }
 
         /* Panel Trading Bawah */
-        .trade-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-        .trade-pane { background: #181a20; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px; font-size: 0.8em; }
+        .trade-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+        .trade-pane { background: #181a20; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px; font-size: 0.75em; }
 
-        .tab-switch { display: flex; background: #121212; border-radius: 6px; padding: 3px; margin-bottom: 8px; gap: 4px; }
-        .tab-btn { flex: 1; text-align: center; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; color: #888; font-size: 0.8em; }
+        .tab-switch { display: flex; background: #121212; border-radius: 6px; padding: 2px; margin-bottom: 6px; gap: 3px; }
+        .tab-btn { flex: 1; text-align: center; padding: 5px; font-weight: bold; border-radius: 4px; cursor: pointer; color: #888; font-size: 0.75em; }
         .tab-btn.buy.active { background: #00ff88; color: #121212; }
         .tab-btn.sell.active { background: #ff4d4d; color: #fff; }
 
-        .order-type-select { background: #121212; border: 1px solid #2b313a; border-radius: 6px; padding: 6px 8px; color: #fff; font-size: 0.75em; margin-bottom: 8px; width: 100%; outline: none; box-sizing: border-box; cursor: pointer; }
+        .order-type-select { background: #121212; border: 1px solid #2b313a; border-radius: 6px; padding: 5px 6px; color: #fff; font-size: 0.7em; margin-bottom: 6px; width: 100%; outline: none; box-sizing: border-box; cursor: pointer; }
 
-        .input-group { margin-bottom: 6px; }
-        .input-group label { display: block; font-size: 0.65em; color: #888; margin-bottom: 2px; }
-        .input-box { background: #121212; border: 1px solid #2b313a; border-radius: 6px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.8em; }
+        .input-group { margin-bottom: 5px; }
+        .input-group label { display: block; font-size: 0.6em; color: #888; margin-bottom: 1px; }
+        .input-box { background: #121212; border: 1px solid #2b313a; border-radius: 6px; padding: 5px 6px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.75em; }
         .input-box input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.9em; }
 
         /* Slider Persentase Modal Interaktif */
-        .slider-container { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 8px 0; padding: 0 4px; position: relative; }
+        .slider-container { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 6px 0; padding: 0 4px; position: relative; }
         .slider-line { position: absolute; height: 2px; background: #2b313a; top: 50%; transform: translateY(-50%); left: 4px; right: 4px; z-index: 1; }
         .slider-line-active { position: absolute; height: 2px; background: #0ecb81; top: 50%; transform: translateY(-50%); left: 4px; width: 0%; z-index: 2; transition: width 0.2s ease; }
         
-        .slider-dot { width: 10px; height: 10px; background: #2b313a; border-radius: 50%; cursor: pointer; z-index: 3; transition: background 0.2s; }
-        .slider-dot.active { background: #0ecb81; box-shadow: 0 0 6px #0ecb81; }
+        .slider-dot { width: 8px; height: 8px; background: #2b313a; border-radius: 50%; cursor: pointer; z-index: 3; transition: background 0.2s; }
+        .slider-dot.active { background: #0ecb81; box-shadow: 0 0 5px #0ecb81; }
 
-        .action-btn { width: 100%; padding: 9px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.85em; cursor: pointer; margin-top: 6px; text-align: center; }
+        .action-btn { width: 100%; padding: 7px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.8em; cursor: pointer; margin-top: 4px; text-align: center; }
         .action-btn.buy { background: #0ecb81; color: #121212; }
         .action-btn.sell { background: #ff4d4d; color: #fff; }
 
-        /* Order Book Style (5/5 Baris) */
-        .ob-header { display: flex; justify-content: space-between; font-size: 0.68em; color: #848e9c; margin-bottom: 4px; border-bottom: 1px solid #2b313a; padding-bottom: 3px; }
-        .ob-row { display: flex; justify-content: space-between; font-size: 0.73em; padding: 1.5px 0; position: relative; cursor: pointer; }
+        /* Order Book Style */
+        .ob-header { display: flex; justify-content: space-between; font-size: 0.62em; color: #848e9c; margin-bottom: 3px; border-bottom: 1px solid #2b313a; padding-bottom: 2px; }
+        .ob-row { display: flex; justify-content: space-between; font-size: 0.68em; padding: 1px 0; position: relative; cursor: pointer; }
         .ob-row:hover { background: rgba(255,255,100,0.05); }
         .ob-row.red { color: #f6465d; }
         .ob-row.green { color: #0ecb81; }
@@ -90,202 +140,222 @@
         .ob-row.red .ob-bar { background: #f6465d; }
         .ob-row.green .ob-bar { background: #0ecb81; }
 
-        .ob-center-price { text-align: center; font-weight: bold; font-size: 0.9em; padding: 4px 0; border-top: 1px solid #2b313a; border-bottom: 1px solid #2b313a; margin: 3px 0; display: flex; justify-content: center; align-items: center; gap: 6px; color: #0ecb81; }
+        .ob-center-price { text-align: center; font-weight: bold; font-size: 0.8em; padding: 3px 0; border-top: 1px solid #2b313a; border-bottom: 1px solid #2b313a; margin: 2px 0; display: flex; justify-content: center; align-items: center; gap: 4px; color: #0ecb81; }
 
         /* Panel List Order & Posisi di Bawah */
-        .orders-panel { background: #181a20; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px; font-size: 0.78em; }
-        .orders-tabs { display: flex; gap: 15px; border-bottom: 1px solid #2b313a; padding-bottom: 6px; margin-bottom: 8px; font-weight: bold; }
+        .orders-panel { background: #181a20; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px; font-size: 0.72em; margin-bottom: 10px; }
+        .orders-tabs { display: flex; gap: 12px; border-bottom: 1px solid #2b313a; padding-bottom: 5px; margin-bottom: 6px; font-weight: bold; }
         .orders-tab { cursor: pointer; color: #848e9c; }
-        .orders-tab.active { color: #00ff88; border-bottom: 2px solid #00ff88; padding-bottom: 4px; }
-        .orders-table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.72em; }
-        .orders-table th { color: #848e9c; text-align: left; padding-bottom: 4px; border-bottom: 1px solid #2b313a; }
-        .orders-table td { padding: 6px 0; border-bottom: 1px solid #1f2329; color: #ddd; }
-        .cancel-btn { background: #2b313a; color: #f6465d; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 0.9em; }
+        .orders-tab.active { color: #00ff88; border-bottom: 2px solid #00ff88; padding-bottom: 3px; }
+        .orders-table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 0.68em; }
+        .orders-table th { color: #848e9c; text-align: left; padding-bottom: 3px; border-bottom: 1px solid #2b313a; }
+        .orders-table td { padding: 5px 0; border-bottom: 1px solid #1f2329; color: #ddd; }
+        .cancel-btn { background: #2b313a; color: #f6465d; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; font-size: 0.85em; }
         .cancel-btn:hover { background: #f6465d; color: #fff; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #181818; border-top: 1px solid #2a2a2a; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
-        .nav-item { text-align: center; color: #888; font-size: 0.7em; text-decoration: none; cursor: pointer; flex: 1; }
-        .nav-item.active { color: #00ffcc; }
-        .nav-item div { font-size: 1.1em; margin-bottom: 2px; }
+        /* Navigasi Bawah Konsisten 5 Menu */
+        .bottom-nav { height: 60px; background: #09090b; border-top: 1px solid #27272a; display: flex; justify-content: space-around; align-items: center; z-index: 100; flex-shrink: 0; }
+        .nav-item { text-align: center; color: #71717a; font-size: 10px; text-decoration: none; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .nav-item.active { color: #10b981; font-weight: bold; }
+        .nav-item span.icon { font-size: 16px; }
     </style>
 </head>
 <body>
-    <header>
-        <div style="font-weight: bold; color: #00ffcc;">⚡ FAFI Trading Pro</div>
-        <div style="font-size: 0.7em; color: #848e9c;">Master: <span style="color:#0ecb81;">godiamond</span></div>
-    </header>
+    <div class="trading-container">
+        <header>
+            <div style="font-weight: bold; color: #00ffcc; font-size: 0.9em;">⚡ FAFI Trading Pro</div>
+            <div style="font-size: 0.65em; color: #848e9c;">Master: <span style="color:#0ecb81;">godiamond</span></div>
+        </header>
 
-    <div class="page-section">
-        <div class="market-top-bar">
-            <div>
-                <span style="font-weight: bold; font-size: 1em; color: #fff;">FARA/USDT</span>
-                <span style="background: #113225; color: #0ecb81; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; margin-left: 6px;">Spot Real</span>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-weight: bold; font-size: 1em; color: #0ecb81;" id="headerPrice">1.4684</div>
-                <div style="font-size: 0.7em; color: #f6465d;" id="headerPct">-0.11%</div>
-            </div>
-        </div>
-
-        <!-- MT Chart Card (DIKUNCI PATEN) -->
-        <div class="mt-chart-card">
-            <div class="mt-tf-row">
-                <span class="mt-tf-item active" onclick="setPeriod(this, 'M1')">M1</span>
-                <span class="mt-tf-item" onclick="setPeriod(this, 'M15')">M15</span>
-                <span class="mt-tf-item" onclick="setPeriod(this, 'M30')">M30</span>
-                <span style="margin-left: auto; color:#848e9c; font-size: 0.7em;" id="liveClockTime">00:00:00</span>
+        <!-- Area Scrollable Utama di dalam Frame HP -->
+        <div class="page-scroll-area">
+            <div class="market-top-bar">
+                <div>
+                    <span style="font-weight: bold; font-size: 0.9em; color: #fff;">FARA/USDT</span>
+                    <span style="background: #113225; color: #0ecb81; padding: 2px 5px; border-radius: 4px; font-size: 0.65em; margin-left: 4px;">Spot Real</span>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-weight: bold; font-size: 0.9em; color: #0ecb81;" id="headerPrice">1.4684</div>
+                    <div style="font-size: 0.65em; color: #f6465d;" id="headerPct">-0.11%</div>
+                </div>
             </div>
 
-            <div class="mt-chart-info">
-                <strong id="chartPairTitle">FARA ▼ M1</strong><br>
-                <span>FARA vs USDT</span>
-            </div>
-
-            <!-- Wrapper Grafik & Sumbu Luar -->
-            <div class="mt-chart-wrapper">
-                <div class="mt-visual-area" id="mtChartArea">
-                    <div class="live-price-line" id="livePriceLine"></div>
-                    <div id="singleCandleContainer"></div>
+            <!-- MT Chart Card -->
+            <div class="mt-chart-card">
+                <div class="mt-tf-row">
+                    <span class="mt-tf-item active" onclick="setPeriod(this, 'M1')">M1</span>
+                    <span class="mt-tf-item" onclick="setPeriod(this, 'M15')">M15</span>
+                    <span class="mt-tf-item" onclick="setPeriod(this, 'M30')">M30</span>
+                    <span style="margin-left: auto; color:#848e9c; font-size: 0.65em;" id="liveClockTime">00:00:00</span>
                 </div>
 
-                <!-- Kolom Sumbu Harga di Kanan -->
-                <div class="mt-axis-right-external" id="mtAxisRight">
-                    <span class="axis-label" id="axTop" style="top: 15%;">1.5697</span>
-                    <span class="axis-label" id="axMidHigh" style="top: 35%;">1.5297</span>
-                    <span class="axis-label" id="axMidLow" style="top: 65%;">1.4497</span>
-                    <span class="axis-label" id="axBtm" style="top: 85%;">1.4097</span>
+                <div class="mt-chart-info">
+                    <strong id="chartPairTitle">FARA ▼ M1</strong><br>
+                    <span>FARA vs USDT</span>
+                </div>
+
+                <!-- Wrapper Grafik & Sumbu Luar -->
+                <div class="mt-chart-wrapper">
+                    <div class="mt-visual-area" id="mtChartArea">
+                        <div class="live-price-line" id="livePriceLine"></div>
+                        <div id="singleCandleContainer"></div>
+                    </div>
+
+                    <!-- Kolom Sumbu Harga di Kanan -->
+                    <div class="mt-axis-right-external" id="mtAxisRight">
+                        <span class="axis-label" id="axTop" style="top: 15%;">1.5697</span>
+                        <span class="axis-label" id="axMidHigh" style="top: 35%;">1.5297</span>
+                        <span class="axis-label" id="axMidLow" style="top: 65%;">1.4497</span>
+                        <span class="axis-label" id="axBtm" style="top: 85%;">1.4097</span>
+                        
+                        <div class="mt-live-tag-external" id="axCurrentTag" style="top: 50%;">1.4684</div>
+                    </div>
+                </div>
+
+                <!-- Sumbu Waktu Bawah -->
+                <div class="mt-time-axis" id="timeAxisContainer"></div>
+            </div>
+
+            <!-- Panel Trading Bawah -->
+            <div class="trade-layout">
+                <!-- Pane Kiri: Form Order Beli/Jual -->
+                <div class="trade-pane">
+                    <div class="tab-switch">
+                        <div class="tab-btn buy active" id="tabBuy" onclick="switchMode('buy')">Beli</div>
+                        <div class="tab-btn sell" id="tabSell" onclick="switchMode('sell')">Jual</div>
+                    </div>
+
+                    <!-- Pilihan Order Limit / Order Market -->
+                    <select class="order-type-select" id="orderTypeSelect" onchange="toggleOrderType()">
+                        <option value="limit">Order Limit</option>
+                        <option value="market" selected>Order Market</option>
+                    </select>
+
+                    <div class="input-group">
+                        <label>Harga (USDT)</label>
+                        <div class="input-box"><input type="text" id="tradePriceInput" readonly></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Jumlah FARA</label>
+                        <div class="input-box"><input type="number" id="tradeAmountInput" placeholder="10"><span>FARA</span></div>
+                    </div>
+
+                    <!-- Slider Persentase Modal Interaktif -->
+                    <div class="slider-container">
+                        <div class="slider-line"></div>
+                        <div class="slider-line-active" id="sliderLineActive"></div>
+                        <div class="slider-dot active" id="dot0" onclick="setSlider(0)"></div>
+                        <div class="slider-dot" id="dot25" onclick="setSlider(25)"></div>
+                        <div class="slider-dot" id="dot50" onclick="setSlider(50)"></div>
+                        <div class="slider-dot" id="dot75" onclick="setSlider(75)"></div>
+                        <div class="slider-dot" id="dot100" onclick="setSlider(100)"></div>
+                    </div>
+
+                    <!-- Tampilan Saldo Tersedia USDT & FARA -->
+                    <div style="font-size: 0.6em; color: #848e9c; margin: 6px 0; display: flex; justify-content: space-between;">
+                        <span>USDT: <strong style="color: #00ffcc;" id="userUsdtDisplay">0.00</strong></span>
+                        <span>FARA: <strong style="color: #00ff88;" id="userFaraDisplay">0.00</strong></span>
+                    </div>
+
+                    <button class="action-btn buy" id="execTradeBtn" onclick="executeRealTrade()">Beli FARA</button>
+                </div>
+
+                <!-- Pane Kanan: Order Book -->
+                <div class="trade-pane">
+                    <div class="ob-header">
+                        <span>Harga (USDT)</span><span>Jumlah</span>
+                    </div>
                     
-                    <div class="mt-live-tag-external" id="axCurrentTag" style="top: 50%;">1.4684</div>
+                    <div class="ob-row red" onclick="selectOrderBookPrice(1.5250)"><span>1.5250</span><span>10K</span><div class="ob-bar" style="width: 40%;"></div></div>
+                    <div class="ob-row red" onclick="selectOrderBookPrice(1.5120)"><span>1.5120</span><span>25K</span><div class="ob-bar" style="width: 70%;"></div></div>
+                    <div class="ob-row red" onclick="selectOrderBookPrice(1.4980)"><span>1.4980</span><span>14K</span><div class="ob-bar" style="width: 50%;"></div></div>
+                    <div class="ob-row red" onclick="selectOrderBookPrice(1.4850)"><span>1.4850</span><span>18K</span><div class="ob-bar" style="width: 60%;"></div></div>
+                    <div class="ob-row red" onclick="selectOrderBookPrice(1.4720)"><span>1.4720</span><span>22K</span><div class="ob-bar" style="width: 65%;"></div></div>
+                    
+                    <div class="ob-center-price" id="orderBookCenterPrice">
+                        1.4684 <span style="font-size: 0.65em; color: #848e9c;">Spot</span>
+                    </div>
+                    
+                    <div class="ob-row green" onclick="selectOrderBookPrice(1.4550)"><span>1.4550</span><span>12K</span><div class="ob-bar" style="width: 45%;"></div></div>
+                    <div class="ob-row green" onclick="selectOrderBookPrice(1.4420)"><span>1.4420</span><span>30K</span><div class="ob-bar" style="width: 80%;"></div></div>
+                    <div class="ob-row green" onclick="selectOrderBookPrice(1.4250)"><span>1.4250</span><span>50K</span><div class="ob-bar" style="width: 100%;"></div></div>
+                    <div class="ob-row green" onclick="selectOrderBookPrice(1.4120)"><span>1.4120</span><span>19K</span><div class="ob-bar" style="width: 55%;"></div></div>
+                    <div class="ob-row green" onclick="selectOrderBookPrice(1.3980)"><span>1.3980</span><span>35K</span><div class="ob-bar" style="width: 85%;"></div></div>
+
+                    <div style="margin-top: 4px; font-size: 0.58em; color: #666; border-top: 1px solid #2b313a; padding-top: 2px; display: flex; justify-content: space-between;">
+                        <div>🔗 TRC20</div>
+                        <div>💎 godiamond</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sumbu Waktu Bawah: Waktu Sebelum & Sesudahnya Berjejer Independen -->
-            <div class="mt-time-axis" id="timeAxisContainer"></div>
-        </div>
-
-        <!-- Panel Trading Bawah -->
-        <div class="trade-layout">
-            <!-- Pane Kiri: Form Order Beli/Jual -->
-            <div class="trade-pane">
-                <div class="tab-switch">
-                    <div class="tab-btn buy active" id="tabBuy" onclick="switchMode('buy')">Beli</div>
-                    <div class="tab-btn sell" id="tabSell" onclick="switchMode('sell')">Jual</div>
+            <!-- Panel Bawah: List Order Limit & Posisi Order -->
+            <div class="orders-panel">
+                <div class="orders-tabs">
+                    <div class="orders-tab active" id="tabLimitOrders" onclick="switchOrderTab('limit')">Order Limit (<span id="limitCount">0</span>)</div>
+                    <div class="orders-tab" id="tabPositions" onclick="switchOrderTab('position')">Posisi Aset (<span id="posCount">0</span>)</div>
                 </div>
 
-                <!-- Pilihan Order Limit / Order Market -->
-                <select class="order-type-select" id="orderTypeSelect" onchange="toggleOrderType()">
-                    <option value="limit">Order Limit</option>
-                    <option value="market" selected>Order Market</option>
-                </select>
-
-                <div class="input-group">
-                    <label>Harga (USDT)</label>
-                    <div class="input-box"><input type="text" id="tradePriceInput" readonly></div>
+                <!-- Tabel Order Limit -->
+                <div id="limitOrdersContainer">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Pair / Tipe</th>
+                                <th>Harga (USDT)</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="limitOrdersTableBody">
+                            <tr><td colspan="4" style="text-align: center; color: #666; padding: 8px;">Tidak ada order limit aktif.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="input-group">
-                    <label>Jumlah FARA</label>
-                    <div class="input-box"><input type="number" id="tradeAmountInput" placeholder="10"><span>FARA</span></div>
-                </div>
-
-                <!-- Slider Persentase Modal Interaktif -->
-                <div class="slider-container">
-                    <div class="slider-line"></div>
-                    <div class="slider-line-active" id="sliderLineActive"></div>
-                    <div class="slider-dot active" id="dot0" onclick="setSlider(0)"></div>
-                    <div class="slider-dot" id="dot25" onclick="setSlider(25)"></div>
-                    <div class="slider-dot" id="dot50" onclick="setSlider(50)"></div>
-                    <div class="slider-dot" id="dot75" onclick="setSlider(75)"></div>
-                    <div class="slider-dot" id="dot100" onclick="setSlider(100)"></div>
-                </div>
-
-                <!-- Tampilan Saldo Tersedia USDT & FARA -->
-                <div style="font-size: 0.65em; color: #848e9c; margin: 8px 0; display: flex; justify-content: space-between;">
-                    <span>Tersedia USDT: <strong style="color: #00ffcc;" id="userUsdtDisplay">0.00</strong></span>
-                    <span>FARA: <strong style="color: #00ff88;" id="userFaraDisplay">0.00</strong></span>
-                </div>
-
-                <button class="action-btn buy" id="execTradeBtn" onclick="executeRealTrade()">Beli FARA</button>
-            </div>
-
-            <!-- Pane Kanan: Order Book 5/5 Baris -->
-            <div class="trade-pane">
-                <div class="ob-header">
-                    <span>Harga (USDT)</span><span>Jumlah</span>
-                </div>
-                
-                <div class="ob-row red" onclick="selectOrderBookPrice(1.5250)"><span>1.5250</span><span>10K</span><div class="ob-bar" style="width: 40%;"></div></div>
-                <div class="ob-row red" onclick="selectOrderBookPrice(1.5120)"><span>1.5120</span><span>25K</span><div class="ob-bar" style="width: 70%;"></div></div>
-                <div class="ob-row red" onclick="selectOrderBookPrice(1.4980)"><span>1.4980</span><span>14K</span><div class="ob-bar" style="width: 50%;"></div></div>
-                <div class="ob-row red" onclick="selectOrderBookPrice(1.4850)"><span>1.4850</span><span>18K</span><div class="ob-bar" style="width: 60%;"></div></div>
-                <div class="ob-row red" onclick="selectOrderBookPrice(1.4720)"><span>1.4720</span><span>22K</span><div class="ob-bar" style="width: 65%;"></div></div>
-                
-                <div class="ob-center-price" id="orderBookCenterPrice">
-                    1.4684 <span style="font-size: 0.7em; color: #848e9c;">Spot</span>
-                </div>
-                
-                <div class="ob-row green" onclick="selectOrderBookPrice(1.4550)"><span>1.4550</span><span>12K</span><div class="ob-bar" style="width: 45%;"></div></div>
-                <div class="ob-row green" onclick="selectOrderBookPrice(1.4420)"><span>1.4420</span><span>30K</span><div class="ob-bar" style="width: 80%;"></div></div>
-                <div class="ob-row green" onclick="selectOrderBookPrice(1.4250)"><span>1.4250</span><span>50K</span><div class="ob-bar" style="width: 100%;"></div></div>
-                <div class="ob-row green" onclick="selectOrderBookPrice(1.4120)"><span>1.4120</span><span>19K</span><div class="ob-bar" style="width: 55%;"></div></div>
-                <div class="ob-row green" onclick="selectOrderBookPrice(1.3980)"><span>1.3980</span><span>35K</span><div class="ob-bar" style="width: 85%;"></div></div>
-
-                <div style="margin-top: 6px; font-size: 0.62em; color: #666; border-top: 1px solid #2b313a; padding-top: 3px; display: flex; justify-content: space-between;">
-                    <div>🔗 TRC20 Active</div>
-                    <div>💎 godiamond</div>
+                <!-- Tabel Posisi / Aset -->
+                <div id="positionsContainer" style="display: none;">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Pair</th>
+                                <th>Tipe</th>
+                                <th>Masuk</th>
+                                <th>Jumlah FARA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="positionsTableBody">
+                            <tr><td colspan="4" style="text-align: center; color: #666; padding: 8px;">Belum ada posisi terbuka.</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- Panel Bawah: List Order Limit & Posisi Order -->
-        <div class="orders-panel">
-            <div class="orders-tabs">
-                <div class="orders-tab active" id="tabLimitOrders" onclick="switchOrderTab('limit')">Order Limit (<span id="limitCount">0</span>)</div>
-                <div class="orders-tab" id="tabPositions" onclick="switchOrderTab('position')">Posisi Aset (<span id="posCount">0</span>)</div>
-            </div>
-
-            <!-- Tabel Order Limit -->
-            <div id="limitOrdersContainer">
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>Pair / Tipe</th>
-                            <th>Harga (USDT)</th>
-                            <th>Jumlah</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="limitOrdersTableBody">
-                        <tr><td colspan="4" style="text-align: center; color: #666; padding: 10px;">Tidak ada order limit aktif.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Tabel Posisi / Aset -->
-            <div id="positionsContainer" style="display: none;">
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>Pair</th>
-                            <th>Tipe</th>
-                            <th>Masuk</th>
-                            <th>Jumlah FARA</th>
-                        </tr>
-                    </thead>
-                    <tbody id="positionsTableBody">
-                        <tr><td colspan="4" style="text-align: center; color: #666; padding: 10px;">Belum ada posisi terbuka.</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <!-- Navigasi Bawah Konsisten 5 Menu -->
+        <div class="bottom-nav">
+            <a href="/" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="/trading" class="nav-item active">
+                <span class="icon">📈</span>
+                <span>Trading</span>
+            </a>
+            <a href="/reels" class="nav-item">
+                <span class="icon">🔥</span>
+                <span>Reels</span>
+            </a>
+            <a href="/wallet" class="nav-item">
+                <span class="icon">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="/profile" class="nav-item">
+                <span class="icon">👤</span>
+                <span>Profile</span>
+            </a>
         </div>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="/" class="nav-item"><div>🏠</div><span>Home</span></a>
-        <a href="/trading" class="nav-item active"><div>📊</div><span>Trading</span></a>
-        <a href="/reels" class="nav-item"><div>🔥</div><span>Reels</span></a>
-        <a href="/wallet" class="nav-item"><div>👛</div><span>Wallet</span></a>
-        <a href="/profile" class="nav-item"><div>👤</div><span>Profile</span></a>
     </div>
 
     <script>
@@ -296,7 +366,7 @@
         let chartOffsetX = JSON.parse(localStorage.getItem('fafiSingleOffsetX')) || 180;
         let chartOffsetY = JSON.parse(localStorage.getItem('fafiSingleOffsetY')) || 0;
         let priceSpread = JSON.parse(localStorage.getItem('fafiPriceSpread')) || 0.16;
-        let timeScaleSpacing = JSON.parse(localStorage.getItem('fafiTimeScaleSpacing')) || 60; // Jarak antar tanggal
+        let timeScaleSpacing = JSON.parse(localStorage.getItem('fafiTimeScaleSpacing')) || 60;
 
         let activeCandleData = JSON.parse(localStorage.getItem('fafiSingleOnlyData')) || {
             'M1': {o: 1.4500, h: 1.5284, l: 1.4284, c: marketPrice},
@@ -330,7 +400,7 @@
             }
 
             document.getElementById('headerPrice').innerText = marketPrice.toFixed(4);
-            document.getElementById('orderBookCenterPrice').innerHTML = `${marketPrice.toFixed(4)} <span style="font-size: 0.7em; color: #848e9c;">Spot</span>`;
+            document.getElementById('orderBookCenterPrice').innerHTML = `${marketPrice.toFixed(4)} <span style="font-size: 0.65em; color: #848e9c;">Spot</span>`;
             document.getElementById('userUsdtDisplay').innerText = userWalletData.usdtBalance.toFixed(2);
             document.getElementById('userFaraDisplay').innerText = userWalletData.faraBalance.toFixed(2);
             document.getElementById('axCurrentTag').innerText = marketPrice.toFixed(4);
@@ -519,7 +589,7 @@
 
             let limitTbody = document.getElementById('limitOrdersTableBody');
             if(activeLimitOrders.length === 0) {
-                limitTbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666; padding: 10px;">Tidak ada order limit aktif.</td></tr>`;
+                limitTbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666; padding: 8px;">Tidak ada order limit aktif.</td></tr>`;
             } else {
                 limitTbody.innerHTML = activeLimitOrders.map(o => `
                     <tr>
@@ -533,7 +603,7 @@
 
             let posTbody = document.getElementById('positionsTableBody');
             if(openPositions.length === 0) {
-                posTbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666; padding: 10px;">Belum ada posisi terbuka.</td></tr>`;
+                posTbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #666; padding: 8px;">Belum ada posisi terbuka.</td></tr>`;
             } else {
                 posTbody.innerHTML = openPositions.map(p => `
                     <tr>
@@ -546,14 +616,12 @@
             }
         }
 
-        // Render Sumbu Waktu Bawah: Berderet Independen (Waktu Sebelum & Sesudahnya Mengikuti Geseran & Zoom)
         function renderDynamicTimeAxis() {
             const axisContainer = document.getElementById('timeAxisContainer');
             let now = new Date();
             let months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
             
             let html = '';
-            // Deretan tanggal masa lalu (-30 hari) hingga masa depan (+30 hari) terbentang mandiri
             for (let i = -30; i <= 30; i += 3) {
                 let targetDate = new Date(now.getTime() + (i * 24 * 60 * 60 * 1000));
                 let d = String(targetDate.getDate()).padStart(2, '0');
@@ -581,23 +649,23 @@
             let bodyEdgePrice = isGreen ? Math.max(candle.o, candle.c) : Math.min(candle.o, candle.c);
             marketPrice = bodyEdgePrice;
 
-            let chartHeightPx = 180;
+            let chartHeightPx = 150;
             let halfSpread = priceSpread / 2;
             let minP = marketPrice - halfSpread;
             let maxP = marketPrice + halfSpread;
             let spread = maxP - minP;
 
             let edgePriceY = chartHeightPx - ((bodyEdgePrice - minP) / spread) * chartHeightPx;
-            let finalY = Math.max(12, Math.min(chartHeightPx - 12, edgePriceY)) + chartOffsetY;
+            let finalY = Math.max(10, Math.min(chartHeightPx - 10, edgePriceY)) + chartOffsetY;
 
             let topPx = chartHeightPx - ((Math.max(candle.o, candle.c) - minP) / spread) * chartHeightPx + chartOffsetY;
             let bottomPx = chartHeightPx - ((Math.min(candle.o, candle.c) - minP) / spread) * chartHeightPx + chartOffsetY;
-            let bodyHeight = Math.max(6, Math.abs(bottomPx - topPx));
+            let bodyHeight = Math.max(5, Math.abs(bottomPx - topPx));
             let bodyTop = Math.min(topPx, bottomPx);
 
             let wickTopPx = chartHeightPx - ((candle.h - minP) / spread) * chartHeightPx + chartOffsetY;
             let wickBottomPx = chartHeightPx - ((candle.l - minP) / spread) * chartHeightPx + chartOffsetY;
-            let wickHeight = Math.max(bodyHeight + 12, Math.abs(wickBottomPx - wickTopPx));
+            let wickHeight = Math.max(bodyHeight + 10, Math.abs(wickBottomPx - wickTopPx));
             let wickTopPos = Math.min(wickTopPx, wickBottomPx);
 
             lineEl.style.top = finalY + 'px';
@@ -610,7 +678,6 @@
 
             renderDynamicTimeAxis();
 
-            // Sumbu wick & body candle dijamin posisinya presisi pas di tengah
             container.innerHTML = `
                 <div class="mt-single-candle ${typeClass}" style="left: ${chartOffsetX}px; top: ${wickTopPos}px;">
                     <div class="candle-wick" style="height: ${wickHeight}px;"></div>
@@ -619,7 +686,6 @@
             `;
         }
 
-        // Interaksi Drag Canvas (Geser Kiri/Kanan & Atas/Bawah)
         const chartArea = document.getElementById('mtChartArea');
         let isDragging = false;
         let startX, startY;
@@ -649,7 +715,6 @@
 
         window.addEventListener('mouseup', () => { isDragging = false; });
 
-        // Interaksi Tarik Sumbu Kanan (Vertical Zoom Harga)
         const axisRight = document.getElementById('mtAxisRight');
         let isScaling = false;
         let scaleStartY = 0;
@@ -676,7 +741,6 @@
 
         window.addEventListener('mouseup', () => { isScaling = false; });
 
-        // Interaksi Tarik Sumbu Bawah (Horizontal Zoom Waktu & Jarak Tanggal)
         const timeAxis = document.getElementById('timeAxisContainer');
         let isTimeScaling = false;
         let timeScaleStartX = 0;
