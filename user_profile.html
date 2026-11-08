@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAFI Detail Profil Pengguna</title>
+    <style>
+        body {
+            margin: 0;
+            background: #121214;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .profile-detail-container {
+            position: relative;
+            width: 380px;
+            height: 720px;
+            background: #09090b;
+            color: #fff;
+            border-radius: 20px;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 2px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Header Atas */
+        .header-nav {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 13px;
+            border-bottom: 1px solid #27272a;
+            background: #121212;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Tombol Kembali di Sudut Kanan Atas */
+        .close-profile-btn {
+            background: #27272a;
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .close-profile-btn:hover {
+            background: #10b981;
+            color: #000;
+        }
+
+        /* Bagian Utama Profil */
+        .profile-main-info {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .avatar-box {
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            background: #27272a;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #eab308;
+            margin-bottom: 12px;
+            box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
+            box-sizing: border-box;
+        }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-box span { font-size: 28px; }
+
+        /* Statistik Angka */
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            margin: 8px 0;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            font-size: 11px;
+            color: #a1a1aa;
+        }
+        .stat-item strong {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        /* Medali Pangkat & Username */
+        .medali-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
+            margin-top: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .username-handle {
+            font-size: 12px;
+            color: #a1a1aa;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+        .bio-desc {
+            font-size: 10px;
+            color: #71717a;
+            margin-top: 6px;
+            line-height: 1.4;
+            padding: 0 20px;
+        }
+
+        /* Menu Pintasan Cepat */
+        .shortcuts-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 12px 0;
+            border-top: 1px solid #18181b;
+            border-bottom: 1px solid #18181b;
+            background: #121212;
+            margin-top: 12px;
+        }
+        .shortcut-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #d4d4d8;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .shortcut-item span.icon { font-size: 16px; }
+
+        /* VIP Badge Banner */
+        .vip-banner {
+            margin: 12px 16px;
+            background: #18181b;
+            border: 1px solid #27272a;
+            padding: 10px 14px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tombol Aksi (Edit Profil & Tambah Teman) */
+        .action-buttons-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            padding: 0 16px;
+            box-sizing: border-box;
+            margin-top: 6px;
+        }
+        .btn-profile-action {
+            flex: 1;
+            padding: 8px;
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .btn-profile-action:hover { background: #27272a; border-color: #10b981; }
+
+        /* Tab Grid Karya */
+        .content-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #27272a;
+            margin-top: 14px;
+            background: #121212;
+        }
+        .content-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #52525b;
+        }
+        .content-tab.active { border-bottom-color: #10b981; color: #10b981; }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: #18181b;
+            min-height: 120px;
+        }
+        .grid-item {
+            background: #27272a;
+            aspect-ratio: 9/16;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #a1a1aa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Footer Aksi Bawah */
+        .footer-action-area {
+            padding: 16px;
+            text-align: center;
+            background: #121212;
+            border-top: 1px solid #27272a;
+            margin-top: auto;
+        }
+        .footer-desc {
+            font-size: 10px;
+            color: #a1a1aa;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .btn-teruskan {
+            background: #10b981;
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-detail-container">
+        
+        <!-- Header Navigasi dengan Tombol Kembali -->
+        <div class="header-nav">
+            <span id="headerNameTitle">Rian Rawalangi</span>
+            <button class="close-profile-btn" id="closeProfileBtn" title="Kembali ke Reels">&times;</button>
+        </div>
+
+        <!-- Info Utama Profil -->
+        <div class="profile-main-info">
+            <div class="avatar-box" id="detailAvatarBox">
+                <span id="detailAvatarEmoji">💎</span>
+                <img id="detailAvatarImg" src="" alt="" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <!-- Statistik -->
+            <div class="stats-row">
+                <div class="stat-item"><strong>0</strong> <span>pengikut</span></div>
+                <div class="stat-item"><strong>4</strong> <span>mengikuti</span></div>
+                <div class="stat-item"><strong>0</strong> <span>Jumlah disukai</span></div>
+            </div>
+
+            <div class="medali-badge" id="profileRankBadge">LV.10 MILIARDER</div>
+            <div class="username-handle" id="detailUsernameHandle">@user_web3</div>
+            
+            <div class="bio-desc">
+                Tambahkan biodata akan membantu Anda mendapatkan lebih banyak pengikut &gt;
+            </div>
+
+            <!-- Menu Pintasan Cepat -->
+            <div class="shortcuts-row">
+                <div class="shortcut-item" onclick="alert('Membuka Riwayat Tontonan')">
+                    <span class="icon">🕒</span>
+                    <span>Riwayat tontonan</span>
+                </div>
+                <div class="shortcut-item" onclick="alert('Membuka Pusat Kreator')">
+                    <span class="icon">⚡</span>
+                    <span>Pusat Kreator</span>
+                </div>
+                <div class="shortcut-item" onclick="alert('Membuka Komentar')">
+                    <span class="icon">💬</span>
+                    <span>Komentar</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner VIP / Pangkat Ekosistem -->
+        <div class="vip-banner">
+            <div style="font-size: 22px;">💎</div>
+            <div>
+                <div style="font-size: 11px; font-weight: bold; color: #fbbf24;">VIPO Ekosistem FAFI</div>
+                <div style="font-size: 9px; color: #10b981;">Status Akun Terverifikasi &amp; Premium</div>
+            </div>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="action-buttons-row">
+            <button class="btn-profile-action" onclick="window.location.href='/profile'">Edit Profil</button>
+            <button class="btn-profile-action" onclick="alert('Mencari Teman Baru')">Tambah Teman</button>
+        </div>
+
+        <!-- Tab Grid Karya -->
+        <div class="content-tabs">
+            <div class="content-tab active">🟦</div>
+            <div class="content-tab">🔒</div>
+            <div class="content-tab">🤍</div>
+            <div class="content-tab">🔖</div>
+        </div>
+
+        <div class="video-grid">
+            <div class="grid-item">Video 1</div>
+            <div class="grid-item">Video 2</div>
+            <div class="grid-item">Video 3</div>
+        </div>
+
+        <!-- Footer Ajakan -->
+        <div class="footer-action-area">
+            <div class="footer-desc">Teruskan karya terbarunya dalam album ponsel, membantu anda berkenalan dengan teman lebih banyak!</div>
+            <button class="btn-teruskan" onclick="window.location.href='/reels'">Teruskan sekarang</button>
+        </div>
+
+    </div>
+
+    <script>
+        const fafiRanks = [
+            { level: 1, name: "WARGA", min: 0, max: 0, bg: "linear-gradient(135deg, #9ca3af, #4b5563)", border: "#9ca3af", color: "#fff" },
+            { level: 2, name: "SOSIAL", min: 1, max: 9, bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", border: "#60a5fa", color: "#fff" },
+            { level: 3, name: "FRIENDLY", min: 10, max: 24, bg: "linear-gradient(135deg, #34d399, #047857)", border: "#34d399", color: "#fff" },
+            { level: 4, name: "LOYALIS", min: 25, max: 49, bg: "linear-gradient(135deg, #38bdf8, #0369a1)", border: "#38bdf8", color: "#fff" },
+            { level: 5, name: "DERMAWAN", min: 50, max: 99, bg: "linear-gradient(135deg, #c084fc, #7e22ce)", border: "#c084fc", color: "#fff" },
+            { level: 6, name: "DONATUR", min: 100, max: 249, bg: "linear-gradient(135deg, #e879f9, #a21caf)", border: "#e879f9", color: "#fff" },
+            { level: 7, name: "JURAGAN", min: 250, max: 499, bg: "linear-gradient(135deg, #fbbf24, #b45309)", border: "#fbbf24", color: "#000" },
+            { level: 8, name: "SAUDAGAR", min: 500, max: 749, bg: "linear-gradient(135deg, #f59e0b, #92400e)", border: "#f59e0b", color: "#000" },
+            { level: 9, name: "HARTAWAN", min: 750, max: 999, bg: "linear-gradient(135deg, #fb923c, #c2410c)", border: "#fb923c", color: "#fff" },
+            { level: 10, name: "MILIARDER", min: 1000, max: 1499, bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", border: "#eab308", color: "#422006" },
+            { level: 11, name: "KONGLOMERAT", min: 1500, max: 1999, bg: "linear-gradient(135deg, #fde047, #ca8a04)", border: "#fde047", color: "#000" },
+            { level: 12, name: "ELITE", min: 2000, max: 2499, bg: "linear-gradient(135deg, #22d3ee, #0284c7)", border: "#22d3ee", color: "#000" },
+            { level: 13, name: "LEGENDA", min: 2500, max: 3499, bg: "linear-gradient(135deg, #f43f5e, #be123c)", border: "#f43f5e", color: "#fff" },
+            { level: 14, name: "KAISAR", min: 3500, max: 4249, bg: "linear-gradient(135deg, #8b5cf6, #4c1d95)", border: "#8b5cf6", color: "#fff" },
+            { level: 15, name: "IMPERATOR", min: 4250, max: 4999, bg: "linear-gradient(135deg, #06b6d4, #1e40af)", border: "#06b6d4", color: "#fff" },
+            { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", border: "#ef4444", color: "#fff" }
+        ];
+
+        function getUserRank(totalFara) {
+            for (let i = fafiRanks.length - 1; i >= 0; i--) {
+                if (totalFara >= fafiRanks[i].min) {
+                    return fafiRanks[i];
+                }
+            }
+            return fafiRanks[0];
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Tombol kembali langsung mengarahkan ke halaman /reels
+            document.getElementById('closeProfileBtn').addEventListener('click', () => {
+                window.location.href = '/reels';
+            });
+
+            let myUsername = "@user_web3";
+            let myName = "Rian Rawalangi";
+            let savedAvatar = localStorage.getItem('fafiUserAvatar') || "";
+            const savedUser = localStorage.getItem('faFiUserData');
+            
+            if (savedUser) {
+                try {
+                    const userData = JSON.parse(savedUser);
+                    if (userData.username) {
+                        myUsername = userData.username.startsWith('@') ? userData.username : '@' + userData.username;
+                    }
+                } catch(e) {}
+            }
+
+            document.getElementById('headerNameTitle').innerText = myName;
+            document.getElementById('detailUsernameHandle').innerText = myUsername;
+
+            const userTotalFara = 1250; 
+            const rankObj = getUserRank(userTotalFara);
+            
+            const badgeEl = document.getElementById('profileRankBadge');
+            badgeEl.innerText = `LV.${rankObj.level} ${rankObj.name}`;
+            badgeEl.style.background = rankObj.bg;
+            badgeEl.style.color = rankObj.color;
+
+            const avatarBox = document.getElementById('detailAvatarBox');
+            avatarBox.style.borderColor = rankObj.border;
+            avatarBox.style.boxShadow = `0 0 12px ${rankObj.border}66`;
+
+            const imgEl = document.getElementById('detailAvatarImg');
+            const emojiEl = document.getElementById('detailAvatarEmoji');
+            if (savedAvatar) {
+                imgEl.src = savedAvatar;
+                imgEl.style.display = 'block';
+                emojiEl.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -121,6 +121,12 @@
             animation: fadeInBubble 0.3s ease-out;
             pointer-events: auto;
             line-height: 1.3;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .floating-comment-bubble:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
         }
         .floating-comment-user {
             font-weight: bold;
@@ -246,6 +252,7 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
+            cursor: pointer;
         }
         .fafi-avatar-img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -449,9 +456,9 @@
             </div>
         </div>
 
-        <!-- Area Gelembung Komentar Melayang -->
+        <!-- Area Gelembung Komentar Melayang (Bisa diklik untuk buka profil kreator lain) -->
         <div class="floating-comments-box" id="floatingCommentsBox">
-            <div class="floating-comment-bubble">
+            <div class="floating-comment-bubble" onclick="window.location.href='/creator_profile'" title="Lihat Profil Kreator">
                 <span class="floating-comment-user">@godiamond</span>
                 <span class="floating-comment-badge" style="background: linear-gradient(135deg, #22d3ee, #0284c7); color: #000;">LV.12</span>
                 <span class="floating-comment-text">Mantap platform trading & sosialfi FAFI! 🚀</span>
@@ -471,11 +478,14 @@
             <div class="fafi-profile-container">
                 <div class="fafi-rank-crown-badge" id="displayRankCrown">LV.10</div>
                 
-                <div class="fafi-avatar-wrapper" id="reelsAvatarWrapper">
+                <!-- Avatar Profil Utama (Membuka profil sendiri /user_profile) -->
+                <div class="fafi-avatar-wrapper" id="reelsAvatarWrapper" title="Klik untuk lihat profil sendiri">
                     <span id="reelsAvatarEmoji" style="font-size: 20px;">💎</span>
                     <img src="" alt="Profil" class="fafi-avatar-img" id="reelsUserAvatarImg" style="display: none;">
                 </div>
-                <button class="fafi-follow-badge" id="followBtn" title="Ikuti">+</button>
+                
+                <!-- Tombol Follow 4 Status -->
+                <button class="fafi-follow-badge" id="followBtn" title="Status Hubungan">+</button>
             </div>
 
             <button class="action-btn" id="likeBtn">❤️ <span id="likeCount">0</span></button>
@@ -719,6 +729,11 @@
             reelsAvatarWrapper.style.borderColor = currentRank.border;
             reelsAvatarWrapper.style.boxShadow = `0 0 10px ${currentRank.border}66`;
 
+            // Ketika foto profil di Reels diklik -> Membuka Profil Sendiri (/user_profile)
+            reelsAvatarWrapper.addEventListener('click', () => {
+                window.location.href = '/user_profile';
+            });
+
             const reelsAvatarImg = document.getElementById('reelsUserAvatarImg');
             const reelsAvatarEmoji = document.getElementById('reelsAvatarEmoji');
             if (savedAvatar) {
@@ -761,25 +776,37 @@
             document.getElementById('uploadVideoBtn').addEventListener('click', () => { uploadModal.style.display = 'flex'; });
             document.getElementById('closeUploadModal').addEventListener('click', () => { uploadModal.style.display = 'none'; });
 
-            // LOGIKA INTERAKTIF TOMBOL FOLLOW ( + Merah -> Centang Hijau -> Centang Biru )
+            // LOGIKA INTERAKTIF TOMBOL FOLLOW 4 STATUS:
+            // State 0: Merah (+) -> Belum Mengikuti
+            // State 1: Kuning (✓) -> Pengikut
+            // State 2: Hijau (✓) -> Mengikuti
+            // State 3: Biru (✓) -> Teman
             const followBtn = document.getElementById('followBtn');
             let followState = 0; 
 
             if (followBtn) {
+                followBtn.innerHTML = '+';
+                followBtn.style.background = '#ef4444'; // Merah
+                followBtn.style.color = '#fff';
+
                 followBtn.addEventListener('click', () => {
-                    followState = (followState + 1) % 3;
+                    followState = (followState + 1) % 4;
                     if (followState === 0) {
                         followBtn.innerHTML = '+';
-                        followBtn.style.background = '#ef4444'; // Merah
-                        followBtn.title = 'Ikuti';
+                        followBtn.style.background = '#ef4444'; // Merah (Belum Mengikuti)
+                        followBtn.title = 'Belum Mengikuti';
                     } else if (followState === 1) {
+                        followBtn.innerHTML = '✓';
+                        followBtn.style.background = '#eab308'; // Kuning (Pengikut)
+                        followBtn.title = 'Pengikut';
+                    } else if (followState === 2) {
                         followBtn.innerHTML = '✓';
                         followBtn.style.background = '#10b981'; // Hijau (Mengikuti)
                         followBtn.title = 'Mengikuti';
-                    } else if (followState === 2) {
+                    } else if (followState === 3) {
                         followBtn.innerHTML = '✓';
-                        followBtn.style.background = '#3b82f6'; // Biru (Berteman)
-                        followBtn.title = 'Berteman';
+                        followBtn.style.background = '#3b82f6'; // Biru (Teman)
+                        followBtn.title = 'Teman';
                     }
                 });
             }
@@ -796,11 +823,18 @@
             function addFloatingComment(user, text, rankObj) {
                 const bubble = document.createElement('div');
                 bubble.className = 'floating-comment-bubble';
+                bubble.title = `Lihat profil ${user}`;
                 bubble.innerHTML = `
                     <span class="floating-comment-user">${user}</span>
                     <span class="floating-comment-badge" style="background: ${rankObj.bg}; color: ${rankObj.color};">LV.${rankObj.level}</span>
                     <span class="floating-comment-text">${text}</span>
                 `;
+                
+                // Ketika gelembung komentar diklik, lari ke Profil Kreator Lain
+                bubble.addEventListener('click', () => {
+                    window.location.href = '/creator_profile';
+                });
+
                 commentBox.appendChild(bubble);
 
                 if (commentBox.children.length > 5) {

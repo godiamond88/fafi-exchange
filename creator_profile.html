@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAFI Profil Kreator Lain</title>
+    <style>
+        body {
+            margin: 0;
+            background: #121214;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .creator-profile-container {
+            position: relative;
+            width: 380px;
+            height: 720px;
+            background: #09090b;
+            color: #fff;
+            border-radius: 20px;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 2px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Header Atas */
+        .header-nav {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 13px;
+            border-bottom: 1px solid #27272a;
+            background: #121212;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        /* Tombol Kembali di Sudut Kanan Atas */
+        .close-profile-btn {
+            background: #27272a;
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .close-profile-btn:hover {
+            background: #ef4444;
+        }
+
+        /* Bagian Utama Profil */
+        .profile-main-info {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .avatar-box {
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            background: #27272a;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #eab308;
+            margin-bottom: 12px;
+            box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
+            box-sizing: border-box;
+            position: relative;
+        }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Statistik Angka */
+        .stats-row {
+            display: flex;
+            gap: 25px;
+            margin: 8px 0;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            font-size: 11px;
+            color: #a1a1aa;
+        }
+        .stat-item strong {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        /* Medali Pangkat & Username */
+        .medali-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
+            margin-top: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .username-handle {
+            font-size: 12px;
+            color: #a1a1aa;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+
+        /* Tombol Aksi (+ Ikuti & Dropdown) */
+        .action-buttons-row {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+            padding: 0 16px;
+            box-sizing: border-box;
+            margin-top: 14px;
+        }
+        .btn-follow {
+            flex: 1;
+            padding: 9px;
+            background: #ef4444;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            transition: background 0.2s;
+        }
+        .btn-follow.following {
+            background: #18181b;
+            color: #fff;
+            border: 1px solid #27272a;
+        }
+        .btn-dropdown {
+            width: 38px;
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Tab Navigasi Konten */
+        .content-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #27272a;
+            margin-top: 16px;
+            background: #121212;
+        }
+        .content-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #52525b;
+        }
+        .content-tab.active { border-bottom-color: #10b981; color: #10b981; }
+
+        /* Grid Video Karya */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: #18181b;
+            min-height: 250px;
+        }
+        .grid-item {
+            background: #27272a;
+            aspect-ratio: 9/16;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 6px;
+            font-size: 9px;
+            color: #fff;
+            position: relative;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="creator-profile-container">
+        
+        <!-- Header Atas dengan Tombol Kembali -->
+        <div class="header-nav">
+            <span id="creatorHeaderName">Adis Gendhis</span>
+            <button class="close-profile-btn" id="closeProfileBtn" title="Kembali ke Reels">&times;</button>
+        </div>
+
+        <!-- Info Utama Profil Kreator -->
+        <div class="profile-main-info">
+            <div class="avatar-box" id="creatorAvatarBox">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar" id="creatorAvatarImg">
+            </div>
+
+            <!-- Statistik Publik -->
+            <div class="stats-row">
+                <div class="stat-item"><strong>2.5K</strong> <span>pengikut</span></div>
+                <div class="stat-item"><strong>2</strong> <span>mengikuti</span></div>
+                <div class="stat-item"><strong>27.9K</strong> <span>Jumlah disukai</span></div>
+            </div>
+
+            <div class="medali-badge" id="creatorRankBadge">LV.12 ELITE</div>
+            <div class="username-handle">@gendhis213</div>
+        </div>
+
+        <!-- Tombol Aksi Utama (+ Ikuti) -->
+        <div class="action-buttons-row">
+            <button class="btn-follow" id="followActionBtn">+ Ikuti</button>
+            <button class="btn-dropdown" id="dropdownActionBtn">▼</button>
+        </div>
+
+        <!-- Tab Navigasi Konten -->
+        <div class="content-tabs">
+            <div class="content-tab active">🟦</div>
+            <div class="content-tab">🤍</div>
+        </div>
+
+        <!-- Grid Video Karya -->
+        <div class="video-grid">
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150') center/cover;">
+                <span>▶ 931</span>
+            </div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=150') center/cover;">
+                <span>▶ 1.4K</span>
+            </div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1584282483830-74697ff9101d?w=150') center/cover;">
+                <span>▶ 736</span>
+            </div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150') center/cover;">
+                <span>▶ 3.2K</span>
+            </div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=150') center/cover;">
+                <span>▶ 5.1K</span>
+            </div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=150') center/cover;">
+                <span>▶ 890</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const fafiRanks = [
+            { level: 1, name: "WARGA", min: 0, max: 0, bg: "linear-gradient(135deg, #9ca3af, #4b5563)", border: "#9ca3af", color: "#fff" },
+            { level: 2, name: "SOSIAL", min: 1, max: 9, bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", border: "#60a5fa", color: "#fff" },
+            { level: 3, name: "FRIENDLY", min: 10, max: 24, bg: "linear-gradient(135deg, #34d399, #047857)", border: "#34d399", color: "#fff" },
+            { level: 4, name: "LOYALIS", min: 25, max: 49, bg: "linear-gradient(135deg, #38bdf8, #0369a1)", border: "#38bdf8", color: "#fff" },
+            { level: 5, name: "DERMAWAN", min: 50, max: 99, bg: "linear-gradient(135deg, #c084fc, #7e22ce)", border: "#c084fc", color: "#fff" },
+            { level: 6, name: "DONATUR", min: 100, max: 249, bg: "linear-gradient(135deg, #e879f9, #a21caf)", border: "#e879f9", color: "#fff" },
+            { level: 7, name: "JURAGAN", min: 250, max: 499, bg: "linear-gradient(135deg, #fbbf24, #b45309)", border: "#fbbf24", color: "#000" },
+            { level: 8, name: "SAUDAGAR", min: 500, max: 749, bg: "linear-gradient(135deg, #f59e0b, #92400e)", border: "#f59e0b", color: "#000" },
+            { level: 9, name: "HARTAWAN", min: 750, max: 999, bg: "linear-gradient(135deg, #fb923c, #c2410c)", border: "#fb923c", color: "#fff" },
+            { level: 10, name: "MILIARDER", min: 1000, max: 1499, bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", border: "#eab308", color: "#422006" },
+            { level: 11, name: "KONGLOMERAT", min: 1500, max: 1999, bg: "linear-gradient(135deg, #fde047, #ca8a04)", border: "#fde047", color: "#000" },
+            { level: 12, name: "ELITE", min: 2000, max: 2499, bg: "linear-gradient(135deg, #22d3ee, #0284c7)", border: "#22d3ee", color: "#000" },
+            { level: 13, name: "LEGENDA", min: 2500, max: 3499, bg: "linear-gradient(135deg, #f43f5e, #be123c)", border: "#f43f5e", color: "#fff" },
+            { level: 14, name: "KAISAR", min: 3500, max: 4249, bg: "linear-gradient(135deg, #8b5cf6, #4c1d95)", border: "#8b5cf6", color: "#fff" },
+            { level: 15, name: "IMPERATOR", min: 4250, max: 4999, bg: "linear-gradient(135deg, #06b6d4, #1e40af)", border: "#06b6d4", color: "#fff" },
+            { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", border: "#ef4444", color: "#fff" }
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Tombol kembali langsung mengarahkan ke halaman /reels
+            document.getElementById('closeProfileBtn').addEventListener('click', () => {
+                window.location.href = '/reels';
+            });
+
+            const creatorFara = 2200;
+            let rankObj = fafiRanks[11];
+            for (let i = fafiRanks.length - 1; i >= 0; i--) {
+                if (creatorFara >= fafiRanks[i].min) {
+                    rankObj = fafiRanks[i];
+                    break;
+                }
+            }
+
+            const badgeEl = document.getElementById('creatorRankBadge');
+            badgeEl.innerText = `LV.${rankObj.level} ${rankObj.name}`;
+            badgeEl.style.background = rankObj.bg;
+            badgeEl.style.color = rankObj.color;
+
+            const avatarBox = document.getElementById('creatorAvatarBox');
+            avatarBox.style.borderColor = rankObj.border;
+            avatarBox.style.boxShadow = `0 0 12px ${rankObj.border}66`;
+
+            const followBtn = document.getElementById('followActionBtn');
+            let isFollowing = false;
+
+            followBtn.addEventListener('click', () => {
+                isFollowing = !isFollowing;
+                if (isFollowing) {
+                    followBtn.innerText = "Mengikuti";
+                    followBtn.classList.add('following');
+                } else {
+                    followBtn.innerText = "+ Ikuti";
+                    followBtn.classList.remove('following');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
