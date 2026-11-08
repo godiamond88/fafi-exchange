@@ -125,7 +125,7 @@
             font-weight: bold;
         }
 
-        /* Tombol Aksi (+ Ikuti & Dropdown) */
+        /* Tombol Aksi (Ikuti, Blokir, & Dropdown) */
         .action-buttons-row {
             display: flex;
             gap: 6px;
@@ -152,6 +152,23 @@
             background: #18181b;
             color: #fff;
             border: 1px solid #27272a;
+        }
+        /* Tombol Blokir Pengguna */
+        .btn-block {
+            padding: 9px 12px;
+            background: #27272a;
+            border: 1px solid #3f3f46;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fca5a5;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-block:hover {
+            background: #7f1d1d;
+            color: #fff;
+            border-color: #ef4444;
         }
         .btn-dropdown {
             width: 38px;
@@ -180,15 +197,8 @@
             border-bottom: 1px solid #27272a;
             padding: 12px 16px;
             box-sizing: border-box;
-            animation: fadeInDropdown 0.25s ease-out;
         }
-        .suggested-dropdown-box.show {
-            display: flex;
-        }
-        @keyframes fadeInDropdown {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .suggested-dropdown-box.show { display: flex; }
 
         .suggested-header-row {
             display: flex;
@@ -209,25 +219,15 @@
             gap: 10px;
             overflow-x: auto;
             padding-bottom: 6px;
-            scrollbar-width: thin;
-            scrollbar-color: #3f3f46 transparent;
-        }
-        .suggested-scroll-container::-webkit-scrollbar {
-            height: 4px;
-        }
-        .suggested-scroll-container::-webkit-scrollbar-thumb {
-            background: #3f3f46;
-            border-radius: 4px;
         }
 
-        /* Card Akun Rekomendasi */
         .suggested-card {
-            min-width: 135px;
-            max-width: 135px;
+            min-width: 115px;
+            max-width: 115px;
             background: #18181b;
             border: 1px solid #27272a;
             border-radius: 10px;
-            padding: 10px 8px;
+            padding: 10px 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -245,8 +245,8 @@
             cursor: pointer;
         }
         .suggested-card-avatar {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             overflow: hidden;
             background: #27272a;
@@ -256,7 +256,7 @@
         .suggested-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
         .suggested-card-name {
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: bold;
             color: #fff;
             white-space: nowrap;
@@ -265,39 +265,119 @@
             width: 100%;
             margin-bottom: 2px;
         }
-        
-        /* Badge Level di Card */
         .suggested-card-level {
-            font-size: 7.5px;
+            font-size: 7px;
             font-weight: 900;
-            padding: 1px 6px;
+            padding: 1px 4px;
             border-radius: 4px;
             display: inline-block;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
-
         .suggested-card-followers {
-            font-size: 9px;
+            font-size: 8.5px;
             color: #a1a1aa;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .suggested-card-btn {
             width: 100%;
-            padding: 5px 0;
+            padding: 4px 0;
             background: #ef4444;
             color: #fff;
             border: none;
-            border-radius: 6px;
-            font-size: 10px;
+            border-radius: 5px;
+            font-size: 9.5px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
         }
         .suggested-card-btn.following {
             background: #27272a;
             color: #d4d4d8;
             border: 1px solid #3f3f46;
         }
+
+        /* FULL GRID MODAL (3 Kolom x 4 Baris) */
+        .full-recommend-modal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #09090b;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            box-sizing: border-box;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .full-recommend-modal.show { display: flex; }
+
+        .full-modal-header {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 13px;
+            border-bottom: 1px solid #27272a;
+            background: #121212;
+        }
+
+        .full-grid-body {
+            flex: 1;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .full-grid-card {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+            justify-content: space-between;
+        }
+        .full-grid-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #eab308;
+            margin-bottom: 2px;
+        }
+        .full-grid-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .full-grid-name { font-size: 9px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .full-grid-level { font-size: 6.5px; font-weight: 900; padding: 1px 3px; border-radius: 3px; }
+        .full-grid-followers { font-size: 8px; color: #a1a1aa; }
+        .full-grid-btn { width: 100%; padding: 3px 0; background: #ef4444; color: #fff; border: none; border-radius: 4px; font-size: 9px; font-weight: bold; cursor: pointer; }
+        .full-grid-btn.following { background: #27272a; color: #d4d4d8; }
+
+        .full-modal-footer {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #121212;
+            border-top: 1px solid #27272a;
+        }
+        .nav-page-btn {
+            background: #27272a;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .nav-page-btn:hover { background: #10b981; color: #000; }
+        .page-indicator { font-size: 11px; color: #a1a1aa; font-weight: bold; }
 
         /* Tab Navigasi Konten */
         .content-tabs {
@@ -368,67 +448,61 @@
             <div class="username-handle">@gendhis213</div>
         </div>
 
-        <!-- Tombol Aksi (+ Ikuti & Dropdown) -->
+        <!-- Tombol Aksi (+ Ikuti, Blokir, & Dropdown) -->
         <div class="action-buttons-row">
             <button class="btn-follow" id="followActionBtn">+ Ikuti</button>
+            <button class="btn-block" id="blockActionBtn" title="Blokir Pengguna">Blokir</button>
             <button class="btn-dropdown" id="dropdownActionBtn" title="Rekomendasi Akun">▼</button>
         </div>
 
-        <!-- DROPDOWN: Orang yang mungkin juga Anda ikuti (Lengkap dengan Level) -->
+        <!-- DROPDOWN REKOMENDASI KECIL -->
         <div class="suggested-dropdown-box" id="suggestedDropdown">
             <div class="suggested-header-row">
                 <span>Orang yang mungkin juga Anda ikuti</span>
-                <span class="see-more" onclick="alert('Melihat lebih banyak rekomendasi kreator...')">Lihat lebih... &gt;</span>
+                <span class="see-more" id="seeMoreBtn">Lihat lebih... &gt;</span>
             </div>
             
             <div class="suggested-scroll-container">
-                <!-- Card 1 -->
                 <div class="suggested-card" id="sugCard1">
                     <span class="suggested-card-close" onclick="document.getElementById('sugCard1').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" alt="User">
-                    </div>
+                    <div class="suggested-card-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" alt="User"></div>
                     <div class="suggested-card-name">berita heboh</div>
                     <span class="suggested-card-level" style="background: linear-gradient(135deg, #60a5fa, #1d4ed8); color: #fff;">LV.7 JURAGAN</span>
                     <div class="suggested-card-followers">17.3K pengikut</div>
                     <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
                 </div>
-
-                <!-- Card 2 -->
                 <div class="suggested-card" id="sugCard2">
                     <span class="suggested-card-close" onclick="document.getElementById('sugCard2').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" alt="User">
-                    </div>
+                    <div class="suggested-card-avatar"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" alt="User"></div>
                     <div class="suggested-card-name">fatima sahra</div>
                     <span class="suggested-card-level" style="background: linear-gradient(135deg, #fef08a, #eab308); color: #422006;">LV.10 MILIARDER</span>
                     <div class="suggested-card-followers">83.4K pengikut</div>
                     <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
                 </div>
-
-                <!-- Card 3 -->
                 <div class="suggested-card" id="sugCard3">
                     <span class="suggested-card-close" onclick="document.getElementById('sugCard3').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar">
-                        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150" alt="User">
-                    </div>
+                    <div class="suggested-card-avatar"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150" alt="User"></div>
                     <div class="suggested-card-name">Berkebun bareng</div>
                     <span class="suggested-card-level" style="background: linear-gradient(135deg, #22d3ee, #0284c7); color: #000;">LV.12 ELITE</span>
                     <div class="suggested-card-followers">244.6K pengikut</div>
                     <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
                 </div>
+            </div>
+        </div>
 
-                <!-- Card 4 -->
-                <div class="suggested-card" id="sugCard4">
-                    <span class="suggested-card-close" onclick="document.getElementById('sugCard4').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="User">
-                    </div>
-                    <div class="suggested-card-name">Crypto Trader</div>
-                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24); color: #fff;">LV.16 SULTAN</span>
-                    <div class="suggested-card-followers">521.0K pengikut</div>
-                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
-                </div>
+        <!-- FULL GRID REKOMENDASI MODAL (3 Kolom x 4 Baris) -->
+        <div class="full-recommend-modal" id="fullRecommendModal">
+            <div class="full-modal-header">
+                <span>Jelajahi Akun Rekomendasi</span>
+                <button class="close-profile-btn" id="closeFullModalBtn">&times;</button>
+            </div>
+            
+            <div class="full-grid-body" id="fullGridContainer"></div>
+
+            <div class="full-modal-footer">
+                <button class="nav-page-btn" id="prevPageBtn">&lt; Kembali</button>
+                <span class="page-indicator" id="pageIndicatorText">Hal 1 dari 3</span>
+                <button class="nav-page-btn" id="nextPageBtn">Terus &gt;</button>
             </div>
         </div>
 
@@ -440,47 +514,71 @@
 
         <!-- Grid Video Karya -->
         <div class="video-grid">
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150') center/cover;">
-                <span>▶ 931</span>
-            </div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=150') center/cover;">
-                <span>▶ 1.4K</span>
-            </div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1584282483830-74697ff9101d?w=150') center/cover;">
-                <span>▶ 736</span>
-            </div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150') center/cover;">
-                <span>▶ 3.2K</span>
-            </div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=150') center/cover;">
-                <span>▶ 5.1K</span>
-            </div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=150') center/cover;">
-                <span>▶ 890</span>
-            </div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150') center/cover;"><span>▶ 931</span></div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=150') center/cover;"><span>▶ 1.4K</span></div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1584282483830-74697ff9101d?w=150') center/cover;"><span>▶ 736</span></div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150') center/cover;"><span>▶ 3.2K</span></div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=150') center/cover;"><span>▶ 5.1K</span></div>
+            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=150') center/cover;"><span>▶ 890</span></div>
         </div>
 
     </div>
 
     <script>
-        const fafiRanks = [
-            { level: 1, name: "WARGA", min: 0, max: 0, bg: "linear-gradient(135deg, #9ca3af, #4b5563)", border: "#9ca3af", color: "#fff" },
-            { level: 2, name: "SOSIAL", min: 1, max: 9, bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", border: "#60a5fa", color: "#fff" },
-            { level: 3, name: "FRIENDLY", min: 10, max: 24, bg: "linear-gradient(135deg, #34d399, #047857)", border: "#34d399", color: "#fff" },
-            { level: 4, name: "LOYALIS", min: 25, max: 49, bg: "linear-gradient(135deg, #38bdf8, #0369a1)", border: "#38bdf8", color: "#fff" },
-            { level: 5, name: "DERMAWAN", min: 50, max: 99, bg: "linear-gradient(135deg, #c084fc, #7e22ce)", border: "#c084fc", color: "#fff" },
-            { level: 6, name: "DONATUR", min: 100, max: 249, bg: "linear-gradient(135deg, #e879f9, #a21caf)", border: "#e879f9", color: "#fff" },
-            { level: 7, name: "JURAGAN", min: 250, max: 499, bg: "linear-gradient(135deg, #fbbf24, #b45309)", border: "#fbbf24", color: "#000" },
-            { level: 8, name: "SAUDAGAR", min: 500, max: 749, bg: "linear-gradient(135deg, #f59e0b, #92400e)", border: "#f59e0b", color: "#000" },
-            { level: 9, name: "HARTAWAN", min: 750, max: 999, bg: "linear-gradient(135deg, #fb923c, #c2410c)", border: "#fb923c", color: "#fff" },
-            { level: 10, name: "MILIARDER", min: 1000, max: 1499, bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", border: "#eab308", color: "#422006" },
-            { level: 11, name: "KONGLOMERAT", min: 1500, max: 1999, bg: "linear-gradient(135deg, #fde047, #ca8a04)", border: "#fde047", color: "#000" },
-            { level: 12, name: "ELITE", min: 2000, max: 2499, bg: "linear-gradient(135deg, #22d3ee, #0284c7)", border: "#22d3ee", color: "#000" },
-            { level: 13, name: "LEGENDA", min: 2500, max: 3499, bg: "linear-gradient(135deg, #f43f5e, #be123c)", border: "#f43f5e", color: "#fff" },
-            { level: 14, name: "KAISAR", min: 3500, max: 4249, bg: "linear-gradient(135deg, #8b5cf6, #4c1d95)", border: "#8b5cf6", color: "#fff" },
-            { level: 15, name: "IMPERATOR", min: 4250, max: 4999, bg: "linear-gradient(135deg, #06b6d4, #1e40af)", border: "#06b6d4", color: "#fff" },
-            { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", border: "#ef4444", color: "#fff" }
+        const allRecommendAccounts = [
+            { name: "berita heboh", lvl: "LV.7 JURAGAN", bg: "#1d4ed8", f: "17.3K", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" },
+            { name: "fatima sahra", lvl: "LV.10 MILIARDER", bg: "#eab308", f: "83.4K", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" },
+            { name: "berkebun bareng", lvl: "LV.12 ELITE", bg: "#0284c7", f: "244.6K", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150" },
+            { name: "crypto trader", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "521.0K", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" },
+            { name: "siti maysarah", lvl: "LV.5 DERMAWAN", bg: "#c084fc", f: "12.1K", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" },
+            { name: "fajar sidiq", lvl: "LV.8 SAUDAGAR", bg: "#f59e0b", f: "45.0K", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
+            { name: "rizky pratama", lvl: "LV.11 KONGLOMERAT", bg: "#ca8a04", f: "110.2K", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" },
+            { name: "dewi lestari", lvl: "LV.3 FRIENDLY", bg: "#34d399", f: "5.4K", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
+            { name: "ahmad dhani", lvl: "LV.13 LEGENDA", bg: "#f43f5e", f: "310.8K", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150" },
+            { name: "putri duyung", lvl: "LV.2 SOSIAL", bg: "#60a5fa", f: "2.1K", img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150" },
+            { name: "eko patrio", lvl: "LV.9 HARTAWAN", bg: "#fb923c", f: "99.5K", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" },
+            { name: "sri muliani", lvl: "LV.15 IMPERATOR", bg: "#06b6d4", f: "880.3K", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150" },
+            { name: "budi doremi", lvl: "LV.4 LOYALIS", bg: "#38bdf8", f: "9.8K", img: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150" },
+            { name: "siti badriah", lvl: "LV.6 DONATUR", bg: "#e879f9", f: "33.2K", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" },
+            { name: "joko widodo", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "1.2M", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
+            { name: "megawati", lvl: "LV.14 KAISAR", bg: "#8b5cf6", f: "450.0K", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
+            { name: "prabowo s", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "2.5M", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" },
+            { name: "anies baswedan", lvl: "LV.13 LEGENDA", bg: "#f43f5e", f: "920.1K", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" },
+            { name: "ganjar pranowo", lvl: "LV.12 ELITE", bg: "#22d3ee", f: "780.4K", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150" },
+            { name: "najwa shihab", lvl: "LV.15 IMPERATOR", bg: "#06b6d4", f: "3.1M", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150" },
+            { name: "deddy corbuzier", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "4.8M", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
+            { name: "raffathar", lvl: "LV.10 MILIARDER", bg: "#eab308", f: "650.0K", img: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150" },
+            { name: "titiek puspa", lvl: "LV.11 KONGLOMERAT", bg: "#ca8a04", f: "150.0K", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
+            { name: "komeng oplet", lvl: "LV.8 SAUDAGAR", bg: "#f59e0b", f: "210.0K", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" }
         ];
+
+        let currentPage = 1;
+        const itemsPerPage = 12;
+
+        function renderFullGrid(page) {
+            const container = document.getElementById('fullGridContainer');
+            container.innerHTML = '';
+            
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = allRecommendAccounts.slice(start, end);
+
+            paginatedItems.forEach(acc => {
+                const card = document.createElement('div');
+                card.className = 'full-grid-card';
+                card.innerHTML = `
+                    <div class="full-grid-avatar"><img src="${acc.img}" alt="Avatar"></div>
+                    <div class="full-grid-name">${acc.name}</div>
+                    <span class="full-grid-level" style="background: ${acc.bg}; color: #fff;">${acc.lvl}</span>
+                    <div class="full-grid-followers">${acc.f} pengikut</div>
+                    <button class="full-grid-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+                `;
+                container.appendChild(card);
+            });
+
+            const maxPage = Math.ceil(allRecommendAccounts.length / itemsPerPage);
+            document.getElementById('pageIndicatorText').innerText = `Hal ${page} dari ${maxPage}`;
+        }
 
         function toggleSugBtn(btn) {
             if (btn.innerText === "Ikuti") {
@@ -505,28 +603,62 @@
                 dropdownBtn.classList.toggle('active');
             });
 
-            const creatorFara = 2200;
-            let rankObj = fafiRanks[11];
-            for (let i = fafiRanks.length - 1; i >= 0; i--) {
-                if (creatorFara >= fafiRanks[i].min) {
-                    rankObj = fafiRanks[i];
-                    break;
+            const fullModal = document.getElementById('fullRecommendModal');
+            document.getElementById('seeMoreBtn').addEventListener('click', () => {
+                renderFullGrid(currentPage);
+                fullModal.classList.add('show');
+            });
+
+            document.getElementById('closeFullModalBtn').addEventListener('click', () => {
+                fullModal.classList.remove('show');
+            });
+
+            document.getElementById('nextPageBtn').addEventListener('click', () => {
+                const maxPage = Math.ceil(allRecommendAccounts.length / itemsPerPage);
+                if (currentPage < maxPage) {
+                    currentPage++;
+                    renderFullGrid(currentPage);
                 }
-            }
+            });
 
-            const badgeEl = document.getElementById('creatorRankBadge');
-            badgeEl.innerText = `LV.${rankObj.level} ${rankObj.name}`;
-            badgeEl.style.background = rankObj.bg;
-            badgeEl.style.color = rankObj.color;
+            document.getElementById('prevPageBtn').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderFullGrid(currentPage);
+                }
+            });
 
-            const avatarBox = document.getElementById('creatorAvatarBox');
-            avatarBox.style.borderColor = rankObj.border;
-            avatarBox.style.boxShadow = `0 0 12px ${rankObj.border}66`;
-
+            // LOGIKA TOMBOL BLOKIR PENGGUNA
+            const blockBtn = document.getElementById('blockActionBtn');
             const followBtn = document.getElementById('followActionBtn');
-            let isFollowing = false;
+            let isBlocked = false;
 
+            blockBtn.addEventListener('click', () => {
+                isBlocked = !isBlocked;
+                if (isBlocked) {
+                    blockBtn.innerText = "Buka Blokir";
+                    blockBtn.style.background = "#7f1d1d";
+                    blockBtn.style.color = "#fff";
+                    followBtn.innerText = "Diblokir";
+                    followBtn.style.background = "#3f3f46";
+                    followBtn.style.cursor = "not-allowed";
+                    followBtn.disabled = true;
+                    alert("⚠️ Pengguna berhasil diblokir. Anda tidak memiliki akses interaksi lagi ke akun ini.");
+                } else {
+                    blockBtn.innerText = "Blokir";
+                    blockBtn.style.background = "#27272a";
+                    blockBtn.style.color = "#fca5a5";
+                    followBtn.innerText = "+ Ikuti";
+                    followBtn.style.background = "#ef4444";
+                    followBtn.style.cursor = "pointer";
+                    followBtn.disabled = false;
+                    alert("🔓 Blokir pengguna dibuka kembali.");
+                }
+            });
+
+            let isFollowing = false;
             followBtn.addEventListener('click', () => {
+                if (isBlocked) return;
                 isFollowing = !isFollowing;
                 if (isFollowing) {
                     followBtn.innerText = "Mengikuti";
@@ -536,6 +668,16 @@
                     followBtn.classList.remove('following');
                 }
             });
+
+            // Set Pangkat Kreator
+            const badgeEl = document.getElementById('creatorRankBadge');
+            badgeEl.innerText = `LV.12 ELITE`;
+            badgeEl.style.background = "linear-gradient(135deg, #22d3ee, #0284c7)";
+            badgeEl.style.color = "#000";
+
+            const avatarBox = document.getElementById('creatorAvatarBox');
+            avatarBox.style.borderColor = "#22d3ee";
+            avatarBox.style.boxShadow = `0 0 12px #22d3ee66`;
         });
     </script>
 </body>
