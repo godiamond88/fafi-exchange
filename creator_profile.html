@@ -48,7 +48,6 @@
             z-index: 10;
         }
         
-        /* Tombol Kembali di Sudut Kanan Atas */
         .close-profile-btn {
             background: #27272a;
             border: none;
@@ -64,9 +63,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .close-profile-btn:hover {
-            background: #ef4444;
-        }
+        .close-profile-btn:hover { background: #ef4444; }
 
         /* Bagian Utama Profil */
         .profile-main-info {
@@ -94,7 +91,6 @@
         }
         .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Statistik Angka */
         .stats-row {
             display: flex;
             gap: 25px;
@@ -112,7 +108,6 @@
             font-weight: 800;
         }
 
-        /* Medali Pangkat & Username */
         .medali-badge {
             display: inline-block;
             padding: 2px 10px;
@@ -169,6 +164,139 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn-dropdown.active {
+            background: #27272a;
+            transform: rotate(180deg);
+        }
+
+        /* Kotak Rekomendasi Akun (Dropdown Scrollable Horizontal) */
+        .suggested-dropdown-box {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            background: #121212;
+            border-bottom: 1px solid #27272a;
+            padding: 12px 16px;
+            box-sizing: border-box;
+            animation: fadeInDropdown 0.25s ease-out;
+        }
+        .suggested-dropdown-box.show {
+            display: flex;
+        }
+        @keyframes fadeInDropdown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggested-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #a1a1aa;
+            margin-bottom: 10px;
+        }
+        .suggested-header-row span.see-more {
+            color: #38bdf8;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .suggested-scroll-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: #3f3f46 transparent;
+        }
+        .suggested-scroll-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .suggested-scroll-container::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 4px;
+        }
+
+        /* Card Akun Rekomendasi */
+        .suggested-card {
+            min-width: 135px;
+            max-width: 135px;
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+        .suggested-card-close {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 12px;
+            color: #71717a;
+            cursor: pointer;
+        }
+        .suggested-card-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #27272a;
+            margin-bottom: 4px;
+            border: 2px solid #eab308;
+        }
+        .suggested-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .suggested-card-name {
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+        
+        /* Badge Level di Card */
+        .suggested-card-level {
+            font-size: 7.5px;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        .suggested-card-followers {
+            font-size: 9px;
+            color: #a1a1aa;
+            margin-bottom: 8px;
+        }
+        .suggested-card-btn {
+            width: 100%;
+            padding: 5px 0;
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .suggested-card-btn.following {
+            background: #27272a;
+            color: #d4d4d8;
+            border: 1px solid #3f3f46;
         }
 
         /* Tab Navigasi Konten */
@@ -176,7 +304,7 @@
             display: flex;
             justify-content: space-around;
             border-top: 1px solid #27272a;
-            margin-top: 16px;
+            margin-top: 10px;
             background: #121212;
         }
         .content-tab {
@@ -240,10 +368,68 @@
             <div class="username-handle">@gendhis213</div>
         </div>
 
-        <!-- Tombol Aksi Utama (+ Ikuti) -->
+        <!-- Tombol Aksi (+ Ikuti & Dropdown) -->
         <div class="action-buttons-row">
             <button class="btn-follow" id="followActionBtn">+ Ikuti</button>
-            <button class="btn-dropdown" id="dropdownActionBtn">▼</button>
+            <button class="btn-dropdown" id="dropdownActionBtn" title="Rekomendasi Akun">▼</button>
+        </div>
+
+        <!-- DROPDOWN: Orang yang mungkin juga Anda ikuti (Lengkap dengan Level) -->
+        <div class="suggested-dropdown-box" id="suggestedDropdown">
+            <div class="suggested-header-row">
+                <span>Orang yang mungkin juga Anda ikuti</span>
+                <span class="see-more" onclick="alert('Melihat lebih banyak rekomendasi kreator...')">Lihat lebih... &gt;</span>
+            </div>
+            
+            <div class="suggested-scroll-container">
+                <!-- Card 1 -->
+                <div class="suggested-card" id="sugCard1">
+                    <span class="suggested-card-close" onclick="document.getElementById('sugCard1').style.display='none'">&times;</span>
+                    <div class="suggested-card-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" alt="User">
+                    </div>
+                    <div class="suggested-card-name">berita heboh</div>
+                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #60a5fa, #1d4ed8); color: #fff;">LV.7 JURAGAN</span>
+                    <div class="suggested-card-followers">17.3K pengikut</div>
+                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="suggested-card" id="sugCard2">
+                    <span class="suggested-card-close" onclick="document.getElementById('sugCard2').style.display='none'">&times;</span>
+                    <div class="suggested-card-avatar">
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" alt="User">
+                    </div>
+                    <div class="suggested-card-name">fatima sahra</div>
+                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #fef08a, #eab308); color: #422006;">LV.10 MILIARDER</span>
+                    <div class="suggested-card-followers">83.4K pengikut</div>
+                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="suggested-card" id="sugCard3">
+                    <span class="suggested-card-close" onclick="document.getElementById('sugCard3').style.display='none'">&times;</span>
+                    <div class="suggested-card-avatar">
+                        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150" alt="User">
+                    </div>
+                    <div class="suggested-card-name">Berkebun bareng</div>
+                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #22d3ee, #0284c7); color: #000;">LV.12 ELITE</span>
+                    <div class="suggested-card-followers">244.6K pengikut</div>
+                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="suggested-card" id="sugCard4">
+                    <span class="suggested-card-close" onclick="document.getElementById('sugCard4').style.display='none'">&times;</span>
+                    <div class="suggested-card-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="User">
+                    </div>
+                    <div class="suggested-card-name">Crypto Trader</div>
+                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24); color: #fff;">LV.16 SULTAN</span>
+                    <div class="suggested-card-followers">521.0K pengikut</div>
+                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+                </div>
+            </div>
         </div>
 
         <!-- Tab Navigasi Konten -->
@@ -296,10 +482,27 @@
             { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", border: "#ef4444", color: "#fff" }
         ];
 
+        function toggleSugBtn(btn) {
+            if (btn.innerText === "Ikuti") {
+                btn.innerText = "Mengikuti";
+                btn.classList.add('following');
+            } else {
+                btn.innerText = "Ikuti";
+                btn.classList.remove('following');
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
-            // Tombol kembali langsung mengarahkan ke halaman /reels
             document.getElementById('closeProfileBtn').addEventListener('click', () => {
                 window.location.href = '/reels';
+            });
+
+            const dropdownBtn = document.getElementById('dropdownActionBtn');
+            const suggestedDropdown = document.getElementById('suggestedDropdown');
+
+            dropdownBtn.addEventListener('click', () => {
+                suggestedDropdown.classList.toggle('show');
+                dropdownBtn.classList.toggle('active');
             });
 
             const creatorFara = 2200;
