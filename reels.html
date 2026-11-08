@@ -245,7 +245,6 @@
         }
         .fafi-avatar-img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Tombol Follow Dinamis (+ Merah -> Centang Hijau -> Centang Biru) */
         .fafi-follow-badge {
             position: absolute;
             bottom: -6px;
@@ -471,7 +470,6 @@
                 <div class="fafi-avatar-wrapper">
                     <img src="https://via.placeholder.com/44" alt="Profil" class="fafi-avatar-img" id="userAvatarImg">
                 </div>
-                <!-- Tombol Follow Interaktif (State: 0=Plus Merah, 1=Centang Hijau, 2=Centang Biru) -->
                 <button class="fafi-follow-badge" id="followBtn" title="Ikuti">+</button>
             </div>
 
@@ -672,8 +670,10 @@
                     if (file) {
                         const videoURL = URL.createObjectURL(file);
                         const contentArea = document.getElementById('reelsContentArea');
+                        
+                        // Ditambahkan playsinline & webkit-playsinline agar di HP pemutar kontrolnya tidak memaksa fullscreen
                         contentArea.innerHTML = `
-                            <video src="${videoURL}" autoplay loop controls style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;"></video>
+                            <video src="${videoURL}" autoplay loop controls playsinline webkit-playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;"></video>
                         `;
                     }
                 };
@@ -747,7 +747,7 @@
 
             // LOGIKA INTERAKTIF TOMBOL FOLLOW ( + Merah -> Centang Hijau -> Centang Biru )
             const followBtn = document.getElementById('followBtn');
-            let followState = 0; // 0: Belum follow (+ Merah), 1: Mengikuti (Centang Hijau), 2: Berteman (Centang Biru)
+            let followState = 0; 
 
             if (followBtn) {
                 followBtn.addEventListener('click', () => {
@@ -762,7 +762,7 @@
                         followBtn.title = 'Mengikuti';
                     } else if (followState === 2) {
                         followBtn.innerHTML = '✓';
-                        followBtn.style.background = '#3b82f6'; // Biru (Berteman / Mutual)
+                        followBtn.style.background = '#3b82f6'; // Biru (Berteman)
                         followBtn.title = 'Berteman';
                     }
                 });
