@@ -239,9 +239,13 @@
             height: 44px;
             border-radius: 50%;
             overflow: hidden;
-            border: 2px solid #eab308;
+            border: 3px solid #eab308;
             background: #333;
             box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
         .fafi-avatar-img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -467,8 +471,9 @@
             <div class="fafi-profile-container">
                 <div class="fafi-rank-crown-badge" id="displayRankCrown">LV.10</div>
                 
-                <div class="fafi-avatar-wrapper">
-                    <img src="https://via.placeholder.com/44" alt="Profil" class="fafi-avatar-img" id="userAvatarImg">
+                <div class="fafi-avatar-wrapper" id="reelsAvatarWrapper">
+                    <span id="reelsAvatarEmoji" style="font-size: 20px;">💎</span>
+                    <img src="" alt="Profil" class="fafi-avatar-img" id="reelsUserAvatarImg" style="display: none;">
                 </div>
                 <button class="fafi-follow-badge" id="followBtn" title="Ikuti">+</button>
             </div>
@@ -518,7 +523,7 @@
             </div>
         </div>
 
-        <!-- Modal Gift dengan Potong Saldo Real-Time & Animasi Melayang -->
+        <!-- Modal Gift -->
         <div class="fafi-modal-overlay" id="giftModalOverlay">
             <div class="fafi-modal-content" style="border-top-color: #f59e0b;">
                 <div class="modal-header">
@@ -537,22 +542,22 @@
 
     <script>
         const fafiRanks = [
-            { level: 1, name: "WARGA", min: 0, max: 0, bg: "linear-gradient(135deg, #9ca3af, #4b5563)", color: "#fff" },
-            { level: 2, name: "SOSIAL", min: 1, max: 9, bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", color: "#fff" },
-            { level: 3, name: "FRIENDLY", min: 10, max: 24, bg: "linear-gradient(135deg, #34d399, #047857)", color: "#fff" },
-            { level: 4, name: "LOYALIS", min: 25, max: 49, bg: "linear-gradient(135deg, #38bdf8, #0369a1)", color: "#fff" },
-            { level: 5, name: "DERMAWAN", min: 50, max: 99, bg: "linear-gradient(135deg, #c084fc, #7e22ce)", color: "#fff" },
-            { level: 6, name: "DONATUR", min: 100, max: 249, bg: "linear-gradient(135deg, #e879f9, #a21caf)", color: "#fff" },
-            { level: 7, name: "JURAGAN", min: 250, max: 499, bg: "linear-gradient(135deg, #fbbf24, #b45309)", color: "#000" },
-            { level: 8, name: "SAUDAGAR", min: 500, max: 749, bg: "linear-gradient(135deg, #f59e0b, #92400e)", color: "#000" },
-            { level: 9, name: "HARTAWAN", min: 750, max: 999, bg: "linear-gradient(135deg, #fb923c, #c2410c)", color: "#fff" },
-            { level: 10, name: "MILIARDER", min: 1000, max: 1499, bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", color: "#422006" },
-            { level: 11, name: "KONGLOMERAT", min: 1500, max: 1999, bg: "linear-gradient(135deg, #fde047, #ca8a04)", color: "#000" },
-            { level: 12, name: "ELITE", min: 2000, max: 2499, bg: "linear-gradient(135deg, #22d3ee, #0284c7)", color: "#000" },
-            { level: 13, name: "LEGENDA", min: 2500, max: 3499, bg: "linear-gradient(135deg, #f43f5e, #be123c)", color: "#fff" },
-            { level: 14, name: "KAISAR", min: 3500, max: 4249, bg: "linear-gradient(135deg, #8b5cf6, #4c1d95)", color: "#fff" },
-            { level: 15, name: "IMPERATOR", min: 4250, max: 4999, bg: "linear-gradient(135deg, #06b6d4, #1e40af)", color: "#fff" },
-            { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", color: "#fff" }
+            { level: 1, name: "WARGA", min: 0, max: 0, bg: "linear-gradient(135deg, #9ca3af, #4b5563)", border: "#9ca3af", color: "#fff" },
+            { level: 2, name: "SOSIAL", min: 1, max: 9, bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", border: "#60a5fa", color: "#fff" },
+            { level: 3, name: "FRIENDLY", min: 10, max: 24, bg: "linear-gradient(135deg, #34d399, #047857)", border: "#34d399", color: "#fff" },
+            { level: 4, name: "LOYALIS", min: 25, max: 49, bg: "linear-gradient(135deg, #38bdf8, #0369a1)", border: "#38bdf8", color: "#fff" },
+            { level: 5, name: "DERMAWAN", min: 50, max: 99, bg: "linear-gradient(135deg, #c084fc, #7e22ce)", border: "#c084fc", color: "#fff" },
+            { level: 6, name: "DONATUR", min: 100, max: 249, bg: "linear-gradient(135deg, #e879f9, #a21caf)", border: "#e879f9", color: "#fff" },
+            { level: 7, name: "JURAGAN", min: 250, max: 499, bg: "linear-gradient(135deg, #fbbf24, #b45309)", border: "#fbbf24", color: "#000" },
+            { level: 8, name: "SAUDAGAR", min: 500, max: 749, bg: "linear-gradient(135deg, #f59e0b, #92400e)", border: "#f59e0b", color: "#000" },
+            { level: 9, name: "HARTAWAN", min: 750, max: 999, bg: "linear-gradient(135deg, #fb923c, #c2410c)", border: "#fb923c", color: "#fff" },
+            { level: 10, name: "MILIARDER", min: 1000, max: 1499, bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", border: "#eab308", color: "#422006" },
+            { level: 11, name: "KONGLOMERAT", min: 1500, max: 1999, bg: "linear-gradient(135deg, #fde047, #ca8a04)", border: "#fde047", color: "#000" },
+            { level: 12, name: "ELITE", min: 2000, max: 2499, bg: "linear-gradient(135deg, #22d3ee, #0284c7)", border: "#22d3ee", color: "#000" },
+            { level: 13, name: "LEGENDA", min: 2500, max: 3499, bg: "linear-gradient(135deg, #f43f5e, #be123c)", border: "#f43f5e", color: "#fff" },
+            { level: 14, name: "KAISAR", min: 3500, max: 4249, bg: "linear-gradient(135deg, #8b5cf6, #4c1d95)", border: "#8b5cf6", color: "#fff" },
+            { level: 15, name: "IMPERATOR", min: 4250, max: 4999, bg: "linear-gradient(135deg, #06b6d4, #1e40af)", border: "#06b6d4", color: "#fff" },
+            { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", border: "#ef4444", color: "#fff" }
         ];
 
         function getUserRank(totalFara) {
@@ -670,8 +675,6 @@
                     if (file) {
                         const videoURL = URL.createObjectURL(file);
                         const contentArea = document.getElementById('reelsContentArea');
-                        
-                        // Ditambahkan playsinline & webkit-playsinline agar di HP pemutar kontrolnya tidak memaksa fullscreen
                         contentArea.innerHTML = `
                             <video src="${videoURL}" autoplay loop controls playsinline webkit-playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;"></video>
                         `;
@@ -685,16 +688,16 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             let myUsername = "@user_web3";
+            let savedAvatar = localStorage.getItem('fafiUserAvatar') || "";
             const savedUser = localStorage.getItem('faFiUserData');
+            
             if (savedUser) {
                 try {
                     const userData = JSON.parse(savedUser);
                     if (userData.username) {
                         myUsername = userData.username.startsWith('@') ? userData.username : '@' + userData.username;
                     }
-                } catch (e) {
-                    console.error(e);
-                }
+                } catch(e) {}
             }
 
             const usernameTag = document.getElementById('displayUsernameTag');
@@ -709,6 +712,19 @@
                 rankCrownElement.style.background = currentRank.bg;
                 rankCrownElement.style.color = currentRank.color;
                 rankCrownElement.title = `Pangkat: ${currentRank.name}`;
+            }
+
+            // Sinkronisasi Border Avatar & Foto Profil dari LocalStorage
+            const reelsAvatarWrapper = document.getElementById('reelsAvatarWrapper');
+            reelsAvatarWrapper.style.borderColor = currentRank.border;
+            reelsAvatarWrapper.style.boxShadow = `0 0 10px ${currentRank.border}66`;
+
+            const reelsAvatarImg = document.getElementById('reelsUserAvatarImg');
+            const reelsAvatarEmoji = document.getElementById('reelsAvatarEmoji');
+            if (savedAvatar) {
+                reelsAvatarImg.src = savedAvatar;
+                reelsAvatarImg.style.display = 'block';
+                reelsAvatarEmoji.style.display = 'none';
             }
 
             setupGiftModal();

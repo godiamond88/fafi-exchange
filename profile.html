@@ -3,29 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFI Profile</title>
+    <title>FAFI Profile, KYC & Rank</title>
     <style>
-        /* Tampilan Utama Layar / Browser (Bingkai HP di Tengah Monitor) */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background-color: #121214; 
-            color: #e0e0e0; 
-            margin: 0; 
-            padding: 0; 
+        body {
+            margin: 0;
+            background: #121214;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            user-select: none; 
+            user-select: none;
         }
 
-        /* Frame Kotak ala Layar HP di Tengah Monitor (Konsisten Semua Halaman) */
         .profile-container {
             position: relative;
             width: 380px;
             height: 720px;
-            background: #000;
+            background: #09090b;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
@@ -33,345 +30,462 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-sizing: border-box;
         }
 
-        header { 
-            background: #1a1a1a; 
-            padding: 10px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #2a2a2a; 
-            flex-shrink: 0;
+        .profile-header {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #27272a;
+            background: #121212;
         }
-        
-        /* Area Konten Scrollable di dalam Frame HP (Tanpa Garis Scrollbar Putih) */
-        .page-scroll-area { 
+        .logo-title { font-size: 13px; font-weight: bold; color: #fbbf24; display: flex; align-items: center; gap: 4px; }
+
+        .profile-body {
             flex: 1;
             overflow-y: auto;
-            padding: 12px;
+            padding: 14px;
             box-sizing: border-box;
-            scrollbar-width: none; 
-            -ms-overflow-style: none; 
-        }
-        .page-scroll-area::-webkit-scrollbar {
-            width: 0px;
-            background: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .profile-card { background: #1e1e1e; padding: 12px; border-radius: 10px; border: 1px solid #2a2a2a; margin-bottom: 10px; font-size: 0.8em; }
-        .profile-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .avatar { width: 44px; height: 44px; background: #00ffcc; color: #121212; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; }
+        .user-card {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         
-        .input-group { margin-bottom: 8px; }
-        .input-group label { display: block; font-size: 0.7em; color: #888; margin-bottom: 2px; }
-        .input-box { background: #121212; border: 1px solid #333; border-radius: 6px; padding: 6px 8px; display: flex; align-items: center; color: #fff; font-size: 0.8em; }
-        .input-box input, .input-box select { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.85em; }
-        .input-box select option { background: #121212; color: #fff; }
-        
-        .action-btn { width: 100%; padding: 8px; border: none; border-radius: 6px; font-weight: bold; font-size: 0.85em; cursor: pointer; margin-top: 6px; background: #00ff88; color: #121212; }
-        .action-btn.secondary { background: #00ffcc; }
-        .action-btn.warning { background: #ffa500; color: #121212; }
-        .action-btn.danger { background: #ff4d4d; color: #fff; }
+        .avatar-upload-wrapper {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 3px solid #eab308;
+            background: #27272a;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
+            transition: transform 0.2s;
+            box-sizing: border-box;
+        }
+        .avatar-upload-wrapper:hover { transform: scale(1.05); }
+        .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-placeholder { font-size: 22px; }
 
-        .info-box { background: #121212; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #2a2a2a; }
-        .info-label { color: #888; font-size: 0.68em; }
-        .info-value { font-size: 0.85em; font-weight: bold; color: #fff; margin-top: 2px; }
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .menu-item {
+            background: #18181b;
+            border: 1px solid #27272a;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .menu-item:hover { background: #27272a; border-color: #10b981; }
 
-        /* Navigasi Bawah Konsisten 5 Menu */
-        .bottom-nav { height: 60px; background: #09090b; border-top: 1px solid #27272a; display: flex; justify-content: space-around; align-items: center; z-index: 100; flex-shrink: 0; }
-        .nav-item { text-align: center; color: #71717a; font-size: 10px; text-decoration: none; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .kyc-form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group-label {
+            font-size: 10px;
+            color: #a1a1aa;
+            margin-bottom: 2px;
+        }
+        .kyc-input {
+            background: #18181b;
+            border: 1px solid #27272a;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .kyc-input:focus { border-color: #10b981; }
+
+        .fafi-modal-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .modal-header-bar {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #27272a;
+            background: #121212;
+        }
+        .modal-title-text { font-size: 13px; font-weight: bold; color: #fff; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+
+        .modal-body-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .save-kyc-btn {
+            background: #10b981;
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 6px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .fafi-bottom-nav {
+            height: 60px;
+            background: #09090b;
+            border-top: 1px solid #27272a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-item {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
         .nav-item.active { color: #10b981; font-weight: bold; }
         .nav-item span.icon { font-size: 16px; }
     </style>
 </head>
 <body>
+
     <div class="profile-container">
-        <header>
-            <div style="font-weight: bold; color: #00ffcc; font-size: 0.9em;">⚡ FAFI Profile</div>
-            <div style="font-size: 0.75em; color: #00ffcc;" id="headerStatus">👤 Akun</div>
-        </header>
+        
+        <div class="profile-header">
+            <div class="logo-title">⚡ FAFI Profile</div>
+            <!-- Teks Master godiamond telah disembunyikan -->
+        </div>
 
-        <!-- Area Scrollable Utama -->
-        <div class="page-scroll-area">
-            <!-- 1. FORM PENDAFTARAN & LOGIN AWAL -->
-            <div class="profile-card" id="authCard">
-                <div id="registerFormSection">
-                    <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 0.9em;">Pendaftaran Akun Web3 FAFI Baru</h4>
-                    <div class="input-group"><label>User Name</label><div class="input-box"><input type="text" id="regUsernameInput" placeholder="Contoh: @ryank_creative"></div></div>
-                    <div class="input-group"><label>Nama Lengkap (Sesuai KTP)</label><div class="input-box"><input type="text" id="regFullNameInput" placeholder="Contoh: Rian Rawalangi"></div></div>
-                    <div class="input-group"><label>Email</label><div class="input-box"><input type="email" id="regEmailInput" placeholder="Contoh: email@domain.com"></div></div>
-                    <div class="input-group"><label>No WA</label><div class="input-box"><input type="tel" id="regPhoneInput" placeholder="Contoh: 081234567890"></div></div>
-
-                    <button class="action-btn secondary" onclick="registerUser()">Buat Akun & Masuk</button>
-                    <div style="text-align: center; margin-top: 10px; font-size: 0.75em; color: #888;">Sudah terdaftar? <span style="color: #00ffcc; cursor: pointer; font-weight: bold;" onclick="toggleAuthMode('login')">Masuk di sini ➔</span></div>
+        <div class="profile-body">
+            
+            <div class="user-card">
+                <div class="avatar-upload-wrapper" id="uploadAvatarTrigger" title="Klik untuk ganti foto profil">
+                    <span class="avatar-placeholder" id="avatarEmojiIcon">💎</span>
+                    <img id="profileAvatarImg" src="" alt="" class="avatar-img" style="display: none;">
                 </div>
-
-                <div id="loginFormSection" style="display: none;">
-                    <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 0.9em;">Masuk (Login) Akun Web3</h4>
-                    <div class="input-group"><label>Email atau Username</label><div class="input-box"><input type="text" id="loginIdInput" placeholder="Masukkan Email / Username"></div></div>
-                    <button class="action-btn" onclick="processLogin()">Masuk ke Akun</button>
-                    <div style="text-align: center; margin-top: 10px; font-size: 0.75em; color: #888;">Belum punya akun? <span style="color: #00ffcc; cursor: pointer; font-weight: bold;" onclick="toggleAuthMode('register')">Daftar sekarang ➔</span></div>
+                <div style="flex: 1;">
+                    <h3 id="profileUsername" style="margin: 0 0 2px 0; font-size: 13px; color: #fff;">@user_web3</h3>
+                    <p style="margin: 0 0 4px 0; font-size: 10px; color: #a1a1aa;">ID Ekosistem: #889234</p>
+                    <div id="profileRankBadge" style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 8px; font-weight: 800; background: linear-gradient(135deg, #fef08a, #eab308); color: #422006;">
+                        LV.10 MILIARDER
+                    </div>
                 </div>
             </div>
 
-            <!-- 2. DASHBOARD PROFIL UTAMA -->
-            <div class="profile-card" id="profileCard" style="display: none;">
-                <div class="profile-header">
-                    <div class="avatar" id="userAvatar">RR</div>
+            <div class="menu-list">
+                <div class="menu-item" id="openKycMenuBtn" style="border-color: #10b981; background: rgba(16, 185, 129, 0.05);">
+                    <span>📋 Verifikasi KYC & Data Bank</span>
+                    <span style="color: #10b981;">&rsaquo;</span>
+                </div>
+                <div class="menu-item" id="openKemitraanBtn">
+                    <span>🤝 Kemitraan & Referral Affiliate</span>
+                    <span>&rsaquo;</span>
+                </div>
+                <div class="menu-item" onclick="alert('Keamanan & Autentikasi 2FA aktif.')">
+                    <span>🔐 Keamanan & Akun</span>
+                    <span>&rsaquo;</span>
+                </div>
+                <div class="menu-item" onclick="alert('Pengaturan Jaringan TRC-20 & Mata Uang USDT.')">
+                    <span>⚙️ Pengaturan Platform</span>
+                    <span>&rsaquo;</span>
+                </div>
+                <div class="menu-item" onclick="alert('Menutup sesi akun...')">
+                    <span>🚪 Keluar (Logout)</span>
+                    <span>&rsaquo;</span>
+                </div>
+            </div>
+
+        </div>
+
+        <input type="file" id="hiddenAvatarInput" accept="image/*" style="display: none;">
+
+        <!-- Modal Data Verifikasi KYC & Bank -->
+        <div class="fafi-modal-overlay" id="kycModal">
+            <div class="modal-header-bar">
+                <span class="modal-title-text" style="color: #10b981;">📋 Data Verifikasi KYC & Bank</span>
+                <button class="close-btn" id="closeKycModal">&times;</button>
+            </div>
+            <div class="modal-body-content">
+                <div class="kyc-form-container">
                     <div>
-                        <div style="font-weight: bold; font-size: 1em; color: #fff;" id="displayFullName">Rian Rawalangi</div>
-                        <div style="color: #ffa500; font-size: 0.7em;" id="kycStatusBadge">⚠️ Status: Belum Verifikasi KYC</div>
+                        <div class="form-group-label">User Name</div>
+                        <input type="text" class="kyc-input" id="kycUsername" value="@user_web3">
                     </div>
+                    <div>
+                        <div class="form-group-label">Nama Lengkap (Sesuai KTP)</div>
+                        <input type="text" class="kyc-input" id="kycFullName" placeholder="Masukkan nama lengkap...">
+                    </div>
+                    <div>
+                        <div class="form-group-label">Email</div>
+                        <input type="email" class="kyc-input" id="kycEmail" placeholder="nama@email.com">
+                    </div>
+                    <div>
+                        <div class="form-group-label">Nomor WhatsApp</div>
+                        <input type="text" class="kyc-input" id="kycPhone" placeholder="082331722288">
+                    </div>
+
+                    <div style="font-size: 11px; font-weight: bold; color: #10b981; margin-top: 6px;">Data Verifikasi KYC & Bank</div>
+                    
+                    <div>
+                        <div class="form-group-label">Nomor ID / KTP</div>
+                        <input type="text" class="kyc-input" id="kycIdNumber" placeholder="Nomor KTP...">
+                    </div>
+                    <div>
+                        <div class="form-group-label">Nomor NPWP</div>
+                        <input type="text" class="kyc-input" id="kycNpwp" placeholder="Nomor NPWP...">
+                    </div>
+                    <div>
+                        <div class="form-group-label">Nama Bank</div>
+                        <input type="text" class="kyc-input" id="kycBankName" placeholder="Contoh: BANK BCA">
+                    </div>
+                    <div>
+                        <div class="form-group-label">Nama di Rekening Bank</div>
+                        <input type="text" class="kyc-input" id="kycAccountName" placeholder="Nama pemilik rekening...">
+                    </div>
+                    <div>
+                        <div class="form-group-label">Nomor Rekening Bank</div>
+                        <input type="text" class="kyc-input" id="kycAccountNumber" placeholder="Nomor rekening...">
+                    </div>
+                    <div>
+                        <div class="form-group-label">ID Smart Contract Utama (TRC20)</div>
+                        <input type="text" class="kyc-input" id="kycSmartContract" placeholder="TPxFBAxB9zwsoAnPj6wghuSMPCNrYoYDjG">
+                    </div>
+
+                    <button class="save-kyc-btn" id="saveKycBtn">Simpan Data KYC & Bank</button>
                 </div>
-
-                <div id="viewMode">
-                    <div class="info-box"><div class="info-label">User Name</div><div class="info-value" id="valUsername">@ryank_creative</div></div>
-                    <div class="info-box"><div class="info-label">Nama Lengkap (Sesuai KTP)</div><div class="info-value" id="valFullName">Rian Rawalangi</div></div>
-                    <div class="info-box"><div class="info-label">Email</div><div class="info-value" id="valEmail">email@domain.com</div></div>
-                    <div class="info-box"><div class="info-label">Nomor WhatsApp</div><div class="info-value" id="valPhone">081234567890</div></div>
-
-                    <div id="kycApprovedSection" style="display: none;">
-                        <h4 style="margin: 12px 0 6px 0; color: #00ffcc; font-size: 0.85em;">Data Verifikasi KYC & Bank</h4>
-                        <div class="info-box"><div class="info-label">Nomor ID / KTP</div><div class="info-value" id="valIdNo">-</div></div>
-                        <div class="info-box"><div class="info-label">Nomor NPWP</div><div class="info-value" id="valNpwp">-</div></div>
-                        <div class="info-box"><div class="info-label">Nama Bank</div><div class="info-value" id="valBankName">-</div></div>
-                        <div class="info-box"><div class="info-label">Nama di Rekening Bank</div><div class="info-value" id="valBankHolder">-</div></div>
-                        <div class="info-box"><div class="info-label">Nomor Rekening Bank</div><div class="info-value" id="valBankAcc">-</div></div>
-                    </div>
-
-                    <div class="info-box" style="border-color: #333;">
-                        <div class="info-label">ID Smart Contract Utama (TRC20)</div>
-                        <div style="font-size: 0.7em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
-                    </div>
-
-                    <button class="action-btn warning" id="btnKyc" onclick="openKycModal()">🛡️ Lakukan Verifikasi KYC</button>
-                    <button class="action-btn danger" onclick="logoutUser()" style="margin-top: 5px;">Keluar (Logout)</button>
-                </div>
-            </div>
-
-            <!-- 3. FORM MENU KYC -->
-            <div class="profile-card" id="kycCard" style="display: none;">
-                <h4 style="margin: 0 0 4px 0; color: #00ffcc; font-size: 0.9em;">Form Verifikasi KYC (Know Your Customer)</h4>
-                <p style="font-size: 0.7em; color: #888; margin-bottom: 10px;">Lengkapi data di bawah ini untuk membuka akses penuh penarikan dana.</p>
-                
-                <div class="input-group"><label>Nomor ID / KTP</label><div class="input-box"><input type="text" id="kycIdNo" placeholder="Masukkan 16 digit No KTP"></div></div>
-                <div class="input-group"><label>Nomor NPWP</label><div class="input-box"><input type="text" id="kycNpwp" placeholder="Masukkan Nomor NPWP"></div></div>
-
-                <h4 style="margin: 12px 0 6px 0; color: #00ffcc; font-size: 0.85em;">Detail Rekening Bank (Validasi Nama)</h4>
-                <div class="input-group"><label>Nama Bank</label>
-                    <div class="input-box">
-                        <select id="kycBankName">
-                            <option value="BANK BCA">BANK BCA</option>
-                            <option value="BANK MANDIRI">BANK MANDIRI</option>
-                            <option value="BANK BNI">BANK BNI</option>
-                            <option value="BANK BRI">BANK BRI</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="input-group"><label>Nama di Rekening Bank (Wajib Sesuai KTP)</label><div class="input-box"><input type="text" id="kycBankHolder" placeholder="Harus sama persis dengan Nama Lengkap"></div></div>
-                <div class="input-group"><label>Nomor Rekening Bank</label><div class="input-box"><input type="text" id="kycBankAcc" placeholder="Masukkan No Rekening Bank"></div></div>
-
-                <button class="action-btn" onclick="submitKycData()">Kirim Verifikasi KYC</button>
-                <button class="action-btn danger" onclick="closeKycModal()" style="margin-top: 5px; background: #333; color: #aaa;">Batal</button>
             </div>
         </div>
 
-        <!-- Navigasi Bawah Konsisten 5 Menu -->
-        <div class="bottom-nav">
-            <a href="/" class="nav-item">
-                <span class="icon">🏠</span>
-                <span>Home</span>
-            </a>
-            <a href="/trading" class="nav-item">
-                <span class="icon">📈</span>
-                <span>Trading</span>
-            </a>
-            <a href="/reels" class="nav-item">
-                <span class="icon">🔥</span>
-                <span>Reels</span>
-            </a>
-            <a href="/wallet" class="nav-item">
-                <span class="icon">👛</span>
-                <span>Wallet</span>
-            </a>
-            <a href="/profile" class="nav-item active">
-                <span class="icon">👤</span>
-                <span>Profile</span>
-            </a>
+        <!-- Modal Menu Kemitraan -->
+        <div class="fafi-modal-overlay" id="kemitraanModal">
+            <div class="modal-header-bar">
+                <button class="close-btn" id="closeKemitraanBtn" style="font-size:14px; font-weight:bold; background:none; border:none; color:#fff; cursor:pointer;">&lsaquo; Kembali</button>
+                <span class="modal-title-text">Kemitraan</span>
+                <span style="width:20px;"></span>
+            </div>
+
+            <div style="display: flex; background: #121212; border-bottom: 1px solid #27272a;">
+                <div id="tabRingkasan" style="flex:1; text-align:center; padding:10px; font-size:11px; font-weight:bold; color:#10b981; border-bottom:2px solid #10b981; cursor:pointer;">Ringkasan</div>
+                <div id="tabReferral" style="flex:1; text-align:center; padding:10px; font-size:11px; font-weight:bold; color:#71717a; border-bottom:2px solid transparent; cursor:pointer;">Referral</div>
+            </div>
+
+            <div class="modal-body-content" id="contentRingkasan">
+                <div style="background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 14px;">
+                    <div style="font-size: 10px; color: #a1a1aa; display: flex; align-items: center; gap: 4px;">Komisi yang diperoleh <span>❓</span></div>
+                    <div style="font-size: 22px; font-weight: 800; color: #fff; margin: 4px 0 10px 0;">$ 0.00 USDT</div>
+                </div>
+
+                <div style="background: #121212; border: 1px solid #27272a; padding: 10px 12px; border-radius: 8px; font-size: 11px; color: #d4d4d8; display: flex; justify-content: space-between; align-items: center;">
+                    <span>👥 Klien yang Direferensikan</span>
+                    <strong>0</strong>
+                </div>
+
+                <div style="background: #121212; border: 1px solid #27272a; padding: 10px 12px; border-radius: 8px; font-size: 11px; color: #d4d4d8; display: flex; justify-content: space-between; align-items: center;">
+                    <span>📋 Akun yang Direferensikan</span>
+                    <strong style="color: #10b981;">0 Akun</strong>
+                </div>
+
+                <div style="background: #121212; border: 1px solid #27272a; padding: 10px 12px; border-radius: 8px; font-size: 11px; color: #d4d4d8; display: flex; justify-content: space-between; align-items: center;">
+                    <span>📊 Lot yang Diperdagangkan</span>
+                    <strong style="color: #fbbf24;">0.00 Lot</strong>
+                </div>
+
+                <div style="background: #18181b; border: 1px solid #3f3f46; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 6px;">
+                    <div style="font-size: 10px; color: #a1a1aa;">Tersedia untuk penarikan</div>
+                    <div style="font-size: 18px; font-weight: bold; color: #fff;">$ 0.11 USDT</div>
+                    <a href="#" style="font-size: 10px; color: #3b82f6; text-decoration: none;">Riwayat penarikan</a>
+                    <button id="tarikDompetBtn" style="background: #f43f5e; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; text-align: center; margin-top: 4px;">↓ Tarik ke Dompet</button>
+                </div>
+            </div>
+
+            <div class="modal-body-content" id="contentReferral" style="display: none;">
+                <div style="background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 14px; text-align: center;">
+                    <div style="font-size: 12px; font-weight: bold; color: #fbbf24; margin-bottom: 6px;">Link Referral Affiliate Anda</div>
+                    <input type="text" value="https://fafi-exchange.app/ref/godiamond" readonly style="width:100%; background:#121212; border:1px solid #3f3f46; color:#10b981; padding:8px; border-radius:6px; text-align:center; font-size:11px; margin-bottom:8px;">
+                    <button style="background:#10b981; color:#000; border:none; padding:10px; border-radius:8px; font-weight:bold; width:100%; cursor:pointer;" onclick="alert('Link referral berhasil disalin!')">Salin Link Referral</button>
+                </div>
+            </div>
         </div>
+
+        <div class="fafi-bottom-nav">
+            <a href="/" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>
+            <a href="/trading" class="nav-item"><span class="icon">📈</span><span>Trading</span></a>
+            <a href="/reels" class="nav-item"><span class="icon">🔥</span><span>Reels</span></a>
+            <a href="/wallet" class="nav-item"><span class="icon">👛</span><span>Wallet</span></a>
+            <a href="/profile" class="nav-item active"><span class="icon">👤</span><span>Profile</span></a>
+        </div>
+
     </div>
 
     <script>
-        let userData = {
-            username: '', fullName: '', email: '', phone: '',
-            idNo: '', npwp: '', bankName: '', bankHolder: '', bankAcc: '', isKycVerified: false
-        };
+        const fafiRanks = [
+            { level: 1, name: "WARGA", min: 0, max: 0, bg: "linear-gradient(135deg, #9ca3af, #4b5563)", border: "#9ca3af", color: "#fff" },
+            { level: 2, name: "SOSIAL", min: 1, max: 9, bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", border: "#60a5fa", color: "#fff" },
+            { level: 3, name: "FRIENDLY", min: 10, max: 24, bg: "linear-gradient(135deg, #34d399, #047857)", border: "#34d399", color: "#fff" },
+            { level: 4, name: "LOYALIS", min: 25, max: 49, bg: "linear-gradient(135deg, #38bdf8, #0369a1)", border: "#38bdf8", color: "#fff" },
+            { level: 5, name: "DERMAWAN", min: 50, max: 99, bg: "linear-gradient(135deg, #c084fc, #7e22ce)", border: "#c084fc", color: "#fff" },
+            { level: 6, name: "DONATUR", min: 100, max: 249, bg: "linear-gradient(135deg, #e879f9, #a21caf)", border: "#e879f9", color: "#fff" },
+            { level: 7, name: "JURAGAN", min: 250, max: 499, bg: "linear-gradient(135deg, #fbbf24, #b45309)", border: "#fbbf24", color: "#000" },
+            { level: 8, name: "SAUDAGAR", min: 500, max: 749, bg: "linear-gradient(135deg, #f59e0b, #92400e)", border: "#f59e0b", color: "#000" },
+            { level: 9, name: "HARTAWAN", min: 750, max: 999, bg: "linear-gradient(135deg, #fb923c, #c2410c)", border: "#fb923c", color: "#fff" },
+            { level: 10, name: "MILIARDER", min: 1000, max: 1499, bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", border: "#eab308", color: "#422006" },
+            { level: 11, name: "KONGLOMERAT", min: 1500, max: 1999, bg: "linear-gradient(135deg, #fde047, #ca8a04)", border: "#fde047", color: "#000" },
+            { level: 12, name: "ELITE", min: 2000, max: 2499, bg: "linear-gradient(135deg, #22d3ee, #0284c7)", border: "#22d3ee", color: "#000" },
+            { level: 13, name: "LEGENDA", min: 2500, max: 3499, bg: "linear-gradient(135deg, #f43f5e, #be123c)", border: "#f43f5e", color: "#fff" },
+            { level: 14, name: "KAISAR", min: 3500, max: 4249, bg: "linear-gradient(135deg, #8b5cf6, #4c1d95)", border: "#8b5cf6", color: "#fff" },
+            { level: 15, name: "IMPERATOR", min: 4250, max: 4999, bg: "linear-gradient(135deg, #06b6d4, #1e40af)", border: "#06b6d4", color: "#fff" },
+            { level: 16, name: "SULTAN", min: 5000, max: Infinity, bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", border: "#ef4444", color: "#fff" }
+        ];
 
-        window.onload = function() {
+        function getUserRank(totalFara) {
+            for (let i = fafiRanks.length - 1; i >= 0; i--) {
+                if (totalFara >= fafiRanks[i].min) {
+                    return fafiRanks[i];
+                }
+            }
+            return fafiRanks[0];
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            let myUsername = "@user_web3";
+            let savedAvatar = localStorage.getItem('fafiUserAvatar') || "";
             const savedUser = localStorage.getItem('faFiUserData');
-            const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
-
+            
             if (savedUser) {
-                userData = JSON.parse(savedUser);
-                userData.isKycVerified = isVerified;
-                
-                updateProfileDisplay();
-                document.getElementById('authCard').style.display = 'none';
-                document.getElementById('profileCard').style.display = 'block';
-            }
-        };
-
-        function toggleAuthMode(mode) {
-            const regSection = document.getElementById('registerFormSection');
-            const loginSection = document.getElementById('loginFormSection');
-            if(mode === 'login') {
-                regSection.style.display = 'none';
-                loginSection.style.display = 'block';
-            } else {
-                regSection.style.display = 'block';
-                loginSection.style.display = 'none';
-            }
-        }
-
-        function registerUser() {
-            const username = document.getElementById('regUsernameInput').value.trim();
-            const fullName = document.getElementById('regFullNameInput').value.trim();
-            const email = document.getElementById('regEmailInput').value.trim();
-            const phone = document.getElementById('regPhoneInput').value.trim();
-
-            if(!username || !fullName || !email || !phone) {
-                alert('Mohon lengkapi User Name, Nama Lengkap, Email, dan No WA!');
-                return;
+                try {
+                    const userData = JSON.parse(savedUser);
+                    if (userData.username) {
+                        myUsername = userData.username.startsWith('@') ? userData.username : '@' + userData.username;
+                    }
+                } catch(e) {}
             }
 
-            userData.username = username;
-            userData.fullName = fullName;
-            userData.email = email;
-            userData.phone = phone;
-            userData.isKycVerified = false;
+            document.getElementById('profileUsername').innerText = myUsername;
+            document.getElementById('kycUsername').value = myUsername;
 
-            localStorage.setItem('faFiUserData', JSON.stringify(userData));
-            localStorage.setItem('faFiKycVerified', 'false');
-
-            updateProfileDisplay();
-            document.getElementById('authCard').style.display = 'none';
-            document.getElementById('profileCard').style.display = 'block';
-            alert('✅ Akun berhasil dibuat! Silakan lakukan Verifikasi KYC.');
-        }
-
-        function processLogin() {
-            const loginId = document.getElementById('loginIdInput').value.trim();
-            if(!loginId) {
-                alert('Silakan masukkan Email atau Username Anda!');
-                return;
-            }
-
-            userData.username = 'user_web3';
-            userData.fullName = loginId;
-            userData.email = loginId;
-            userData.phone = '081234567890';
+            const userTotalFara = 1250; 
+            const rankObj = getUserRank(userTotalFara);
             
-            const isVerified = localStorage.getItem('faFiKycVerified') === 'true';
-            userData.isKycVerified = isVerified;
+            const badgeEl = document.getElementById('profileRankBadge');
+            badgeEl.innerText = `LV.${rankObj.level} ${rankObj.name}`;
+            badgeEl.style.background = rankObj.bg;
+            badgeEl.style.color = rankObj.color;
 
-            localStorage.setItem('faFiUserData', JSON.stringify(userData));
+            const avatarWrapper = document.getElementById('uploadAvatarTrigger');
+            avatarWrapper.style.borderColor = rankObj.border;
+            avatarWrapper.style.boxShadow = `0 0 12px ${rankObj.border}66`;
 
-            updateProfileDisplay();
-            document.getElementById('authCard').style.display = 'none';
-            document.getElementById('profileCard').style.display = 'block';
-            alert('✅ Berhasil Masuk!');
-        }
-
-        function logoutUser() {
-            localStorage.removeItem('faFiUserData');
-            localStorage.removeItem('faFiKycVerified');
-
-            userData = {
-                username: '', fullName: '', email: '', phone: '',
-                idNo: '', npwp: '', bankName: '', bankHolder: '', bankAcc: '', isKycVerified: false
-            };
-
-            document.getElementById('profileCard').style.display = 'none';
-            document.getElementById('kycCard').style.display = 'none';
-            document.getElementById('authCard').style.display = 'block';
-            toggleAuthMode('login');
-            alert('Sesi diakhiri.');
-        }
-
-        function updateProfileDisplay() {
-            document.getElementById('displayFullName').innerText = userData.fullName || 'User FAFI';
-            document.getElementById('valUsername').innerText = '@' + (userData.username || 'user').replace('@', '');
-            document.getElementById('valFullName').innerText = userData.fullName || '-';
-            document.getElementById('valEmail').innerText = userData.email || '-';
-            document.getElementById('valPhone').innerText = userData.phone || '-';
-            
-            if(userData.fullName) {
-                document.getElementById('userAvatar').innerText = userData.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            const avatarImg = document.getElementById('profileAvatarImg');
+            const avatarEmoji = document.getElementById('avatarEmojiIcon');
+            if (savedAvatar) {
+                avatarImg.src = savedAvatar;
+                avatarImg.style.display = 'block';
+                avatarEmoji.style.display = 'none';
             }
 
-            if(userData.isKycVerified) {
-                document.getElementById('kycStatusBadge').innerText = '✅ Status: Verified KYC';
-                document.getElementById('kycStatusBadge').style.color = '#00ff88';
-                document.getElementById('btnKyc').style.display = 'none';
-                document.getElementById('kycApprovedSection').style.display = 'block';
+            const fileInput = document.getElementById('hiddenAvatarInput');
+            avatarWrapper.addEventListener('click', () => { fileInput.click(); });
 
-                document.getElementById('valIdNo').innerText = userData.idNo || '-';
-                document.getElementById('valNpwp').innerText = userData.npwp || '-';
-                document.getElementById('valBankName').innerText = userData.bankName || '-';
-                document.getElementById('valBankHolder').innerText = userData.bankHolder || '-';
-                document.getElementById('valBankAcc').innerText = userData.bankAcc || '-';
-            } else {
-                document.getElementById('kycStatusBadge').innerText = '⚠️ Status: Belum Verifikasi KYC';
-                document.getElementById('kycStatusBadge').style.color = '#ffa500';
-                document.getElementById('btnKyc').style.display = 'block';
-                document.getElementById('kycApprovedSection').style.display = 'none';
-            }
-        }
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64Image = event.target.result;
+                        localStorage.setItem('fafiUserAvatar', base64Image);
+                        avatarImg.src = base64Image;
+                        avatarImg.style.display = 'block';
+                        avatarEmoji.style.display = 'none';
+                        alert("✅ Foto profil berhasil diperbarui dan disinkronkan ke Reels!");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-        function openKycModal() {
-            document.getElementById('profileCard').style.display = 'none';
-            document.getElementById('kycCard').style.display = 'block';
-            document.getElementById('kycBankHolder').value = userData.fullName;
-        }
+            const kemitraanModal = document.getElementById('kemitraanModal');
+            document.getElementById('openKemitraanBtn').addEventListener('click', () => { kemitraanModal.style.display = 'flex'; });
+            document.getElementById('closeKemitraanBtn').addEventListener('click', () => { kemitraanModal.style.display = 'none'; });
 
-        function closeKycModal() {
-            document.getElementById('kycCard').style.display = 'none';
-            document.getElementById('profileCard').style.display = 'block';
-        }
+            const kycModal = document.getElementById('kycModal');
+            document.getElementById('openKycMenuBtn').addEventListener('click', () => { kycModal.style.display = 'flex'; });
+            document.getElementById('closeKycModal').addEventListener('click', () => { kycModal.style.display = 'none'; });
 
-        function submitKycData() {
-            const idNo = document.getElementById('kycIdNo').value.trim();
-            const npwp = document.getElementById('kycNpwp').value.trim();
-            const bankName = document.getElementById('kycBankName').value;
-            const bankHolder = document.getElementById('kycBankHolder').value.trim();
-            const bankAcc = document.getElementById('kycBankAcc').value.trim();
+            document.getElementById('saveKycBtn').addEventListener('click', () => {
+                alert("✅ Data verifikasi KYC & Bank berhasil disimpan!");
+                kycModal.style.display = 'none';
+            });
 
-            if(!idNo || !npwp || !bankHolder || !bankAcc) {
-                alert('Mohon lengkapi seluruh kolom formulir KYC!');
-                return;
-            }
+            const tabRingkasan = document.getElementById('tabRingkasan');
+            const tabReferral = document.getElementById('tabReferral');
+            const contentRingkasan = document.getElementById('contentRingkasan');
+            const contentReferral = document.getElementById('contentReferral');
 
-            if(bankHolder.toLowerCase() !== userData.fullName.toLowerCase()) {
-                alert('❌ VERIFIKASI KYC GAGAL!\nNama di Rekening Bank tidak sesuai dengan Nama Lengkap di KTP!');
-                return;
-            }
+            tabRingkasan.addEventListener('click', () => {
+                tabRingkasan.style.color = '#10b981';
+                tabRingkasan.style.borderBottomColor = '#10b981';
+                tabReferral.style.color = '#71717a';
+                tabReferral.style.borderBottomColor = 'transparent';
+                contentRingkasan.style.display = 'flex';
+                contentReferral.style.display = 'none';
+            });
 
-            userData.idNo = idNo;
-            userData.npwp = npwp;
-            userData.bankName = bankName;
-            userData.bankHolder = bankHolder;
-            userData.bankAcc = bankAcc;
-            userData.isKycVerified = true;
+            tabReferral.addEventListener('click', () => {
+                tabReferral.style.color = '#10b981';
+                tabReferral.style.borderBottomColor = '#10b981';
+                tabRingkasan.style.color = '#71717a';
+                tabRingkasan.style.borderBottomColor = 'transparent';
+                contentReferral.style.display = 'flex';
+                contentRingkasan.style.display = 'none';
+            });
 
-            localStorage.setItem('faFiUserData', JSON.stringify(userData));
-            localStorage.setItem('faFiKycVerified', 'true');
-
-            updateProfileDisplay();
-            document.getElementById('kycCard').style.display = 'none';
-            document.getElementById('profileCard').style.display = 'block';
-            alert('🎉 SELAMAT! Verifikasi KYC Berhasil Disetujui.');
-        }
+            document.getElementById('tarikDompetBtn').addEventListener('click', () => {
+                alert("✅ Berhasil! Saldo komisi $0.11 USDT telah ditarik ke Dompet Utama.");
+            });
+        });
     </script>
 </body>
 </html>
