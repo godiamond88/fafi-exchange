@@ -89,7 +89,7 @@
             text-align: center;
             color: #71717a;
             font-size: 13px;
-            padding: 20px;
+            padding: 0;
             position: relative;
             z-index: 10;
         }
@@ -140,7 +140,7 @@
             font-size: 10px;
         }
 
-        /* Area Animasi Gift Melayang ala TikTok Live */
+        /* Area Animasi Gift Melayang */
         .floating-gift-container {
             position: absolute;
             bottom: 180px;
@@ -245,6 +245,7 @@
         }
         .fafi-avatar-img { width: 100%; height: 100%; object-fit: cover; }
         
+        /* Tombol Follow Dinamis (+ Merah -> Centang Hijau -> Centang Biru) */
         .fafi-follow-badge {
             position: absolute;
             bottom: -6px;
@@ -252,10 +253,10 @@
             transform: translateX(-50%);
             background: #ef4444;
             color: #fff;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -263,6 +264,7 @@
             border: 2px solid #18181b;
             cursor: pointer;
             z-index: 46;
+            transition: background 0.2s;
         }
 
         .action-btn {
@@ -438,7 +440,7 @@
         <button class="upload-small-btn" id="uploadVideoBtn" title="Buat Konten">+</button>
 
         <div class="reels-content" id="reelsContentArea">
-            <div id="dynamicTextView">
+            <div id="dynamicTextView" style="padding: 20px;">
                 <p id="contentText" style="font-weight: bold; margin-bottom: 4px;">Karya Video Pribadi Anda</p>
                 <span id="contentSub" style="font-size: 10px; color: #52525b;">Kelola dan unggah karya video anda di sini</span>
             </div>
@@ -469,6 +471,7 @@
                 <div class="fafi-avatar-wrapper">
                     <img src="https://via.placeholder.com/44" alt="Profil" class="fafi-avatar-img" id="userAvatarImg">
                 </div>
+                <!-- Tombol Follow Interaktif (State: 0=Plus Merah, 1=Centang Hijau, 2=Centang Biru) -->
                 <button class="fafi-follow-badge" id="followBtn" title="Ikuti">+</button>
             </div>
 
@@ -655,9 +658,29 @@
 
         function handleUploadChoice(type) {
             document.getElementById('uploadModalOverlay').style.display = 'none';
-            if (type === 'Kamera') alert("Membuka kamera perangkat...");
-            else if (type === 'Galeri') alert("Membuka galeri perangkat...");
-            else if (type === 'Live') alert("Menyiapkan siaran LIVE...");
+            
+            if (type === 'Kamera' || type === 'Galeri') {
+                const mediaInput = document.createElement('input');
+                mediaInput.type = 'file';
+                mediaInput.accept = 'video/*';
+                if (type === 'Kamera') {
+                    mediaInput.capture = 'environment';
+                }
+                
+                mediaInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const videoURL = URL.createObjectURL(file);
+                        const contentArea = document.getElementById('reelsContentArea');
+                        contentArea.innerHTML = `
+                            <video src="${videoURL}" autoplay loop controls style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;"></video>
+                        `;
+                    }
+                };
+                mediaInput.click();
+            } else if (type === 'Live') {
+                alert("Menyiapkan siaran LIVE streaming...");
+            }
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -701,7 +724,6 @@
             });
             document.getElementById('closeGiftModal').addEventListener('click', () => { giftModal.style.display = 'none'; });
 
-            // EKSEKUSI KIRIM GIFT (Potong Saldo + Animasi Melayang)
             document.getElementById('topupBtn').addEventListener('click', () => {
                 let walletData = JSON.parse(localStorage.getItem('fafiUserWallet')) || { faraBalance: 1250.00, usdtBalance: 1000.00 };
 
@@ -710,20 +732,41 @@
                     return;
                 }
 
-                // Potong saldo FARA
                 walletData.faraBalance -= selectedGift.price;
                 localStorage.setItem('fafiUserWallet', JSON.stringify(walletData));
 
                 updateWalletDisplay();
                 giftModal.style.display = 'none';
 
-                // Munculkan animasi gift melayang di layar
                 const emoji = giftEmojis[selectedGift.id] || "🎁";
                 showFloatingGiftAnimation(myUsername, selectedGift.name, emoji, currentRank);
             });
 
             document.getElementById('uploadVideoBtn').addEventListener('click', () => { uploadModal.style.display = 'flex'; });
             document.getElementById('closeUploadModal').addEventListener('click', () => { uploadModal.style.display = 'none'; });
+
+            // LOGIKA INTERAKTIF TOMBOL FOLLOW ( + Merah -> Centang Hijau -> Centang Biru )
+            const followBtn = document.getElementById('followBtn');
+            let followState = 0; // 0: Belum follow (+ Merah), 1: Mengikuti (Centang Hijau), 2: Berteman (Centang Biru)
+
+            if (followBtn) {
+                followBtn.addEventListener('click', () => {
+                    followState = (followState + 1) % 3;
+                    if (followState === 0) {
+                        followBtn.innerHTML = '+';
+                        followBtn.style.background = '#ef4444'; // Merah
+                        followBtn.title = 'Ikuti';
+                    } else if (followState === 1) {
+                        followBtn.innerHTML = '✓';
+                        followBtn.style.background = '#10b981'; // Hijau (Mengikuti)
+                        followBtn.title = 'Mengikuti';
+                    } else if (followState === 2) {
+                        followBtn.innerHTML = '✓';
+                        followBtn.style.background = '#3b82f6'; // Biru (Berteman / Mutual)
+                        followBtn.title = 'Berteman';
+                    }
+                });
+            }
 
             const commentBtn = document.getElementById('commentBtn');
             const closeCommentBtn = document.getElementById('closeCommentModal');
@@ -786,8 +829,7 @@
             });
 
             const navTabs = document.querySelectorAll('#topNavTabs span');
-            const contentText = document.getElementById('contentText');
-            const contentSub = document.getElementById('contentSub');
+            const contentArea = document.getElementById('reelsContentArea');
             const uploadBtn = document.getElementById('uploadVideoBtn');
 
             navTabs.forEach(tab => {
@@ -798,32 +840,27 @@
 
                     const target = tab.getAttribute('data-target');
                     if (target === 'live') {
-                        contentText.innerText = "📺 Siaran LIVE FAFI Berlangsung";
-                        contentSub.innerText = "Geser layar untuk menonton kreator live streaming";
+                        contentArea.innerHTML = `<div style="padding:20px;"><p style="font-weight:bold; margin-bottom:4px;">📺 Siaran LIVE FAFI Berlangsung</p><span style="font-size:10px; color:#52525b;">Geser layar untuk menonton kreator live streaming</span></div>`;
                         uploadBtn.style.display = 'none';
                         usernameTag.innerText = "@kreator_live_sultan";
                         captionTag.innerText = "🔴 Sedang Live Streaming Trading Analisis XAUUSD!";
                     } else if (target === 'beranda') {
-                        contentText.innerText = "🔥 Beranda Reels Populer";
-                        contentSub.innerText = "Video trending dari seluruh kreator FAFI";
+                        contentArea.innerHTML = `<div style="padding:20px;"><p style="font-weight:bold; margin-bottom:4px;">🔥 Beranda Reels Populer</p><span style="font-size:10px; color:#52525b;">Video trending dari seluruh kreator FAFI</span></div>`;
                         uploadBtn.style.display = 'none';
                         usernameTag.innerText = "@fara_whale_99";
                         captionTag.innerText = "Analisis market crypto bull run hari ini 🚀";
                     } else if (target === 'teman') {
-                        contentText.innerText = "👥 Reels dari Teman Anda";
-                        contentSub.innerText = "Aktivitas video terbaru dari relasi anda";
+                        contentArea.innerHTML = `<div style="padding:20px;"><p style="font-weight:bold; margin-bottom:4px;">👥 Reels dari Teman Anda</p><span style="font-size:10px; color:#52525b;">Aktivitas video terbaru dari relasi anda</span></div>`;
                         uploadBtn.style.display = 'none';
                         usernameTag.innerText = "@sorong_crypto_club";
                         captionTag.innerText = "Kumpul bareng komunitas nonton bareng sorong raya 😎";
                     } else if (target === 'mengikuti') {
-                        contentText.innerText = "⭐ Kreator yang Anda Ikuti";
-                        contentSub.innerText = "Daftar video eksklusif dari akun favorit";
+                        contentArea.innerHTML = `<div style="padding:20px;"><p style="font-weight:bold; margin-bottom:4px;">⭐ Kreator yang Anda Ikuti</p><span style="font-size:10px; color:#52525b;">Daftar video eksklusif dari akun favorit</span></div>`;
                         uploadBtn.style.display = 'none';
                         usernameTag.innerText = "@godiamond_master";
                         captionTag.innerText = "Tips & Trik Expert Advisor MQL5 Sniper OCO";
                     } else if (target === 'karya') {
-                        contentText.innerText = "Karya Video Pribadi Anda";
-                        contentSub.innerText = "Kelola dan unggah karya video anda di sini";
+                        contentArea.innerHTML = `<div style="padding:20px;"><p style="font-weight:bold; margin-bottom:4px;">Karya Video Pribadi Anda</p><span style="font-size:10px; color:#52525b;">Kelola dan unggah karya video anda di sini</span></div>`;
                         uploadBtn.style.display = 'flex';
                         usernameTag.innerText = myUsername;
                         captionTag.innerText = "Karya video eksklusif ekosistem FAFI 🚀";
