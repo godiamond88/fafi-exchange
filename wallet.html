@@ -3,29 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFI Wallet - Real Web3</title>
+    <title>FAFI Wallet & History</title>
     <style>
-        /* Tampilan Utama Layar / Browser (Bingkai HP di Tengah Monitor) */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background-color: #121214; 
-            color: #e0e0e0; 
-            margin: 0; 
-            padding: 0; 
+        body {
+            margin: 0;
+            background: #121214;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            user-select: none; 
+            user-select: none;
         }
 
-        /* Frame Kotak ala Layar HP di Tengah Monitor (Konsisten Semua Halaman) */
         .wallet-container {
             position: relative;
             width: 380px;
             height: 720px;
-            background: #000;
+            background: #09090b;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
@@ -33,217 +30,502 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-sizing: border-box;
         }
 
-        header { 
-            background: #1a1a1a; 
-            padding: 10px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #2a2a2a; 
-            flex-shrink: 0;
+        .wallet-header {
+            padding: 14px 16px 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #27272a;
+            background: #121212;
         }
+        .logo-title { font-size: 13px; font-weight: bold; color: #fbbf24; }
+        .user-tag { font-size: 11px; color: #10b981; font-weight: bold; }
 
-        /* Area Konten Scrollable di dalam Frame HP (Tanpa Garis Scrollbar Putih) */
-        .page-scroll-area { 
+        .wallet-body {
             flex: 1;
             overflow-y: auto;
-            padding: 12px;
+            padding: 14px;
             box-sizing: border-box;
-            scrollbar-width: none; 
-            -ms-overflow-style: none; 
-        }
-        .page-scroll-area::-webkit-scrollbar {
-            width: 0px;
-            background: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .wallet-card { background: #1e1e1e; padding: 12px; border-radius: 10px; border: 1px solid #2a2a2a; margin-bottom: 10px; font-size: 0.8em; }
-        
-        .total-asset-box { background: linear-gradient(135deg, #182822, #121212); padding: 14px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #00ff88; text-align: center; }
-        .total-asset-box .label { color: #888; font-size: 0.7em; text-transform: uppercase; letter-spacing: 1px; }
-        .total-asset-box .value { font-size: 1.4em; font-weight: bold; color: #00ff88; margin-top: 4px; }
-        
-        .wallet-box { background: #121212; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #2a2a2a; }
-        .wallet-box .label { color: #888; font-size: 0.68em; }
-        .wallet-box .value { font-size: 1em; font-weight: bold; color: #fff; margin-top: 3px; }
+        /* Kartu Total Saldo */
+        .balance-card {
+            background: linear-gradient(135deg, #18181b, #27272a);
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .balance-label { font-size: 10px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.5px; }
+        .balance-amount { font-size: 20px; font-weight: 800; color: #f4f4f5; margin: 4px 0; }
+        .balance-idr { font-size: 11px; color: #71717a; }
 
-        /* Tombol Aksi Deposit & WD TRON (TRC20) */
-        .wallet-action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .wallet-btn { padding: 9px; border-radius: 6px; font-weight: bold; font-size: 0.8em; text-align: center; cursor: pointer; border: none; transition: opacity 0.2s; }
-        .btn-deposit-trc { background: #00ff88; color: #121212; }
-        .btn-wd-trc { background: #27272a; color: #ff4d4d; border: 1px solid #ff4d4d; }
-        .wallet-btn:active { opacity: 0.85; }
+        /* Tombol Aksi Cepat (Deposit & Withdraw USDT TRC-20) */
+        .action-buttons-row {
+            display: flex;
+            gap: 10px;
+        }
+        .wallet-action-btn {
+            flex: 1;
+            background: #10b981;
+            color: #000;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+        }
+        .wallet-action-btn.secondary {
+            background: #27272a;
+            color: #fff;
+            border: 1px solid #3f3f46;
+            box-shadow: none;
+        }
 
-        /* Navigasi Bawah Konsisten 5 Menu */
-        .bottom-nav { height: 60px; background: #09090b; border-top: 1px solid #27272a; display: flex; justify-content: space-around; align-items: center; z-index: 100; flex-shrink: 0; }
-        .nav-item { text-align: center; color: #71717a; font-size: 10px; text-decoration: none; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        /* Daftar Aset */
+        .assets-section-title { font-size: 11px; font-weight: bold; color: #a1a1aa; margin-top: 4px; }
+        .asset-item {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .asset-info { display: flex; align-items: center; gap: 8px; }
+        .asset-icon { font-size: 16px; }
+        .asset-name { font-size: 11px; font-weight: bold; color: #fff; }
+        .asset-network { font-size: 9px; color: #71717a; }
+        .asset-balance { text-align: right; }
+        .asset-val { font-size: 11px; font-weight: bold; color: #fff; }
+        .asset-sub { font-size: 9px; color: #a1a1aa; }
+
+        /* Sesi Histori Transaksi */
+        .history-section {
+            margin-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .history-tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid #27272a;
+            padding-bottom: 6px;
+        }
+        .history-tab {
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+        }
+        .history-tab.active { background: #27272a; color: #10b981; }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 140px;
+            overflow-y: auto;
+        }
+        .history-item {
+            background: #121212;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+        }
+        .h-title { font-weight: bold; color: #fff; margin-bottom: 2px; }
+        .h-time { font-size: 8px; color: #71717a; }
+        .status-badge { font-size: 8px; padding: 1px 4px; border-radius: 3px; font-weight: bold; }
+        .status-success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+
+        /* Modal Popup */
+        .fafi-modal-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: flex-end;
+            z-index: 9999;
+        }
+        .fafi-modal-content {
+            background: #18181b;
+            width: 100%;
+            max-height: 85vh;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 16px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            border-top: 2px solid #10b981;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #27272a;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+        .modal-title { font-weight: bold; font-size: 14px; color: #10b981; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+
+        .deposit-qr-box {
+            background: #fff;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 10px auto;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .mock-barcode {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg, #000, #000 4px, #fff 4px, #fff 8px);
+            border-radius: 4px;
+        }
+
+        .deposit-address-box {
+            background: #121212;
+            border: 1px solid #27272a;
+            padding: 8px 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .deposit-address-text {
+            font-size: 10px;
+            color: #10b981;
+            font-family: monospace;
+            word-break: break-all;
+            margin-right: 8px;
+        }
+        .copy-btn {
+            background: #10b981;
+            color: #000;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* Form Withdraw */
+        .withdraw-form-group {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .withdraw-label { font-size: 10px; color: #a1a1aa; font-weight: bold; }
+        .withdraw-input {
+            background: #121212;
+            border: 1px solid #27272a;
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .withdraw-submit-btn {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 6px;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Navigasi Bawah Konsisten */
+        .fafi-bottom-nav {
+            height: 60px;
+            background: #09090b;
+            border-top: 1px solid #27272a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-item {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
         .nav-item.active { color: #10b981; font-weight: bold; }
         .nav-item span.icon { font-size: 16px; }
-
-        /* Modal Sederhana untuk Deposit & WD */
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 999; }
-        .modal-content { background: #18181b; width: 85%; padding: 15px; border-radius: 12px; border: 1px solid #00ff88; box-sizing: border-box; font-size: 0.8em; }
-        .modal-input { width: 100%; background: #121212; border: 1px solid #333; border-radius: 6px; padding: 8px; color: #fff; margin: 8px 0; box-sizing: border-box; outline: none; font-size: 0.9em; }
     </style>
 </head>
 <body>
+
     <div class="wallet-container">
-        <header>
-            <div style="font-weight: bold; color: #00ffcc; font-size: 0.9em;">⚡ FAFI Wallet</div>
-            <div style="font-size: 0.65em; color: #848e9c;">TRC20 Network</div>
-        </header>
+        
+        <!-- Header Wallet -->
+        <div class="wallet-header">
+            <div class="logo-title">👛 FAFI Web3 Wallet</div>
+            <div class="user-tag">Master godiamond</div>
+        </div>
 
-        <!-- Area Scrollable Dompet -->
-        <div class="page-scroll-area">
-            <div class="wallet-card">
-                <h4 style="margin: 0 0 8px 0; color: #fff; font-size: 0.9em;">Aset Dompet TRC20 Real</h4>
-                
-                <div class="total-asset-box">
-                    <div class="label">Total Estimasi Aset (IDR)</div>
-                    <div class="value" id="totalAssetIdr">Rp 0</div>
-                    <div style="font-size: 0.6em; color: #888; margin-top: 3px;" id="rateInfoText">Kurs Real-Time Terhubung</div>
-                </div>
+        <!-- Body Wallet -->
+        <div class="wallet-body">
+            
+            <!-- Ringkasan Saldo -->
+            <div class="balance-card">
+                <div class="balance-label">Total Estimasi Aset</div>
+                <div class="balance-amount" id="totalAssetUsdt">$1,450.80 USDT</div>
+                <div class="balance-idr">≈ Rp 23,212,800 (Kurs IDR 16,000)</div>
+            </div>
 
-                <div class="wallet-box">
-                    <div class="label">Alamat Master Pool Utama (godiamond)</div>
-                    <div style="font-size: 0.7em; color: #00ffcc; word-break: break-all; margin-top: 2px;">TTip6T141qxP9tgh2KeQ88ZTpaGmEZxCxy</div>
-                    <div style="font-size: 0.65em; color: #666; margin-top: 2px;">FARA Contract: TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG</div>
-                </div>
+            <!-- Tombol Deposit & Withdraw USDT (TRC-20) -->
+            <div class="action-buttons-row">
+                <button class="wallet-action-btn" id="openDepositModalBtn">⬇️ Deposit USDT</button>
+                <button class="wallet-action-btn secondary" id="openWithdrawModalBtn">⬆️ Withdraw USDT</button>
+            </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                    <div class="wallet-box" style="margin-bottom: 0;">
-                        <div class="label">Saldo FARA (Real)</div>
-                        <div class="value" style="color: #00ff88;" id="faraBalance">0,00</div>
-                        <div style="font-size: 0.6em; color: #888; margin-top: 2px;" id="faraIdrVal">≈ Rp 0</div>
+            <!-- Daftar Aset -->
+            <div class="assets-section-title">Aset Kripto & Utilitas</div>
+            
+            <div class="asset-item">
+                <div class="asset-info">
+                    <span class="asset-icon">💵</span>
+                    <div>
+                        <div class="asset-name">USDT</div>
+                        <div class="asset-network">Jaringan TRC-20</div>
                     </div>
-                    <div class="wallet-box" style="margin-bottom: 0;">
-                        <div class="label">Saldo USDT (Real)</div>
-                        <div class="value" style="color: #00ffcc;" id="usdtBalance">0,00</div>
-                        <div style="font-size: 0.6em; color: #888; margin-top: 2px;" id="usdtIdrVal">≈ Rp 0</div>
+                </div>
+                <div class="asset-balance">
+                    <div class="asset-val">1,000.00 USDT</div>
+                    <div class="asset-sub">$1,000.00</div>
+                </div>
+            </div>
+
+            <div class="asset-item">
+                <div class="asset-info">
+                    <span class="asset-icon">💎</span>
+                    <div>
+                        <div class="asset-name">TRX</div>
+                        <div class="asset-network">Tron Mainnet</div>
                     </div>
                 </div>
+                <div class="asset-balance">
+                    <div class="asset-val">1,500.00 TRX</div>
+                    <div class="asset-sub">$357.00</div>
+                </div>
+            </div>
 
-                <!-- Tombol Deposit & Withdraw USDT (TRC20) -->
-                <div class="wallet-action-grid">
-                    <button class="wallet-btn btn-deposit-trc" onclick="openModal('deposit')">📥 Deposit USDT (TRC20)</button>
-                    <button class="wallet-btn btn-wd-trc" onclick="openModal('withdraw')">📤 Withdraw USDT</button>
+            <div class="asset-item">
+                <div class="asset-info">
+                    <span class="asset-icon">🟡</span>
+                    <div>
+                        <div class="asset-name">FARA</div>
+                        <div class="asset-network">SocialFi Token</div>
+                    </div>
+                </div>
+                <div class="asset-balance">
+                    <div class="asset-val">1,250.00 FARA</div>
+                    <div class="asset-sub">$93.80</div>
+                </div>
+            </div>
+
+            <!-- Histori Transaksi -->
+            <div class="history-section">
+                <div class="assets-section-title">Riwayat Transaksi (Transaction History)</div>
+                <div class="history-tabs">
+                    <button class="history-tab active">Semua</button>
+                    <button class="history-tab">Deposit/WD</button>
+                    <button class="history-tab">Trading</button>
+                    <button class="history-tab">SosialFi</button>
+                </div>
+                <div class="history-list">
+                    <div class="history-item">
+                        <div>
+                            <div class="h-title">📥 Deposit USDT (TRC-20)</div>
+                            <div class="h-time">08 Nov 2026, 19:30</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="color: #10b981; font-weight: bold;">+500.00 USDT</div>
+                            <span class="status-badge status-success">Berhasil</span>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div>
+                            <div class="h-title">📈 Buy TRX/USDT (Spot)</div>
+                            <div class="h-time">08 Nov 2026, 18:15</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="color: #ef4444; font-weight: bold;">-119.25 USDT</div>
+                            <span class="status-badge status-success">Executed</span>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div>
+                            <div class="h-title">🎁 Kirim Gift "Mahkota Sultan"</div>
+                            <div class="h-time">07 Nov 2026, 21:10</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="color: #f59e0b; font-weight: bold;">-500.00 FARA</div>
+                            <span class="status-badge status-success">Selesai</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal Deposit USDT TRC-20 -->
+        <div class="fafi-modal-overlay" id="depositModalOverlay">
+            <div class="fafi-modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">📥 Deposit USDT (TRC-20)</span>
+                    <button class="close-btn" id="closeDepositModal">&times;</button>
+                </div>
+                <div style="font-size: 11px; color: #a1a1aa; text-align: center; margin-bottom: 10px;">
+                    Scan QR Code atau salin alamat di bawah untuk melakukan deposit USDT via jaringan TRC-20.
+                </div>
+                <div class="deposit-qr-box">
+                    <div class="mock-barcode"></div>
+                </div>
+                <div style="font-size: 10px; color: #71717a; margin-bottom: 4px;">Alamat Deposit USDT (TRC-20) Anda:</div>
+                <div class="deposit-address-box">
+                    <span class="deposit-address-text" id="walletAddressText">TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t</span>
+                    <button class="copy-btn" id="copyAddressBtn">Salin</button>
+                </div>
+                <div style="font-size: 9px; color: #fbbf24; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); padding: 6px; border-radius: 6px; text-align: center;">
+                    ⚠️ Kirim hanya token <b>USDT</b> melalui jaringan <b>TRC-20</b>. Setoran aset lain akan hilang permanen.
                 </div>
             </div>
         </div>
 
-        <!-- Modal Aksi Deposit/WD -->
-        <div class="modal-overlay" id="walletModal">
-            <div class="modal-content">
-                <h3 id="modalTitle" style="margin-top: 0; color: #00ffcc; font-size: 1.1em;">Deposit USDT</h3>
-                <p id="modalDesc" style="color: #888; font-size: 0.75em; margin-bottom: 8px;">Masukkan jumlah USDT (Jaringan TRC20):</p>
-                <input type="number" class="modal-input" id="modalAmountInput" placeholder="0.00">
-                <div style="display: flex; gap: 8px; margin-top: 10px;">
-                    <button class="wallet-btn btn-deposit-trc" style="flex: 1;" onclick="processWalletAction()">Konfirmasi</button>
-                    <button class="wallet-btn" style="flex: 1; background: #333; color: #fff;" onclick="closeModal()">Batal</button>
+        <!-- Modal Withdraw USDT TRC-20 -->
+        <div class="fafi-modal-overlay" id="withdrawModalOverlay">
+            <div class="fafi-modal-content" style="border-top-color: #ef4444;">
+                <div class="modal-header">
+                    <span class="modal-title" style="color: #ef4444;">⬆️ Withdraw USDT (TRC-20)</span>
+                    <button class="close-btn" id="closeWithdrawModal">&times;</button>
                 </div>
+
+                <div class="withdraw-form-group">
+                    <label class="withdraw-label">Aset</label>
+                    <input type="text" class="withdraw-input" value="USDT (Jaringan TRC-20)" disabled style="color: #10b981; font-weight: bold;">
+                </div>
+
+                <div class="withdraw-form-group">
+                    <label class="withdraw-label">Alamat Tujuan Penarikan (TRC-20 Address)</label>
+                    <input type="text" class="withdraw-input" id="wdAddressInput" placeholder="Masukkan alamat wallet USDT TRC-20...">
+                </div>
+
+                <div class="withdraw-form-group">
+                    <label class="withdraw-label">Jumlah Penarikan (USDT)</label>
+                    <input type="number" class="withdraw-input" id="wdAmountInput" placeholder="0.00">
+                    <div style="font-size: 9px; color: #71717a; margin-top: 2px;">Saldo tersedia: 1,000.00 USDT (Fee Jaringan: 1 USDT)</div>
+                </div>
+
+                <button class="withdraw-submit-btn" id="submitWithdrawBtn">Konfirmasi Withdraw USDT</button>
             </div>
         </div>
 
-        <!-- Navigasi Bawah Konsisten 5 Menu -->
-        <div class="bottom-nav">
-            <a href="/" class="nav-item">
-                <span class="icon">🏠</span>
-                <span>Home</span>
-            </a>
-            <a href="/trading" class="nav-item">
-                <span class="icon">📈</span>
-                <span>Trading</span>
-            </a>
-            <a href="/reels" class="nav-item">
-                <span class="icon">🔥</span>
-                <span>Reels</span>
-            </a>
-            <a href="/wallet" class="nav-item active">
-                <span class="icon">👛</span>
-                <span>Wallet</span>
-            </a>
-            <a href="/profile" class="nav-item">
-                <span class="icon">👤</span>
-                <span>Profile</span>
-            </a>
+        <!-- Navigasi Bawah Konsisten -->
+        <div class="fafi-bottom-nav">
+            <a href="/" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>
+            <a href="/trading" class="nav-item"><span class="icon">📈</span><span>Trading</span></a>
+            <a href="/reels" class="nav-item"><span class="icon">🔥</span><span>Reels</span></a>
+            <a href="/wallet" class="nav-item active"><span class="icon">👛</span><span>Wallet</span></a>
+            <a href="/profile" class="nav-item"><span class="icon">👤</span><span>Profile</span></a>
         </div>
+
     </div>
 
     <script>
-        let userWalletData = JSON.parse(localStorage.getItem('fafiUserWallet')) || {
-            faraBalance: 100.00,
-            usdtBalance: 1000.00,
-            rateUsdtIdr: 16000 
-        };
-        localStorage.setItem('fafiUserWallet', JSON.stringify(userWalletData));
+        document.addEventListener("DOMContentLoaded", () => {
+            // Deposit Modal
+            const depositModal = document.getElementById('depositModalOverlay');
+            const openDepositBtn = document.getElementById('openDepositModalBtn');
+            const closeDepositBtn = document.getElementById('closeDepositModal');
+            const copyAddressBtn = document.getElementById('copyAddressBtn');
+            const walletAddressText = document.getElementById('walletAddressText');
 
-        let currentActionType = 'deposit';
+            openDepositBtn.addEventListener('click', () => { depositModal.style.display = 'flex'; });
+            closeDepositBtn.addEventListener('click', () => { depositModal.style.display = 'none'; });
 
-        function updateWalletUI() {
-            let currentFaraPriceUsd = parseFloat(localStorage.getItem('fafiMarketPrice')) || 1.5000;
-            const faraIdr = userWalletData.faraBalance * currentFaraPriceUsd * userWalletData.rateUsdtIdr;
-            const usdtIdr = userWalletData.usdtBalance * userWalletData.rateUsdtIdr;
-            const totalAsset = faraIdr + usdtIdr;
+            copyAddressBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(walletAddressText.innerText);
+                copyAddressBtn.innerText = "Disalin!";
+                setTimeout(() => { copyAddressBtn.innerText = "Salin"; }, 2000);
+            });
 
-            document.getElementById('totalAssetIdr').innerText = 'Rp ' + totalAsset.toLocaleString('id-ID', { maximumFractionDigits: 0 });
-            document.getElementById('faraBalance').innerText = userWalletData.faraBalance.toLocaleString('id-ID', { minimumFractionDigits: 2 });
-            document.getElementById('usdtBalance').innerText = userWalletData.usdtBalance.toLocaleString('id-ID', { minimumFractionDigits: 2 });
-            
-            document.getElementById('faraIdrVal').innerText = '≈ Rp ' + faraIdr.toLocaleString('id-ID', { maximumFractionDigits: 0 });
-            document.getElementById('usdtIdrVal').innerText = '≈ Rp ' + usdtIdr.toLocaleString('id-ID', { maximumFractionDigits: 0 });
-        }
+            // Withdraw Modal
+            const withdrawModal = document.getElementById('withdrawModalOverlay');
+            const openWithdrawBtn = document.getElementById('openWithdrawModalBtn');
+            const closeWithdrawBtn = document.getElementById('closeWithdrawModal');
+            const submitWithdrawBtn = document.getElementById('submitWithdrawBtn');
+            const wdAddressInput = document.getElementById('wdAddressInput');
+            const wdAmountInput = document.getElementById('wdAmountInput');
 
-        function openModal(type) {
-            currentActionType = type;
-            const modal = document.getElementById('walletModal');
-            const title = document.getElementById('modalTitle');
-            const desc = document.getElementById('modalDesc');
-            
-            if(type === 'deposit') {
-                title.innerText = '📥 Deposit USDT (TRC20)';
-                desc.innerText = 'Kirim USDT via jaringan TRON ke Master Pool. Masukkan jumlah deposit:';
-            } else {
-                title.innerText = '📤 Withdraw USDT (TRC20)';
-                desc.innerText = 'Tarik saldo USDT ke wallet eksternal TRC20. Masukkan jumlah WD:';
-            }
-            
-            modal.style.display = 'flex';
-        }
+            openWithdrawBtn.addEventListener('click', () => { withdrawModal.style.display = 'flex'; });
+            closeWithdrawBtn.addEventListener('click', () => { withdrawModal.style.display = 'none'; });
 
-        function closeModal() {
-            document.getElementById('walletModal').style.display = 'none';
-            document.getElementById('modalAmountInput').value = '';
-        }
+            submitWithdrawBtn.addEventListener('click', () => {
+                const addr = wdAddressInput.value.trim();
+                const amount = parseFloat(wdAmountInput.value);
 
-        function processWalletAction() {
-            let amount = parseFloat(document.getElementById('modalAmountInput').value);
-            if(!amount || amount <= 0) {
-                alert('Masukkan jumlah yang valid.');
-                return;
-            }
-
-            if(currentActionType === 'deposit') {
-                userWalletData.usdtBalance += amount;
-                alert(`✅ Deposit ${amount} USDT (TRC20) Berhasil! Saldo bertambah.`);
-            } else {
-                if(userWalletData.usdtBalance < amount) {
-                    alert('❌ Saldo USDT Anda tidak mencukupi untuk penarikan.');
+                if (!addr) {
+                    alert("❌ Mohon masukkan alamat tujuan wallet penarikan USDT.");
                     return;
                 }
-                userWalletData.usdtBalance -= amount;
-                alert(`✅ Withdraw ${amount} USDT Berhasil diproses via TRC20.`);
-            }
+                if (!amount || amount <= 0) {
+                    alert("❌ Mohon masukkan jumlah penarikan USDT yang valid.");
+                    return;
+                }
 
-            localStorage.setItem('fafiUserWallet', JSON.stringify(userWalletData));
-            updateWalletUI();
-            closeModal();
-        }
+                alert(`✅ Permintaan Withdraw ${amount} USDT ke alamat ${addr.substring(0, 8)}... berhasil diajukan melalui jaringan TRC-20!`);
+                withdrawModal.style.display = 'none';
+                wdAddressInput.value = '';
+                wdAmountInput.value = '';
+            });
 
-        window.onload = function() {
-            updateWalletUI();
-        };
+            window.addEventListener('click', (e) => {
+                if (e.target === depositModal) depositModal.style.display = 'none';
+                if (e.target === withdrawModal) withdrawModal.style.display = 'none';
+            });
+        });
     </script>
 </body>
 </html>
