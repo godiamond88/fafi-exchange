@@ -3,45 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFI - Test KYC Clean</title>
+    <title>FAFI - KYC & Bank Verification</title>
     <style>
         body {
             margin: 0;
             background: #121214;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            overflow: hidden;
         }
-        .box {
+
+        .container {
+            width: 380px;
+            max-height: 85vh;
+            background: #09090b;
+            border-radius: 20px;
+            border: 2px solid #27272a;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #27272a;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .close-btn {
+            background: #27272a;
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .close-btn:hover { background: #10b981; color: #000; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            font-size: 11px;
+            color: #a1a1aa;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
             background: #18181b;
-            border: 2px solid #10b981;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            width: 320px;
+            border: 1px solid #27272a;
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        h2 { color: #10b981; margin-top: 0; }
-        .btn {
+        .form-input:focus { border-color: #10b981; }
+
+        .submit-btn {
+            width: 100%;
             background: #10b981;
             color: #000;
             border: none;
-            padding: 10px 20px;
+            border-radius: 10px;
+            padding: 12px;
             font-weight: bold;
-            border-radius: 8px;
             cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
+            margin-top: 10px;
+            transition: opacity 0.2s;
         }
+        .submit-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>🛡️ KYC Halaman Bersih</h2>
-        <p>Jika halaman ini tampil, berarti file fisik dan rute server sudah 100% normal tanpa terhalang apa pun.</p>
-        <button class="btn" onclick="window.location.href='/profile'">Kembali ke Profile</button>
+    <div class="container">
+        <div class="header">
+            <span>🛡️ KYC &amp; Bank Verification</span>
+            <button class="close-btn" onclick="window.location.href='/profile'">&times;</button>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Full Name (As on KTP)</label>
+            <input type="text" class="form-input" id="kycName" value="Rian Rawalangi">
+        </div>
+        <div class="form-group">
+            <label class="form-label">16-Digit NIK KTP</label>
+            <input type="text" class="form-input" id="kycNik" placeholder="Enter your 16-digit NIK" maxlength="16">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-input" id="kycBank" placeholder="e.g. BCA / Mandiri">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Bank Account Number</label>
+            <input type="text" class="form-input" id="kycAccount" placeholder="Enter account number">
+        </div>
+        <button class="submit-btn" onclick="submitKycData()">Submit KYC Verification</button>
     </div>
+
+    <script>
+        function submitKycData() {
+            const name = document.getElementById('kycName').value;
+            const nik = document.getElementById('kycNik').value;
+            
+            if (!nik || nik.length < 16) {
+                alert('Please enter a valid 16-digit NIK KTP.');
+                return;
+            }
+
+            // Simpan status verifikasi ke localStorage
+            const savedUser = localStorage.getItem('faFiUserData');
+            let userData = savedUser ? JSON.parse(savedUser) : { username: "@godiamond", fullName: name };
+            userData.kycVerified = true;
+            localStorage.setItem('faFiUserData', JSON.stringify(userData));
+
+            alert('KYC Verified Successfully!');
+            window.location.href = '/profile';
+        }
+    </script>
 </body>
 </html>
