@@ -13,20 +13,37 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             overflow: hidden;
+            user-select: none;
         }
 
+        /* Container ala Frame HP agar konsisten dengan profile */
         .container {
+            position: relative;
             width: 380px;
-            max-height: 88vh;
+            height: 85vh;
+            max-height: 780px;
             background: #09090b;
+            color: #fff;
             border-radius: 20px;
-            border: 2px solid #27272a;
-            padding: 20px;
-            box-sizing: border-box;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 2px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 16px;
+            padding-bottom: 30px;
+        }
+
+        /* Custom Scrollbar */
+        .container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .container::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 4px;
         }
 
         .header {
@@ -34,7 +51,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #27272a;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             margin-bottom: 15px;
             font-weight: bold;
             font-size: 13px;
@@ -61,12 +78,12 @@
             border: 1px solid #3f3f46;
             border-radius: 14px;
             padding: 16px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             text-align: center;
         }
 
         .stat-title {
-            font-size: 10.5px;
+            font-size: 10px;
             color: #a1a1aa;
             text-transform: uppercase;
             font-weight: bold;
@@ -80,12 +97,33 @@
             color: #f59e0b;
         }
 
+        /* Tombol Withdraw ke Wallet */
+        .wd-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            transition: opacity 0.2s;
+        }
+        .wd-btn:hover { opacity: 0.9; }
+
         .section-title {
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: bold;
             color: #a1a1aa;
             text-transform: uppercase;
-            margin: 15px 0 8px 0;
+            margin: 14px 0 8px 0;
             letter-spacing: 0.5px;
         }
 
@@ -106,14 +144,14 @@
 
         .tier-name { font-size: 12px; font-weight: bold; color: #fff; }
         .tier-desc { font-size: 9.5px; color: #a1a1aa; margin-top: 2px; }
-        .tier-badge { font-size: 9.5px; font-weight: bold; padding: 3px 8px; border-radius: 6px; background: #27272a; color: #f59e0b; }
+        .tier-badge { font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 6px; background: #27272a; color: #f59e0b; }
         .tier-box.active .tier-badge { background: #f59e0b; color: #000; }
 
         .referral-box {
             background: #18181b;
             border: 1px solid #27272a;
             border-radius: 10px;
-            padding: 12px;
+            padding: 10px 12px;
             display: flex;
             gap: 8px;
             align-items: center;
@@ -158,14 +196,19 @@
             <div class="stat-value" id="commissionDisplay">450.20 FARA</div>
         </div>
 
-        <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+        <!-- Tombol Withdraw ke Dompet / Wallet -->
+        <button class="wd-btn" onclick="window.location.href='/wallet'">
+            <span>💸 Withdraw Commission to Wallet</span>
+        </button>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 6px;">
             <div class="stat-card" style="flex: 1; margin-bottom: 0;">
                 <div class="stat-title">Active Partners</div>
-                <div class="stat-value" style="font-size: 16px; color: #22d3ee;" id="referralCountDisplay">14 Mitra</div>
+                <div class="stat-value" style="font-size: 15px; color: #22d3ee;" id="referralCountDisplay">14 Mitra</div>
             </div>
             <div class="stat-card" style="flex: 1; margin-bottom: 0;">
                 <div class="stat-title">Current Rank</div>
-                <div class="stat-value" style="font-size: 14px; color: #10b981;">💎 Diamond</div>
+                <div class="stat-value" style="font-size: 13px; color: #10b981;">💎 Diamond</div>
             </div>
         </div>
 
@@ -212,7 +255,6 @@
             alert("Referral link copied to clipboard!");
         }
 
-        // Sinkronisasi data mitra dari localStorage jika ada
         document.addEventListener("DOMContentLoaded", () => {
             const savedUser = localStorage.getItem('faFiUserData');
             if (savedUser) {
