@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFI Profil Kreator Lain</title>
+    <title>FAFI Creator Profile</title>
     <style>
         body {
             margin: 0;
@@ -18,14 +18,15 @@
             user-select: none;
         }
 
-        .creator-profile-container {
+        /* Ukuran Frame Dikunci Mati Presisi 380px x 720px */
+        .creator-container {
             position: relative;
             width: 380px;
             height: 720px;
             background: #09090b;
             color: #fff;
             border-radius: 20px;
-            overflow-y: auto;
+            overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             border: 2px solid #27272a;
             display: flex;
@@ -33,29 +34,53 @@
             box-sizing: border-box;
         }
 
+        /* Area Konten */
+        .content-scroll {
+            position: absolute;
+            top: 45px;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            overflow-y: auto;
+            padding: 10px 14px;
+            box-sizing: border-box;
+        }
+
+        .content-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        .content-scroll::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+
         /* Header Atas */
         .header-nav {
-            padding: 14px 16px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 45px;
+            padding: 0 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
             border-bottom: 1px solid #27272a;
             background: #121212;
-            position: sticky;
-            top: 0;
+            box-sizing: border-box;
             z-index: 10;
         }
-        
+
         .close-profile-btn {
             background: #27272a;
             border: none;
             color: #fff;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -63,11 +88,10 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .close-profile-btn:hover { background: #ef4444; }
+        .close-profile-btn:hover { background: #ef4444; color: #fff; }
 
-        /* Bagian Utama Profil */
+        /* Profil Utama Kreator */
         .profile-main-info {
-            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -75,188 +99,197 @@
         }
 
         .avatar-box {
-            width: 74px;
-            height: 74px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: #27272a;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid #eab308;
-            margin-bottom: 12px;
-            box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
+            border: 3px solid #22d3ee;
+            margin-bottom: 6px;
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
             box-sizing: border-box;
-            position: relative;
         }
         .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
 
         .stats-row {
             display: flex;
-            gap: 25px;
-            margin: 8px 0;
+            gap: 22px;
+            margin: 4px 0;
         }
         .stat-item {
             display: flex;
             flex-direction: column;
-            font-size: 11px;
+            font-size: 10px;
             color: #a1a1aa;
         }
         .stat-item strong {
-            font-size: 15px;
+            font-size: 13px;
             color: #fff;
             font-weight: 800;
         }
 
         .medali-badge {
             display: inline-block;
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 4px;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 800;
-            margin-top: 6px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            margin-top: 4px;
+            background: linear-gradient(135deg, #22d3ee, #0284c7);
+            color: #000;
         }
         .username-handle {
-            font-size: 12px;
+            font-size: 11px;
             color: #a1a1aa;
-            margin-top: 4px;
+            margin-top: 2px;
             font-weight: bold;
         }
 
-        /* Tombol Aksi (Ikuti, Blokir, & Dropdown) */
+        /* Tombol Aksi */
         .action-buttons-row {
             display: flex;
             gap: 6px;
             width: 100%;
-            padding: 0 16px;
-            box-sizing: border-box;
-            margin-top: 14px;
+            margin-top: 8px;
+            align-items: center;
         }
         .btn-follow {
-            flex: 1;
-            padding: 9px;
+            flex: 2;
+            padding: 7px;
             background: #ef4444;
             border: none;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 10.5px;
             font-weight: bold;
             color: #fff;
             cursor: pointer;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-            transition: background 0.2s;
         }
         .btn-follow.following {
-            background: #18181b;
-            color: #fff;
-            border: 1px solid #27272a;
-        }
-        /* Tombol Blokir Pengguna */
-        .btn-block {
-            padding: 9px 12px;
             background: #27272a;
+            color: #a1a1aa;
             border: 1px solid #3f3f46;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            color: #fca5a5;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
         }
-        .btn-block:hover {
-            background: #7f1d1d;
-            color: #fff;
-            border-color: #ef4444;
-        }
-        .btn-dropdown {
-            width: 38px;
+        .btn-block {
+            flex: 1;
+            padding: 7px;
             background: #18181b;
             border: 1px solid #27272a;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 10.5px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-block:hover { background: #27272a; border-color: #ef4444; }
+
+        .btn-arrow-toggle {
+            width: 32px;
+            height: 31px;
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            font-size: 13px;
             color: #fff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s, background 0.2s;
+            transition: background 0.2s;
         }
-        .btn-dropdown.active {
-            background: #27272a;
-            transform: rotate(180deg);
-        }
+        .btn-arrow-toggle:hover { background: #27272a; }
 
-        /* Kotak Rekomendasi Akun (Dropdown Scrollable Horizontal) */
-        .suggested-dropdown-box {
-            display: none;
-            flex-direction: column;
+        /* Bagian Rekomendasi (Suggested Creators) dengan Tombol Navigasi Kiri & Kanan */
+        .suggested-section {
+            margin-top: 14px;
             width: 100%;
-            background: #121212;
-            border-bottom: 1px solid #27272a;
-            padding: 12px 16px;
-            box-sizing: border-box;
+            text-align: left;
+            display: none;
         }
-        .suggested-dropdown-box.show { display: flex; }
+        .suggested-section.show { display: block; }
 
-        .suggested-header-row {
+        .suggested-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 11px;
+            font-size: 10px;
             color: #a1a1aa;
-            margin-bottom: 10px;
-        }
-        .suggested-header-row span.see-more {
-            color: #38bdf8;
-            cursor: pointer;
-            font-weight: bold;
+            margin-bottom: 8px;
         }
 
-        .suggested-scroll-container {
+        .suggested-nav-wrapper {
+            position: relative;
             display: flex;
-            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-arrow-left, .nav-arrow-right {
+            position: absolute;
+            z-index: 5;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #3f3f46;
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .nav-arrow-left { left: -6px; }
+        .nav-arrow-right { right: -6px; }
+
+        .suggested-cards-container {
+            display: flex;
+            gap: 8px;
             overflow-x: auto;
             padding-bottom: 6px;
+            scroll-behavior: smooth;
+            width: 100%;
         }
+        .suggested-cards-container::-webkit-scrollbar { display: none; }
 
         .suggested-card {
-            min-width: 115px;
-            max-width: 115px;
             background: #18181b;
             border: 1px solid #27272a;
-            border-radius: 10px;
-            padding: 10px 6px;
+            border-radius: 8px;
+            padding: 10px 8px;
+            width: 105px;
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             position: relative;
-            flex-shrink: 0;
-            box-sizing: border-box;
+            cursor: pointer;
+            transition: border-color 0.2s;
         }
-        .suggested-card-close {
+        .suggested-card:hover { border-color: #22d3ee; }
+
+        .sug-close {
             position: absolute;
-            top: 4px;
-            right: 6px;
-            font-size: 12px;
+            top: 4px; right: 6px;
+            font-size: 9px;
             color: #71717a;
             cursor: pointer;
         }
-        .suggested-card-avatar {
-            width: 40px;
-            height: 40px;
+
+        .sug-avatar {
+            width: 38px; height: 38px;
             border-radius: 50%;
-            overflow: hidden;
-            background: #27272a;
+            object-fit: cover;
             margin-bottom: 4px;
-            border: 2px solid #eab308;
+            border: 2px solid #22d3ee;
         }
-        .suggested-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .suggested-card-name {
-            font-size: 9.5px;
+
+        .sug-name {
+            font-size: 9px;
             font-weight: bold;
             color: #fff;
             white-space: nowrap;
@@ -265,146 +298,61 @@
             width: 100%;
             margin-bottom: 2px;
         }
-        .suggested-card-level {
+
+        .sug-rank {
             font-size: 7px;
-            font-weight: 900;
             padding: 1px 4px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 3px;
+            border-radius: 3px;
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+            font-weight: bold;
+            margin-bottom: 2px;
         }
-        .suggested-card-followers {
-            font-size: 8.5px;
+
+        .sug-followers {
+            font-size: 7.5px;
             color: #a1a1aa;
             margin-bottom: 6px;
         }
-        .suggested-card-btn {
-            width: 100%;
-            padding: 4px 0;
+
+        .sug-btn-ikuti {
             background: #ef4444;
             color: #fff;
             border: none;
-            border-radius: 5px;
-            font-size: 9.5px;
+            border-radius: 4px;
+            padding: 4px 0;
+            width: 100%;
+            font-size: 8.5px;
             font-weight: bold;
             cursor: pointer;
         }
-        .suggested-card-btn.following {
-            background: #27272a;
-            color: #d4d4d8;
-            border: 1px solid #3f3f46;
-        }
 
-        /* FULL GRID MODAL (3 Kolom x 4 Baris) */
-        .full-recommend-modal {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #09090b;
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            box-sizing: border-box;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .full-recommend-modal.show { display: flex; }
-
-        .full-modal-header {
-            padding: 14px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            font-size: 13px;
-            border-bottom: 1px solid #27272a;
-            background: #121212;
-        }
-
-        .full-grid-body {
-            flex: 1;
-            padding: 12px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 8px;
-            overflow-y: auto;
-            box-sizing: border-box;
-        }
-
-        .full-grid-card {
-            background: #18181b;
-            border: 1px solid #27272a;
-            border-radius: 8px;
-            padding: 8px 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-sizing: border-box;
-            justify-content: space-between;
-        }
-        .full-grid-avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #eab308;
-            margin-bottom: 2px;
-        }
-        .full-grid-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .full-grid-name { font-size: 9px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-        .full-grid-level { font-size: 6.5px; font-weight: 900; padding: 1px 3px; border-radius: 3px; }
-        .full-grid-followers { font-size: 8px; color: #a1a1aa; }
-        .full-grid-btn { width: 100%; padding: 3px 0; background: #ef4444; color: #fff; border: none; border-radius: 4px; font-size: 9px; font-weight: bold; cursor: pointer; }
-        .full-grid-btn.following { background: #27272a; color: #d4d4d8; }
-
-        .full-modal-footer {
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #121212;
-            border-top: 1px solid #27272a;
-        }
-        .nav-page-btn {
-            background: #27272a;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .nav-page-btn:hover { background: #10b981; color: #000; }
-        .page-indicator { font-size: 11px; color: #a1a1aa; font-weight: bold; }
-
-        /* Tab Navigasi Konten */
+        /* Tab Grid Karya */
         .content-tabs {
             display: flex;
             justify-content: space-around;
             border-top: 1px solid #27272a;
-            margin-top: 10px;
+            margin-top: 12px;
             background: #121212;
         }
         .content-tab {
             flex: 1;
-            padding: 10px 0;
+            padding: 6px 0;
             text-align: center;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             border-bottom: 2px solid transparent;
             color: #52525b;
         }
-        .content-tab.active { border-bottom-color: #10b981; color: #10b981; }
+        .content-tab.active { border-bottom-color: #22d3ee; color: #22d3ee; }
 
-        /* Grid Video Karya */
+        /* Grid Video */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2px;
             background: #18181b;
-            min-height: 250px;
+            padding-bottom: 10px;
         }
         .grid-item {
             background: #27272a;
@@ -412,273 +360,230 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 6px;
-            font-size: 9px;
+            padding: 4px;
+            font-size: 8.5px;
             color: #fff;
-            position: relative;
             font-weight: bold;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #1f1f23;
         }
+        .grid-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 10%, transparent 60%);
+        }
+        .grid-item span {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navbar Bawah */
+        .bottom-nav {
+            height: 60px;
+            background: #09090b;
+            border-top: 1px solid #27272a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 20;
+        }
+
+        .nav-item {
+            color: #71717a;
+            text-decoration: none;
+            font-size: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .nav-item.active { color: #f59e0b; font-weight: bold; }
+        .nav-item:hover { color: #fff; }
+        .nav-item span.icon { font-size: 16px; }
     </style>
 </head>
 <body>
 
-    <div class="creator-profile-container">
+    <div class="creator-container">
         
-        <!-- Header Atas dengan Tombol Kembali -->
+        <!-- Header Navigasi -->
         <div class="header-nav">
-            <span id="creatorHeaderName">Adis Gendhis</span>
-            <button class="close-profile-btn" id="closeProfileBtn" title="Kembali ke Reels">&times;</button>
+            <span id="headerProfileName">Adis Gendhis</span>
+            <button class="close-profile-btn" onclick="window.location.href='/reels'" title="Back">&times;</button>
         </div>
 
-        <!-- Info Utama Profil Kreator -->
-        <div class="profile-main-info">
-            <div class="avatar-box" id="creatorAvatarBox">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar" id="creatorAvatarImg">
-            </div>
-
-            <!-- Statistik Publik -->
-            <div class="stats-row">
-                <div class="stat-item"><strong>2.5K</strong> <span>pengikut</span></div>
-                <div class="stat-item"><strong>2</strong> <span>mengikuti</span></div>
-                <div class="stat-item"><strong>27.9K</strong> <span>Jumlah disukai</span></div>
-            </div>
-
-            <div class="medali-badge" id="creatorRankBadge">LV.12 ELITE</div>
-            <div class="username-handle">@gendhis213</div>
-        </div>
-
-        <!-- Tombol Aksi (+ Ikuti, Blokir, & Dropdown) -->
-        <div class="action-buttons-row">
-            <button class="btn-follow" id="followActionBtn">+ Ikuti</button>
-            <button class="btn-block" id="blockActionBtn" title="Blokir Pengguna">Blokir</button>
-            <button class="btn-dropdown" id="dropdownActionBtn" title="Rekomendasi Akun">▼</button>
-        </div>
-
-        <!-- DROPDOWN REKOMENDASI KECIL -->
-        <div class="suggested-dropdown-box" id="suggestedDropdown">
-            <div class="suggested-header-row">
-                <span>Orang yang mungkin juga Anda ikuti</span>
-                <span class="see-more" id="seeMoreBtn">Lihat lebih... &gt;</span>
-            </div>
-            
-            <div class="suggested-scroll-container">
-                <div class="suggested-card" id="sugCard1">
-                    <span class="suggested-card-close" onclick="document.getElementById('sugCard1').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" alt="User"></div>
-                    <div class="suggested-card-name">berita heboh</div>
-                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #60a5fa, #1d4ed8); color: #fff;">LV.7 JURAGAN</span>
-                    <div class="suggested-card-followers">17.3K pengikut</div>
-                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+        <div class="content-scroll">
+            <!-- Info Utama Kreator -->
+            <div class="profile-main-info">
+                <div class="avatar-box">
+                    <img id="mainAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar">
                 </div>
-                <div class="suggested-card" id="sugCard2">
-                    <span class="suggested-card-close" onclick="document.getElementById('sugCard2').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" alt="User"></div>
-                    <div class="suggested-card-name">fatima sahra</div>
-                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #fef08a, #eab308); color: #422006;">LV.10 MILIARDER</span>
-                    <div class="suggested-card-followers">83.4K pengikut</div>
-                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+
+                <!-- Statistik -->
+                <div class="stats-row">
+                    <div class="stat-item"><strong id="statFollowing">2.5K</strong> <span>followers</span></div>
+                    <div class="stat-item"><strong id="statFollowings">2</strong> <span>following</span></div>
+                    <div class="stat-item"><strong id="statLikes">27.9K</strong> <span>likes</span></div>
                 </div>
-                <div class="suggested-card" id="sugCard3">
-                    <span class="suggested-card-close" onclick="document.getElementById('sugCard3').style.display='none'">&times;</span>
-                    <div class="suggested-card-avatar"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150" alt="User"></div>
-                    <div class="suggested-card-name">Berkebun bareng</div>
-                    <span class="suggested-card-level" style="background: linear-gradient(135deg, #22d3ee, #0284c7); color: #000;">LV.12 ELITE</span>
-                    <div class="suggested-card-followers">244.6K pengikut</div>
-                    <button class="suggested-card-btn" onclick="toggleSugBtn(this)">Ikuti</button>
+
+                <div class="medali-badge" id="mainRankBadge">LV.12 ELITE</div>
+                <div class="username-handle" id="headerUsername">@gendhls213</div>
+
+                <!-- Tombol Aksi Lengkap -->
+                <div class="action-buttons-row">
+                    <button class="btn-follow" id="followCreatorBtn" onclick="toggleFollow()">+ Follow</button>
+                    <button class="btn-block" onclick="blockCreator()">Block</button>
+                    <button class="btn-arrow-toggle" id="arrowToggleBtn" onclick="toggleSuggested()" title="Toggle Recommendations">⌄</button>
+                </div>
+
+                <!-- Kotak Rekomendasi (Suggested for you) -->
+                <div class="suggested-section" id="suggestedSection">
+                    <div class="suggested-header">
+                        <span>Suggested for you</span>
+                        <span style="color: #22d3ee; cursor: pointer;" onclick="loadMoreSuggested()">See more &gt;</span>
+                    </div>
+                    <div class="suggested-nav-wrapper">
+                        <div class="nav-arrow-left" onclick="scrollSuggested(-100)">&lt;</div>
+                        <div class="suggested-cards-container" id="suggestedCardsContainer">
+                            <!-- Card 1 -->
+                            <div class="suggested-card" onclick="loadProfile('Berita Heboh', '@berita_heboh', 'LV.8 SAUDAGAR', '17.3K', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100')">
+                                <span class="sug-close" onclick="event.stopPropagation(); this.parentElement.style.display='none'">&times;</span>
+                                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" class="sug-avatar" alt="">
+                                <div class="sug-name">Berita Heboh</div>
+                                <div class="sug-rank">LV.8 SAUDAGAR</div>
+                                <div class="sug-followers">17.3K followers</div>
+                                <button class="sug-btn-ikuti" onclick="event.stopPropagation(); this.innerText='✓ Following'; this.style.background='#27272a'; this.style.color='#a1a1aa';">Follow</button>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="suggested-card" onclick="loadProfile('Fatima Sahra', '@fatima_sahra', 'LV.10 MILIARDER', '83.4K', 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100')">
+                                <span class="sug-close" onclick="event.stopPropagation(); this.parentElement.style.display='none'">&times;</span>
+                                <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100" class="sug-avatar" alt="">
+                                <div class="sug-name">Fatima Sahra</div>
+                                <div class="sug-rank">LV.10 MILIARDER</div>
+                                <div class="sug-followers">83.4K followers</div>
+                                <button class="sug-btn-ikuti" onclick="event.stopPropagation(); this.innerText='✓ Following'; this.style.background='#27272a'; this.style.color='#a1a1aa';">Follow</button>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="suggested-card" onclick="loadProfile('Berkebun Bareng', '@berkebun_id', 'LV.5 DERMAWAN', '244.6K', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100')">
+                                <span class="sug-close" onclick="event.stopPropagation(); this.parentElement.style.display='none'">&times;</span>
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" class="sug-avatar" alt="">
+                                <div class="sug-name">Berkebun Bareng</div>
+                                <div class="sug-rank">LV.5 DERMAWAN</div>
+                                <div class="sug-followers">244.6K followers</div>
+                                <button class="sug-btn-ikuti" onclick="event.stopPropagation(); this.innerText='✓ Following'; this.style.background='#27272a'; this.style.color='#a1a1aa';">Follow</button>
+                            </div>
+                        </div>
+                        <div class="nav-arrow-right" onclick="scrollSuggested(100)">&gt;</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- FULL GRID REKOMENDASI MODAL (3 Kolom x 4 Baris) -->
-        <div class="full-recommend-modal" id="fullRecommendModal">
-            <div class="full-modal-header">
-                <span>Jelajahi Akun Rekomendasi</span>
-                <button class="close-profile-btn" id="closeFullModalBtn">&times;</button>
+            <!-- Tab Grid Karya -->
+            <div class="content-tabs" style="margin-top: 14px;">
+                <div class="content-tab active">🟦</div>
+                <div class="content-tab">🤍</div>
             </div>
-            
-            <div class="full-grid-body" id="fullGridContainer"></div>
 
-            <div class="full-modal-footer">
-                <button class="nav-page-btn" id="prevPageBtn">&lt; Kembali</button>
-                <span class="page-indicator" id="pageIndicatorText">Hal 1 dari 3</span>
-                <button class="nav-page-btn" id="nextPageBtn">Terus &gt;</button>
+            <!-- Grid Video -->
+            <div class="video-grid">
+                <div class="grid-item" style="background: #3f3f46;"><span>▶ 931</span></div>
+                <div class="grid-item" style="background: #27272a;"><span>▶ 1.4K</span></div>
+                <div class="grid-item" style="background: #18181b;"><span>▶ 736</span></div>
+                <div class="grid-item" style="background: #2b2b30;"><span>▶ 3.2K</span></div>
+                <div class="grid-item" style="background: #1f1f23;"><span>▶ 850</span></div>
+                <div class="grid-item" style="background: #333338;"><span>▶ 4.1K</span></div>
             </div>
         </div>
 
-        <!-- Tab Navigasi Konten -->
-        <div class="content-tabs">
-            <div class="content-tab active">🟦</div>
-            <div class="content-tab">🤍</div>
-        </div>
-
-        <!-- Grid Video Karya -->
-        <div class="video-grid">
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=150') center/cover;"><span>▶ 931</span></div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=150') center/cover;"><span>▶ 1.4K</span></div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1584282483830-74697ff9101d?w=150') center/cover;"><span>▶ 736</span></div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150') center/cover;"><span>▶ 3.2K</span></div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=150') center/cover;"><span>▶ 5.1K</span></div>
-            <div class="grid-item" style="background: url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?w=150') center/cover;"><span>▶ 890</span></div>
+        <!-- Navbar Bawah -->
+        <div class="bottom-nav">
+            <a href="/" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>
+            <a href="/trading" class="nav-item"><span class="icon">📈</span><span>Trading</span></a>
+            <a href="/reels" class="nav-item active"><span class="icon">🔥</span><span>Reels</span></a>
+            <a href="/wallet" class="nav-item"><span class="icon">👛</span><span>Wallet</span></a>
+            <a href="/profile" class="nav-item"><span class="icon">👤</span><span>Profile</span></a>
         </div>
 
     </div>
 
     <script>
-        const allRecommendAccounts = [
-            { name: "berita heboh", lvl: "LV.7 JURAGAN", bg: "#1d4ed8", f: "17.3K", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" },
-            { name: "fatima sahra", lvl: "LV.10 MILIARDER", bg: "#eab308", f: "83.4K", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150" },
-            { name: "berkebun bareng", lvl: "LV.12 ELITE", bg: "#0284c7", f: "244.6K", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150" },
-            { name: "crypto trader", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "521.0K", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" },
-            { name: "siti maysarah", lvl: "LV.5 DERMAWAN", bg: "#c084fc", f: "12.1K", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" },
-            { name: "fajar sidiq", lvl: "LV.8 SAUDAGAR", bg: "#f59e0b", f: "45.0K", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
-            { name: "rizky pratama", lvl: "LV.11 KONGLOMERAT", bg: "#ca8a04", f: "110.2K", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" },
-            { name: "dewi lestari", lvl: "LV.3 FRIENDLY", bg: "#34d399", f: "5.4K", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
-            { name: "ahmad dhani", lvl: "LV.13 LEGENDA", bg: "#f43f5e", f: "310.8K", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150" },
-            { name: "putri duyung", lvl: "LV.2 SOSIAL", bg: "#60a5fa", f: "2.1K", img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150" },
-            { name: "eko patrio", lvl: "LV.9 HARTAWAN", bg: "#fb923c", f: "99.5K", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" },
-            { name: "sri muliani", lvl: "LV.15 IMPERATOR", bg: "#06b6d4", f: "880.3K", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150" },
-            { name: "budi doremi", lvl: "LV.4 LOYALIS", bg: "#38bdf8", f: "9.8K", img: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150" },
-            { name: "siti badriah", lvl: "LV.6 DONATUR", bg: "#e879f9", f: "33.2K", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" },
-            { name: "joko widodo", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "1.2M", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
-            { name: "megawati", lvl: "LV.14 KAISAR", bg: "#8b5cf6", f: "450.0K", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
-            { name: "prabowo s", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "2.5M", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" },
-            { name: "anies baswedan", lvl: "LV.13 LEGENDA", bg: "#f43f5e", f: "920.1K", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150" },
-            { name: "ganjar pranowo", lvl: "LV.12 ELITE", bg: "#22d3ee", f: "780.4K", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150" },
-            { name: "najwa shihab", lvl: "LV.15 IMPERATOR", bg: "#06b6d4", f: "3.1M", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150" },
-            { name: "deddy corbuzier", lvl: "LV.16 SULTAN", bg: "#ef4444", f: "4.8M", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" },
-            { name: "raffathar", lvl: "LV.10 MILIARDER", bg: "#eab308", f: "650.0K", img: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150" },
-            { name: "titiek puspa", lvl: "LV.11 KONGLOMERAT", bg: "#ca8a04", f: "150.0K", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150" },
-            { name: "komeng oplet", lvl: "LV.8 SAUDAGAR", bg: "#f59e0b", f: "210.0K", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" }
-        ];
+        let isFollowing = false;
+        let isSuggestedOpen = false;
 
-        let currentPage = 1;
-        const itemsPerPage = 12;
-
-        function renderFullGrid(page) {
-            const container = document.getElementById('fullGridContainer');
-            container.innerHTML = '';
-            
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const paginatedItems = allRecommendAccounts.slice(start, end);
-
-            paginatedItems.forEach(acc => {
-                const card = document.createElement('div');
-                card.className = 'full-grid-card';
-                card.innerHTML = `
-                    <div class="full-grid-avatar"><img src="${acc.img}" alt="Avatar"></div>
-                    <div class="full-grid-name">${acc.name}</div>
-                    <span class="full-grid-level" style="background: ${acc.bg}; color: #fff;">${acc.lvl}</span>
-                    <div class="full-grid-followers">${acc.f} pengikut</div>
-                    <button class="full-grid-btn" onclick="toggleSugBtn(this)">Ikuti</button>
-                `;
-                container.appendChild(card);
-            });
-
-            const maxPage = Math.ceil(allRecommendAccounts.length / itemsPerPage);
-            document.getElementById('pageIndicatorText').innerText = `Hal ${page} dari ${maxPage}`;
-        }
-
-        function toggleSugBtn(btn) {
-            if (btn.innerText === "Ikuti") {
-                btn.innerText = "Mengikuti";
-                btn.classList.add('following');
+        function toggleFollow() {
+            const btn = document.getElementById('followCreatorBtn');
+            isFollowing = !isFollowing;
+            if (isFollowing) {
+                btn.innerText = "✓ Following";
+                btn.className = "btn-follow following";
             } else {
-                btn.innerText = "Ikuti";
-                btn.classList.remove('following');
+                btn.innerText = "+ Follow";
+                btn.className = "btn-follow";
             }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('closeProfileBtn').addEventListener('click', () => {
+        function blockCreator() {
+            if (confirm("Are you sure you want to block this user?")) {
+                alert("User successfully blocked.");
                 window.location.href = '/reels';
-            });
+            }
+        }
 
-            const dropdownBtn = document.getElementById('dropdownActionBtn');
-            const suggestedDropdown = document.getElementById('suggestedDropdown');
+        function toggleSuggested() {
+            const section = document.getElementById('suggestedSection');
+            const arrowBtn = document.getElementById('arrowToggleBtn');
+            isSuggestedOpen = !isSuggestedOpen;
+            if (isSuggestedOpen) {
+                section.classList.add('show');
+                arrowBtn.innerText = "︿"; 
+            } else {
+                section.classList.remove('show');
+                arrowBtn.innerText = "⌄"; 
+            }
+        }
 
-            dropdownBtn.addEventListener('click', () => {
-                suggestedDropdown.classList.toggle('show');
-                dropdownBtn.classList.toggle('active');
-            });
+        function scrollSuggested(amount) {
+            const container = document.getElementById('suggestedCardsContainer');
+            container.scrollBy({ left: amount, behavior: 'smooth' });
+        }
 
-            const fullModal = document.getElementById('fullRecommendModal');
-            document.getElementById('seeMoreBtn').addEventListener('click', () => {
-                renderFullGrid(currentPage);
-                fullModal.classList.add('show');
-            });
+        // Fungsi klik profil kecil di card rekomendasi untuk membuka profil utama kreator tersebut
+        function loadProfile(name, username, rank, followers, avatarUrl) {
+            document.getElementById('headerProfileName').innerText = name;
+            document.getElementById('headerUsername').innerText = username;
+            document.getElementById('mainRankBadge').innerText = rank;
+            document.getElementById('statFollowing').innerText = followers;
+            document.getElementById('mainAvatarImg').src = avatarUrl;
+            
+            // Scroll kembali ke atas halaman profil
+            document.querySelector('.content-scroll').scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            document.getElementById('closeFullModalBtn').addEventListener('click', () => {
-                fullModal.classList.remove('show');
-            });
+        function loadMoreSuggested() {
+            const container = document.getElementById('suggestedCardsContainer');
+            
+            const newCard = document.createElement('div');
+            newCard.className = 'suggested-card';
+            newCard.onclick = () => loadProfile('Crypto Sorong', '@crypto_sorong', 'LV.14 KAISAR', '45.1K', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100');
+            newCard.innerHTML = `
+                <span class="sug-close" onclick="event.stopPropagation(); this.parentElement.style.display='none'">&times;</span>
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="sug-avatar" alt="">
+                <div class="sug-name">Crypto Sorong</div>
+                <div class="sug-rank">LV.14 KAISAR</div>
+                <div class="sug-followers">45.1K followers</div>
+                <button class="sug-btn-ikuti" onclick="event.stopPropagation(); this.innerText='✓ Following'; this.style.background='#27272a'; this.style.color='#a1a1aa';">Follow</button>
+            `;
 
-            document.getElementById('nextPageBtn').addEventListener('click', () => {
-                const maxPage = Math.ceil(allRecommendAccounts.length / itemsPerPage);
-                if (currentPage < maxPage) {
-                    currentPage++;
-                    renderFullGrid(currentPage);
-                }
-            });
-
-            document.getElementById('prevPageBtn').addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderFullGrid(currentPage);
-                }
-            });
-
-            // LOGIKA TOMBOL BLOKIR PENGGUNA
-            const blockBtn = document.getElementById('blockActionBtn');
-            const followBtn = document.getElementById('followActionBtn');
-            let isBlocked = false;
-
-            blockBtn.addEventListener('click', () => {
-                isBlocked = !isBlocked;
-                if (isBlocked) {
-                    blockBtn.innerText = "Buka Blokir";
-                    blockBtn.style.background = "#7f1d1d";
-                    blockBtn.style.color = "#fff";
-                    followBtn.innerText = "Diblokir";
-                    followBtn.style.background = "#3f3f46";
-                    followBtn.style.cursor = "not-allowed";
-                    followBtn.disabled = true;
-                    alert("⚠️ Pengguna berhasil diblokir. Anda tidak memiliki akses interaksi lagi ke akun ini.");
-                } else {
-                    blockBtn.innerText = "Blokir";
-                    blockBtn.style.background = "#27272a";
-                    blockBtn.style.color = "#fca5a5";
-                    followBtn.innerText = "+ Ikuti";
-                    followBtn.style.background = "#ef4444";
-                    followBtn.style.cursor = "pointer";
-                    followBtn.disabled = false;
-                    alert("🔓 Blokir pengguna dibuka kembali.");
-                }
-            });
-
-            let isFollowing = false;
-            followBtn.addEventListener('click', () => {
-                if (isBlocked) return;
-                isFollowing = !isFollowing;
-                if (isFollowing) {
-                    followBtn.innerText = "Mengikuti";
-                    followBtn.classList.add('following');
-                } else {
-                    followBtn.innerText = "+ Ikuti";
-                    followBtn.classList.remove('following');
-                }
-            });
-
-            // Set Pangkat Kreator
-            const badgeEl = document.getElementById('creatorRankBadge');
-            badgeEl.innerText = `LV.12 ELITE`;
-            badgeEl.style.background = "linear-gradient(135deg, #22d3ee, #0284c7)";
-            badgeEl.style.color = "#000";
-
-            const avatarBox = document.getElementById('creatorAvatarBox');
-            avatarBox.style.borderColor = "#22d3ee";
-            avatarBox.style.boxShadow = `0 0 12px #22d3ee66`;
-        });
+            container.appendChild(newCard);
+            container.scrollBy({ left: 110, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
