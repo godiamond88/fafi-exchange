@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAFI - Exchange & SocialFi Pro</title>
+    <style>
+        body {
+            margin: 0;
+            background: #09090b;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .auth-container {
+            position: relative;
+            width: 380px;
+            height: 720px;
+            background: radial-gradient(circle at center, #181824 0%, #09090b 80%);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
+            border: 2px solid #27272a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 24px;
+            box-sizing: border-box;
+        }
+
+        .neon-glow-circle {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #06b6d4, #ec4899);
+            filter: blur(60px);
+            opacity: 0.25;
+            z-index: 1;
+            border-radius: 50%;
+            top: 35%;
+        }
+
+        .brand-section {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .logo-icon-neon {
+            font-size: 42px;
+            color: #22d3ee;
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+            margin-bottom: 6px;
+        }
+
+        .logo-text-fafi {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #22d3ee, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
+            margin: 0;
+        }
+
+        .logo-subtitle {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #a1a1aa;
+            margin-top: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .hero-tagline {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: #d4d4d8;
+            font-size: 12px;
+            line-height: 1.4;
+            padding: 0 10px;
+        }
+
+        .auth-actions {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary-fafi {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary-fafi:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6);
+        }
+
+        .btn-secondary-fafi {
+            width: 100%;
+            padding: 13px;
+            background: rgba(39, 39, 42, 0.6);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .btn-secondary-fafi:hover {
+            background: rgba(63, 63, 70, 0.8);
+            border-color: #22d3ee;
+        }
+
+        /* Modal */
+        .fafi-modal-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 999;
+        }
+        .fafi-modal-content {
+            background: #18181b;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 20px 20px 24px 20px;
+            box-sizing: border-box;
+            border-top: 2px solid #22d3ee;
+            animation: slideUpModal 0.3s ease-out;
+        }
+        @keyframes slideUpModal {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .modal-title-text {
+            font-size: 15px;
+            font-weight: bold;
+            color: #22d3ee;
+        }
+        .modal-close-x {
+            background: none;
+            border: none;
+            color: #a1a1aa;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .form-label {
+            font-size: 10.5px;
+            color: #a1a1aa;
+            margin-bottom: 4px;
+            display: block;
+            font-weight: 600;
+        }
+        .form-input {
+            width: 100%;
+            background: #121212;
+            border: 1px solid #3f3f46;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 12.5px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: #22d3ee; }
+        
+        .form-hint {
+            font-size: 9px;
+            color: #71717a;
+            margin-top: 3px;
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #22d3ee, #0284c7);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 4px 15px rgba(34, 211, 238, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="neon-glow-circle"></div>
+
+        <div class="brand-section">
+            <div class="logo-icon-neon">♾️</div>
+            <h1 class="logo-text-fafi">FAFI</h1>
+            <div class="logo-subtitle">Exchange &amp; SocialFi Pro</div>
+        </div>
+
+        <div class="hero-tagline">
+            Next-Gen Web3 Trading Ecosystem, Community Driven &amp; Global Creator Social Platform 🚀
+        </div>
+
+        <div class="auth-actions">
+            <button class="btn-primary-fafi" id="openLoginBtn">Login</button>
+            <button class="btn-secondary-fafi" id="openRegisterBtn">Create New Account (Register)</button>
+        </div>
+
+        <!-- MODAL LOGIN / REGISTER -->
+        <div class="fafi-modal-overlay" id="authModalOverlay">
+            <div class="fafi-modal-content">
+                <div class="modal-header-row">
+                    <span class="modal-title-text" id="modalTitleText">Login to FAFI</span>
+                    <button class="modal-close-x" id="closeAuthModal">&times;</button>
+                </div>
+
+                <!-- Form Register Fields -->
+                <div id="registerFieldsContainer" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Username (Unique &amp; Permanent)</label>
+                        <input type="text" class="form-input" id="inputUsername" placeholder="e.g. @ryank_crypto">
+                        <div class="form-hint">Note: Username cannot be changed after registration.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" id="inputEmail" placeholder="e.g. rian.rawalangi@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp Number (No WA)</label>
+                        <input type="text" class="form-input" id="inputWhatsApp" placeholder="e.g. +6281234567890">
+                    </div>
+                </div>
+
+                <!-- Form Login Field -->
+                <div class="form-group" id="loginIdentifierGroup">
+                    <label class="form-label">Username / Email</label>
+                    <input type="text" class="form-input" id="inputIdentifier" placeholder="e.g. @ryank_crypto">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="inputPassword" placeholder="••••••••">
+                </div>
+
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="inputConfirmPassword" placeholder="••••••••">
+                </div>
+
+                <button class="form-submit-btn" id="submitAuthBtn">Sign In Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modalOverlay = document.getElementById('authModalOverlay');
+        const modalTitle = document.getElementById('modalTitleText');
+        const registerFieldsContainer = document.getElementById('registerFieldsContainer');
+        const loginIdentifierGroup = document.getElementById('loginIdentifierGroup');
+        const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+        const submitBtn = document.getElementById('submitAuthBtn');
+        
+        let isRegisterMode = false;
+
+        document.getElementById('openLoginBtn').addEventListener('click', () => {
+            isRegisterMode = false;
+            modalTitle.innerText = "Login to FAFI Ecosystem";
+            registerFieldsContainer.style.display = 'none';
+            loginIdentifierGroup.style.display = 'block';
+            confirmPasswordGroup.style.display = 'none';
+            submitBtn.innerText = "Sign In Now";
+            modalOverlay.style.display = 'flex';
+        });
+
+        document.getElementById('openRegisterBtn').addEventListener('click', () => {
+            isRegisterMode = true;
+            modalTitle.innerText = "Create FAFI Account";
+            registerFieldsContainer.style.display = 'block';
+            loginIdentifierGroup.style.display = 'none';
+            confirmPasswordGroup.style.display = 'block';
+            submitBtn.innerText = "Register & Create Account";
+            modalOverlay.style.display = 'flex';
+        });
+
+        document.getElementById('closeAuthModal').addEventListener('click', () => {
+            modalOverlay.style.display = 'none';
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) modalOverlay.style.display = 'none';
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const password = document.getElementById('inputPassword').value.trim();
+
+            if (isRegisterMode) {
+                let username = document.getElementById('inputUsername').value.trim();
+                const email = document.getElementById('inputEmail').value.trim();
+                const whatsapp = document.getElementById('inputWhatsApp').value.trim();
+                const confirmPassword = document.getElementById('inputConfirmPassword').value.trim();
+
+                if (!username || !email || !whatsapp || !password || !confirmPassword) {
+                    alert("❌ Please fill in all required registration fields!");
+                    return;
+                }
+
+                if (!username.startsWith('@')) {
+                    username = '@' + username;
+                }
+
+                if (password !== confirmPassword) {
+                    alert("❌ Passwords do not match! Please check again.");
+                    return;
+                }
+
+                const userData = {
+                    username: username,
+                    email: email,
+                    whatsapp: whatsapp,
+                    joinedDate: new Date().toISOString(),
+                    kycVerified: false
+                };
+                
+                localStorage.setItem('faFiUserData', JSON.stringify(userData));
+                alert(`✅ Registration successful! Welcome to FAFI Pro, ${username}. Please complete your KYC verification.`);
+                
+                // LANGSUNG ARAHKAN KE HALAMAN PROFIL KYC (/profile)
+                window.location.href = '/profile';
+            } else {
+                const identifier = document.getElementById('inputIdentifier').value.trim();
+                if (!identifier || !password) {
+                    alert("❌ Please enter your username/email and password!");
+                    return;
+                }
+                alert(`🚀 Login successful! Welcome back, ${identifier}.`);
+                
+                // Login biasa langsung ke Reels
+                window.location.href = '/reels';
+            }
+        });
+    </script>
+</body>
+</html>

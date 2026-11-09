@@ -18,11 +18,11 @@
             user-select: none;
         }
 
+        /* Ukuran Frame Standar 380px x 720px */
         .profile-container {
             position: relative;
             width: 380px;
-            height: 85vh;
-            max-height: 780px;
+            height: 720px;
             background: #09090b;
             color: #fff;
             border-radius: 20px;
@@ -32,7 +32,15 @@
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
-            padding-bottom: 30px;
+            padding-bottom: 75px;
+        }
+
+        .profile-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .profile-container::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 4px;
         }
 
         /* Header */
@@ -69,13 +77,20 @@
 
         /* User Info Card */
         .user-hero-card {
-            padding: 20px 16px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
             border-bottom: 1px solid #27272a;
             background: radial-gradient(circle at center, #181824 0%, #09090b 80%);
             text-align: center;
+        }
+
+        /* Avatar & Bingkai Sesuai Pangkat */
+        .avatar-upload-wrapper {
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 8px;
         }
 
         .user-avatar-circle {
@@ -89,31 +104,73 @@
             font-size: 26px;
             font-weight: bold;
             color: #000;
-            margin-bottom: 10px;
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+            overflow: hidden;
+            box-sizing: border-box;
+            /* Border dinamis diset via JS berdasarkan pangkat */
+            border: 3px solid #eab308;
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.4);
+        }
+
+        .user-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-hint-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #10b981;
+            color: #000;
+            font-size: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid #09090b;
         }
 
         .user-display-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             color: #fff;
             margin-bottom: 2px;
         }
 
         .user-tag-handle {
-            font-size: 11px;
+            font-size: 10.5px;
             color: #22d3ee;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+        }
+
+        /* Badge Pangkat & KYC */
+        .badge-container {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .rank-badge-tag {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
         }
 
         .kyc-status-badge {
-            font-size: 9.5px;
-            padding: 4px 10px;
+            font-size: 9px;
+            padding: 3px 8px;
             border-radius: 20px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .kyc-status-badge.verified {
             background: rgba(16, 185, 129, 0.2);
@@ -128,26 +185,26 @@
 
         /* Menu List */
         .menu-section {
-            padding: 16px;
+            padding: 14px 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .section-heading {
-            font-size: 10.5px;
+            font-size: 10px;
             font-weight: bold;
             color: #a1a1aa;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .menu-item-card {
             background: #18181b;
             border: 1px solid #27272a;
-            border-radius: 12px;
-            padding: 14px 16px;
+            border-radius: 10px;
+            padding: 11px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -164,29 +221,42 @@
         .menu-item-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .menu-icon {
-            font-size: 18px;
+        .menu-icon { font-size: 16px; }
+        .menu-title-text { font-size: 12px; font-weight: 700; }
+        .menu-desc-text { font-size: 9px; color: #a1a1aa; margin-top: 1px; }
+        .menu-arrow { font-size: 13px; color: #71717a; font-weight: bold; }
+
+        /* Navbar Bawah Konsisten */
+        .bottom-nav {
+            height: 60px;
+            background: #09090b;
+            border-top: 1px solid #27272a;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 20;
         }
 
-        .menu-title-text {
-            font-size: 12.5px;
-            font-weight: 700;
-        }
-
-        .menu-desc-text {
-            font-size: 9.5px;
-            color: #a1a1aa;
-            margin-top: 2px;
-        }
-
-        .menu-arrow {
-            font-size: 14px;
+        .nav-item {
             color: #71717a;
-            font-weight: bold;
+            text-decoration: none;
+            font-size: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
         }
+        .nav-item.active { color: #f59e0b; font-weight: bold; }
+        .nav-item:hover { color: #fff; }
+        .nav-item span.icon { font-size: 16px; }
     </style>
 </head>
 <body>
@@ -201,10 +271,24 @@
 
         <!-- User Hero Card -->
         <div class="user-hero-card">
-            <div class="user-avatar-circle" id="userAvatarInitial">R</div>
+            <!-- Tempat Upload Foto Profil (Klik untuk ganti foto) -->
+            <div class="avatar-upload-wrapper" id="avatarUploadTrigger" title="Klik untuk ganti foto profil">
+                <div class="user-avatar-circle" id="userAvatarContainer">
+                    <span id="userAvatarInitial">R</span>
+                    <img id="userAvatarImage" src="" alt="Avatar" style="display: none;">
+                </div>
+                <div class="upload-hint-badge">📷</div>
+            </div>
+            <!-- Input File Tersembunyi untuk Upload Foto -->
+            <input type="file" id="hiddenAvatarInput" accept="image/*" style="display: none;">
+
             <div class="user-display-name" id="userFullNameDisplay">Rian Rawalangi</div>
             <div class="user-tag-handle" id="userUsernameDisplay">@godiamond</div>
-            <div class="kyc-status-badge unverified" id="kycBadgeStatus">⚠️ KYC Unverified</div>
+            
+            <div class="badge-container">
+                <div class="rank-badge-tag" id="userRankBadgeTag">LV.10 MILIARDER</div>
+                <div class="kyc-status-badge unverified" id="kycBadgeStatus">⚠️ KYC Unverified</div>
+            </div>
         </div>
 
         <!-- Menu List -->
@@ -212,7 +296,6 @@
             
             <div class="section-heading">Account Verification &amp; Security</div>
 
-            <!-- 1. KYC VERIFICATION -->
             <div class="menu-item-card" onclick="window.location.href='/kyc'">
                 <div class="menu-item-left">
                     <span class="menu-icon">🛡️</span>
@@ -224,7 +307,6 @@
                 <span class="menu-arrow">&rsaquo;</span>
             </div>
 
-            <!-- 2. PARTNERSHIP -->
             <div class="menu-item-card" onclick="window.location.href='/partnership'">
                 <div class="menu-item-left">
                     <span class="menu-icon">🤝</span>
@@ -236,7 +318,6 @@
                 <span class="menu-arrow">&rsaquo;</span>
             </div>
 
-            <!-- 3. ACCOUNT SECURITY -->
             <div class="menu-item-card" onclick="window.location.href='/account_security'">
                 <div class="menu-item-left">
                     <span class="menu-icon">🔒</span>
@@ -248,9 +329,8 @@
                 <span class="menu-arrow">&rsaquo;</span>
             </div>
 
-            <div class="section-heading" style="margin-top: 10px;">Preferences &amp; Support</div>
+            <div class="section-heading" style="margin-top: 6px;">Preferences &amp; Support</div>
 
-            <!-- 4. APP SETTINGS -->
             <div class="menu-item-card" onclick="window.location.href='/app_setting'">
                 <div class="menu-item-left">
                     <span class="menu-icon">⚙️</span>
@@ -262,7 +342,6 @@
                 <span class="menu-arrow">&rsaquo;</span>
             </div>
 
-            <!-- 5. LOGOUT -->
             <div class="menu-item-card" id="logoutBtn" style="border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05);">
                 <div class="menu-item-left">
                     <span class="menu-icon">🚪</span>
@@ -276,29 +355,97 @@
 
         </div>
 
+        <!-- Navbar Bawah Konsisten -->
+        <div class="bottom-nav">
+            <a href="/" class="nav-item"><span class="icon">🏠</span><span>Home</span></a>
+            <a href="/trading" class="nav-item"><span class="icon">📈</span><span>Trading</span></a>
+            <a href="/reels" class="nav-item"><span class="icon">🔥</span><span>Reels</span></a>
+            <a href="/wallet" class="nav-item"><span class="icon">👛</span><span>Wallet</span></a>
+            <a href="/profile" class="nav-item active"><span class="icon">👤</span><span>Profile</span></a>
+        </div>
+
     </div>
 
     <script>
+        // Data Pangkat (Rank Tiers) untuk Warna Bingkai (Border)
+        const fafiRanks = [
+            { level: 1, name: "WARGA", border: "#9ca3af", bg: "linear-gradient(135deg, #9ca3af, #4b5563)", color: "#fff" },
+            { level: 2, name: "SOSIAL", border: "#60a5fa", bg: "linear-gradient(135deg, #60a5fa, #1d4ed8)", color: "#fff" },
+            { level: 3, name: "FRIENDLY", border: "#34d399", bg: "linear-gradient(135deg, #34d399, #047857)", color: "#fff" },
+            { level: 10, name: "MILIARDER", border: "#eab308", bg: "linear-gradient(135deg, #fef08a, #eab308, #ca8a04)", color: "#422006" },
+            { level: 16, name: "SULTAN", border: "#ef4444", bg: "linear-gradient(135deg, #ef4444, #b91c1c, #fbbf24)", color: "#fff" }
+        ];
+
         document.addEventListener("DOMContentLoaded", () => {
-            // Ambil data user dari localStorage
+            // Load Data Profil & Wallet dari localStorage
             const savedUser = localStorage.getItem('faFiUserData');
+            let userFullName = "Rian Rawalangi";
+            let userUsername = "@godiamond";
+            let userLevel = 10; // Default Miliarder
+
             if (savedUser) {
                 try {
                     const userData = JSON.parse(savedUser);
-                    if (userData.username) {
-                        document.getElementById('userUsernameDisplay').innerText = userData.username;
-                        document.getElementById('userAvatarInitial').innerText = userData.username.charAt(1).toUpperCase();
-                    }
-                    if (userData.fullName) {
-                        document.getElementById('userFullNameDisplay').innerText = userData.fullName;
-                    }
+                    if (userData.username) userUsername = userData.username.startsWith('@') ? userData.username : '@' + userData.username;
+                    if (userData.fullName) userFullName = userData.fullName;
                     if (userData.kycVerified) {
                         const badge = document.getElementById('kycBadgeStatus');
                         badge.className = "kyc-status-badge verified";
-                        badge.innerText = "✅ KYC Verified & Active";
+                        badge.innerText = "✅ KYC Verified";
                     }
                 } catch(e) {}
             }
+
+            document.getElementById('userFullNameDisplay').innerText = userFullName;
+            document.getElementById('userUsernameDisplay').innerText = userUsername;
+            document.getElementById('userAvatarInitial').innerText = userFullName.charAt(0).toUpperCase();
+
+            // Set Pangkat & Bingkai Avatar Berdasarkan Level
+            const currentRank = fafiRanks.find(r => r.level === userLevel) || fafiRanks[3];
+            const rankBadge = document.getElementById('userRankBadgeTag');
+            rankBadge.innerText = `LV.${currentRank.level} ${currentRank.name}`;
+            rankBadge.style.background = currentRank.bg;
+            rankBadge.style.color = currentRank.color;
+
+            const avatarContainer = document.getElementById('userAvatarContainer');
+            avatarContainer.style.borderColor = currentRank.border;
+            avatarContainer.style.boxShadow = `0 0 15px ${currentRank.border}88`;
+
+            // Load Foto Avatar yang sudah tersimpan (jika ada)
+            const savedAvatar = localStorage.getItem('fafiUserAvatar');
+            const avatarImg = document.getElementById('userAvatarImage');
+            const avatarInitial = document.getElementById('userAvatarInitial');
+            if (savedAvatar) {
+                avatarImg.src = savedAvatar;
+                avatarImg.style.display = 'block';
+                avatarInitial.style.display = 'none';
+            }
+
+            // Logika Upload Foto Profil & Simpan ke LocalStorage untuk Reels
+            const uploadTrigger = document.getElementById('avatarUploadTrigger');
+            const hiddenInput = document.getElementById('hiddenAvatarInput');
+
+            uploadTrigger.addEventListener('click', () => {
+                hiddenInput.click();
+            });
+
+            hiddenInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64Image = event.target.result;
+                        localStorage.setItem('fafiUserAvatar', base64Image); // Simpan agar terkoneksi ke Reels
+
+                        avatarImg.src = base64Image;
+                        avatarImg.style.display = 'block';
+                        avatarInitial.style.display = 'none';
+
+                        alert("✅ Foto profil berhasil diubah dan disinkronkan ke Reels!");
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
             // Tombol Logout
             document.getElementById('logoutBtn').addEventListener('click', () => {
