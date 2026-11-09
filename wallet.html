@@ -91,7 +91,7 @@
             box-shadow: none;
         }
 
-        /* Daftar Aset */
+        /* Daftar Aset & Penguncian Ukuran Logo Ikon */
         .assets-section-title { font-size: 11px; font-weight: bold; color: #a1a1aa; margin-top: 4px; }
         .asset-item {
             background: #18181b;
@@ -103,8 +103,21 @@
             align-items: center;
             margin-bottom: 6px;
         }
-        .asset-info { display: flex; align-items: center; gap: 8px; }
-        .asset-icon { font-size: 16px; }
+        .asset-info { display: flex; align-items: center; gap: 10px; }
+        
+        .asset-icon-img {
+            width: 24px !important;
+            height: 24px !important;
+            min-width: 24px !important;
+            min-height: 24px !important;
+            max-width: 24px !important;
+            max-height: 24px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: #27272a;
+        }
+
         .asset-name { font-size: 11px; font-weight: bold; color: #fff; }
         .asset-network { font-size: 9px; color: #71717a; }
         .asset-balance { text-align: right; }
@@ -301,7 +314,7 @@
         <!-- Header Wallet -->
         <div class="wallet-header">
             <div class="logo-title">👛 FAFI Web3 Wallet</div>
-            <div class="user-tag">Master godiamond</div>
+            <div class="user-tag"></div>
         </div>
 
         <!-- Body Wallet -->
@@ -323,23 +336,10 @@
             <!-- Daftar Aset -->
             <div class="assets-section-title">Aset Kripto & Utilitas</div>
             
+            <!-- TRX (Logo Standar Asli Tron di Atas) -->
             <div class="asset-item">
                 <div class="asset-info">
-                    <span class="asset-icon">💵</span>
-                    <div>
-                        <div class="asset-name">USDT</div>
-                        <div class="asset-network">Jaringan TRC-20</div>
-                    </div>
-                </div>
-                <div class="asset-balance">
-                    <div class="asset-val">1,000.00 USDT</div>
-                    <div class="asset-sub">$1,000.00</div>
-                </div>
-            </div>
-
-            <div class="asset-item">
-                <div class="asset-info">
-                    <span class="asset-icon">💎</span>
+                    <img src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/vectors/trx-q8ocxy7h0nc2c11ucr2m.png/trx-2ynri4p1kxp5a8djpqdzy8.png?_a=DATAiZAAZAA0" alt="TRX" class="asset-icon-img">
                     <div>
                         <div class="asset-name">TRX</div>
                         <div class="asset-network">Tron Mainnet</div>
@@ -351,9 +351,25 @@
                 </div>
             </div>
 
+            <!-- USDT (Logo Tether di Tengah) -->
             <div class="asset-item">
                 <div class="asset-info">
-                    <span class="asset-icon">🟡</span>
+                    <img src="https://static.tronscan.org/production/logo/usdtlogo.png" alt="USDT" class="asset-icon-img">
+                    <div>
+                        <div class="asset-name">USDT</div>
+                        <div class="asset-network">Jaringan TRC-20</div>
+                    </div>
+                </div>
+                <div class="asset-balance">
+                    <div class="asset-val">1,000.00 USDT</div>
+                    <div class="asset-sub">$1,000.00</div>
+                </div>
+            </div>
+
+            <!-- FARA (Logo FARA Asli di Bawah) -->
+            <div class="asset-item">
+                <div class="asset-info">
+                    <img src="https://static.tronscan.org/production/upload/logo/TPxFBAxB9zwsoaNpj6wghuSMPCNrYoYDjG.jpeg?t=1612756939965" alt="FARA" class="asset-icon-img">
                     <div>
                         <div class="asset-name">FARA</div>
                         <div class="asset-network">SocialFi Token</div>
