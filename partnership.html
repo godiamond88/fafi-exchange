@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFI - Partnership & Rank Tiers</title>
+    <title>FAFI - Partnership & Referral Dashboard</title>
     <style>
         body {
             margin: 0;
@@ -13,40 +13,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
-            user-select: none;
         }
 
         .container {
-            position: relative;
             width: 380px;
-            height: 85vh;
-            max-height: 780px;
+            max-height: 88vh;
             background: #09090b;
-            color: #fff;
             border-radius: 20px;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             border: 2px solid #27272a;
-            display: flex;
-            flex-direction: column;
+            padding: 20px;
             box-sizing: border-box;
-            padding-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            overflow-y: auto;
         }
 
-        .header-nav {
-            padding: 14px 16px;
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #27272a;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
             font-weight: bold;
             font-size: 13px;
-            border-bottom: 1px solid #27272a;
-            background: #121212;
-            position: sticky;
-            top: 0;
-            z-index: 10;
         }
 
         .close-btn {
@@ -56,80 +47,182 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            font-size: 16px;
+            cursor: pointer;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
             transition: background 0.2s;
         }
         .close-btn:hover { background: #f59e0b; color: #000; }
 
-        .body-content {
+        .stat-card {
+            background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+            border: 1px solid #3f3f46;
+            border-radius: 14px;
             padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .stat-title {
+            font-size: 10.5px;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #f59e0b;
         }
 
         .section-title {
             font-size: 11px;
             font-weight: bold;
-            color: #f59e0b;
+            color: #a1a1aa;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 6px;
-            margin-bottom: 2px;
+            margin: 15px 0 8px 0;
+            letter-spacing: 0.5px;
         }
 
-        .card-box {
+        .tier-box {
             background: #18181b;
             border: 1px solid #27272a;
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tier-box.active {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .tier-name { font-size: 12px; font-weight: bold; color: #fff; }
+        .tier-desc { font-size: 9.5px; color: #a1a1aa; margin-top: 2px; }
+        .tier-badge { font-size: 9.5px; font-weight: bold; padding: 3px 8px; border-radius: 6px; background: #27272a; color: #f59e0b; }
+        .tier-box.active .tier-badge { background: #f59e0b; color: #000; }
+
+        .referral-box {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
             gap: 8px;
+            align-items: center;
         }
 
-        .rank-title {
-            font-size: 13px;
+        .referral-input {
+            background: #121214;
+            border: 1px solid #27272a;
+            border-radius: 6px;
+            padding: 8px;
+            color: #22d3ee;
+            font-size: 11px;
+            width: 100%;
+            outline: none;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            background: #f59e0b;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
             font-weight: bold;
-            color: #f59e0b;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
         }
-
-        .rank-desc {
-            font-size: 10px;
-            color: #a1a1aa;
-        }
+        .copy-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header-nav">
-            <span>🤝 Partnership &amp; Rank Tiers</span>
-            <button class="close-btn" id="closeBtn">&times;</button>
+        <div class="header">
+            <span style="color: #f59e0b;">🤝 Partnership &amp; Tiers</span>
+            <button class="close-btn" onclick="window.location.href='/profile'">&times;</button>
         </div>
-        <div class="body-content">
-            <div class="section-title">Global Creator Rank Tiers</div>
-            <div class="card-box">
-                <div class="rank-title">👑 Diamond Partner (Current)</div>
-                <div class="rank-desc">Global referral commission rate: 10% per transaction with priority liquidity access.</div>
+
+        <!-- Statistik Kemitraan -->
+        <div class="stat-card">
+            <div class="stat-title">Total Referral Commission</div>
+            <div class="stat-value" id="commissionDisplay">450.20 FARA</div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+            <div class="stat-card" style="flex: 1; margin-bottom: 0;">
+                <div class="stat-title">Active Partners</div>
+                <div class="stat-value" style="font-size: 16px; color: #22d3ee;" id="referralCountDisplay">14 Mitra</div>
             </div>
-            <div class="card-box">
-                <div class="rank-title">⭐ Platinum Partner</div>
-                <div class="rank-desc">Requires 50 active global referrals. Commission rate: 8%.</div>
+            <div class="stat-card" style="flex: 1; margin-bottom: 0;">
+                <div class="stat-title">Current Rank</div>
+                <div class="stat-value" style="font-size: 14px; color: #10b981;">💎 Diamond</div>
             </div>
-            <div class="card-box">
-                <div class="rank-title">🚀 Gold Partner</div>
-                <div class="rank-desc">Requires 20 active global referrals. Commission rate: 5%.</div>
+        </div>
+
+        <!-- Link Referral -->
+        <div class="section-title">Your Referral Link</div>
+        <div class="referral-box">
+            <input type="text" class="referral-input" id="refLink" value="https://fafi-exchange.up.railway.app/auth?ref=ryank_diamond" readonly>
+            <button class="copy-btn" onclick="copyReferral()">Copy</button>
+        </div>
+
+        <!-- Rank Tiers List -->
+        <div class="section-title">Global Creator Rank Tiers</div>
+        
+        <div class="tier-box active">
+            <div>
+                <div class="tier-name">💎 Diamond Partner</div>
+                <div class="tier-desc">10% commission + priority liquidity access.</div>
             </div>
+            <span class="tier-badge">ACTIVE</span>
+        </div>
+
+        <div class="tier-box">
+            <div>
+                <div class="tier-name">⭐ Platinum Partner</div>
+                <div class="tier-desc">Requires 50 active referrals. 8% commission.</div>
+            </div>
+            <span class="tier-badge">LOCKED</span>
+        </div>
+
+        <div class="tier-box">
+            <div>
+                <div class="tier-name">🚀 Gold Partner</div>
+                <div class="tier-desc">Requires 20 active referrals. 5% commission.</div>
+            </div>
+            <span class="tier-badge">LOCKED</span>
         </div>
     </div>
+
     <script>
-        document.getElementById('closeBtn').addEventListener('click', () => {
-            window.location.href = '/profile';
+        function copyReferral() {
+            const copyText = document.getElementById("refLink");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Referral link copied to clipboard!");
+        }
+
+        // Sinkronisasi data mitra dari localStorage jika ada
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedUser = localStorage.getItem('faFiUserData');
+            if (savedUser) {
+                try {
+                    const userData = JSON.parse(savedUser);
+                    if (userData.referralCount) {
+                        document.getElementById('referralCountDisplay').innerText = userData.referralCount + " Mitra";
+                    }
+                } catch(e) {}
+            }
         });
     </script>
 </body>
